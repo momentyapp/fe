@@ -3,5 +3,7 @@ declare module "common" {
     topic: string;
     id: number;
     enabled: boolean;
+    count?: number;
+    trending?: boolean;
   }
 }

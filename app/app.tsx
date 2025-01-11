@@ -15,12 +15,6 @@ export default function App() {
 
   // 테마가 디바이스 설정에 따라 변경되도록 설정
   useEffect(() => {
-    ReactModal.defaultStyles = {
-      content: {
-        background: theme.bg2,
-      },
-    };
-
     if (preference.theme !== "device") return;
 
     const match = window.matchMedia("(prefers-color-scheme: dark)");
@@ -35,7 +29,13 @@ export default function App() {
   // 모달 기본 설정
   useEffect(() => {
     ReactModal.setAppElement("main");
-  }, []);
+
+    ReactModal.defaultStyles = {
+      content: {
+        background: theme.bg2,
+      },
+    };
+  }, [theme]);
 
   return (
     <ThemeProvider theme={theme}>

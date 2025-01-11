@@ -24,9 +24,8 @@ const Wrapper = styled.button<{ $background: string }>`
   }
 `;
 
-const Content = styled.div``;
-
-interface PressableProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface PressableProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   backgroundColor?: string;
 }
 
@@ -37,7 +36,7 @@ export default function Pressable({
 }: PressableProps) {
   return (
     <Wrapper {...props} $background={backgroundColor}>
-      <Content>{children}</Content>
+      {children}
     </Wrapper>
   );
 }
