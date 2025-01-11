@@ -3,15 +3,13 @@ import { styled } from "styled-components";
 import isDarkColor from "~/utils/isDarkColor";
 
 const Wrapper = styled.button<{ $background: string }>`
-  padding: 0;
   border: none;
-  outline: none;
   cursor: pointer;
   background: ${(props) => props.$background};
-  transition: filter 0.2s, transform 0.1s ease-in-out;
+  transition: background 0.2s, filter 0.2s, transform 0.1s ease-in-out;
   -webkit-tap-highlight-color: transparent;
 
-  &:focus {
+  &:focus-visible {
     transform: scale(1.05);
     filter: brightness(
       ${(props) => (isDarkColor(props.$background) ? "110%" : "90%")}
