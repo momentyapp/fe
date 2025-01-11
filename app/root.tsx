@@ -1,6 +1,6 @@
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
-import { PreferenceProvider } from "~/contexts/preferences";
+import { PreferenceProvider } from "~/contexts/preference";
 import App from "./app";
 
 import type { Route } from "./+types/root";

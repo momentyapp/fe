@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { ThemeProvider } from "styled-components";
 
-import PreferenceContext from "~/contexts/preferences";
+import PreferenceContext from "~/contexts/preference";
 import palette, { type Palette } from "~/styles/palette";
 
 export default function App() {
