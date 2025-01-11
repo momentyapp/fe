@@ -6,6 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { ThemeProvider } from "styled-components";
+
+import theme from "./styles/theme";
 
 import type { Route } from "./+types/root";
 
@@ -45,7 +48,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <ThemeProvider theme={theme}>
+      <Outlet />;
+    </ThemeProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
