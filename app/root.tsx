@@ -1,15 +1,11 @@
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { useContext, useEffect, useState } from "react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { ThemeProvider } from "styled-components";
 
-import theme from "./styles/theme";
+import palette from "~/styles/palette";
+import PreferenceContext, { PreferenceProvider } from "~/contexts/preferences";
 
+import type { Palette } from "~/styles/palette";
 import type { Route } from "./+types/root";
 
 export const links: Route.LinksFunction = () => [
@@ -39,47 +35,38 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+        <PreferenceProvider>
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </PreferenceProvider>
       </body>
     </html>
   );
 }
 
 export default function App() {
+  const preference = useContext(PreferenceContext);
+  const [theme, setTheme] = useState<Palette>(
+    preference.theme === "dark" ? palette.dark : palette.light
+  );
+
+  // 테마가 디바이스 설정에 따라 변경되도록 설정
+  useEffect(() => {
+    if (preference.theme !== "device") return;
+
+    const match = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const eventListener = (e: MediaQueryListEvent) =>
+      setTheme(e.matches ? palette.dark : palette.light);
+    match.addEventListener("change", eventListener);
+
+    return () => match.removeEventListener("change", eventListener);
+  }, [preference.theme]);
+
   return (
     <ThemeProvider theme={theme}>
       <Outlet />;
     </ThemeProvider>
-  );
-}
-
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
-
-  return (
-    <main>
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
   );
 }
