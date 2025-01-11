@@ -15,6 +15,12 @@ export default function App() {
 
   // 테마가 디바이스 설정에 따라 변경되도록 설정
   useEffect(() => {
+    ReactModal.defaultStyles = {
+      content: {
+        background: theme.bg2,
+      },
+    };
+
     if (preference.theme !== "device") return;
 
     const match = window.matchMedia("(prefers-color-scheme: dark)");
@@ -28,30 +34,6 @@ export default function App() {
 
   // 모달 기본 설정
   useEffect(() => {
-    ReactModal.defaultStyles = {
-      overlay: {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-      },
-      content: {
-        position: "fixed",
-        left: 20,
-        right: 20,
-        bottom: 0,
-        display: "flex",
-        padding: "30px 0px",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        gap: "10px",
-        borderRadius: "20px",
-        background: theme.bg2,
-      },
-    };
-
     ReactModal.setAppElement("main");
   }, []);
 
