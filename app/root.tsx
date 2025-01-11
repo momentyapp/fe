@@ -33,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <PreferenceProvider>
-          {children}
+          <main>{children}</main>
           <ScrollRestoration />
           <Scripts />
         </PreferenceProvider>

@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 
 import { MdTune } from "react-icons/md";
 
 import SwitchableTopic from "~/components/SwitchableTopic";
 import Pressable from "~/components/Pressable";
+import TopicModal from "~/components/TopicModal";
 
 import type { Topic } from "common";
 
@@ -37,7 +38,9 @@ interface TopicFilterProps {
 
 export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
   const theme = useContext(ThemeContext);
+  const [modalOpen, setModalOpen] = useState(false);
 
+  // 주제 활성화를 전환하는 함수
   function switchTopic(id: number) {
     setTopics((prevTopics) => {
       return prevTopics.map((topic) => {
@@ -49,20 +52,58 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
     });
   }
 
-  return (
-    <TopicContainer>
-      <AddTopic backgroundColor={theme?.bg2}>
-        <MdTune size="20" color={theme?.grey1} />
-      </AddTopic>
+  // 모달 열기 함수
+  function openModal() {
+    setModalOpen(true);
+  }
 
-      {topics.map((topic) => (
-        <SwitchableTopic
-          topic={topic.topic}
-          enabled={topic.enabled}
-          onPress={() => switchTopic(topic.id)}
-          key={topic.id}
-        />
-      ))}
-    </TopicContainer>
+  // 모달 닫기 함수
+  function closeModal() {
+    setModalOpen(false);
+  }
+
+  // 주제 추가 함수
+  function addTopic(topic: Topic) {
+    setTopics((prevTopics) => {
+      return [...prevTopics, topic];
+    });
+  }
+
+  // 주제 제거 함수
+  function removeTopic(id: number) {
+    setTopics((prevTopics) => {
+      return prevTopics.filter((topic) => topic.id !== id);
+    });
+  }
+
+  // 주제 아이디 배열
+  const topicIds = topics.map((topic) => topic.id);
+
+  return (
+    <>
+      <TopicContainer>
+        <AddTopic backgroundColor={theme?.bg2} onClick={openModal}>
+          <MdTune size="20" color={theme?.grey1} />
+        </AddTopic>
+
+        {topics.map((topic) => (
+          <SwitchableTopic
+            topic={topic.topic}
+            enabled={topic.enabled}
+            onPress={() => switchTopic(topic.id)}
+            key={topic.id}
+          />
+        ))}
+      </TopicContainer>
+
+      {/* 주제 모달 */}
+      <TopicModal
+        addedTopicIds={topicIds}
+        onAddTopic={addTopic}
+        onRemoveTopic={removeTopic}
+        onRequestClose={closeModal}
+        isOpen={modalOpen}
+      />
+    </>
   );
 }
