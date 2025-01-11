@@ -1,3 +1,9 @@
+import AppBar from "~/components/AppBar";
+
 export default function Feed() {
-  return <div></div>;
+  return (
+    <div>
+      <AppBar />
+    </div>
+  );
 }

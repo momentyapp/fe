@@ -1,9 +1,20 @@
 import { useContext, useState, useEffect } from "react";
 import { Outlet } from "react-router";
-import { ThemeProvider, type DefaultTheme } from "styled-components";
+import {
+  ThemeProvider,
+  createGlobalStyle,
+  type DefaultTheme,
+} from "styled-components";
 
 import PreferenceContext from "~/contexts/preference";
 import palette from "~/styles/palette";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+      margin: 0;
+      padding: 0;
+  }
+`;
 
 export default function App() {
   const preference = useContext(PreferenceContext);
@@ -26,6 +37,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <Outlet />
     </ThemeProvider>
   );
