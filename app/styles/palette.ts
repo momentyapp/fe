@@ -1,30 +1,12 @@
-export interface Palette {
-  primary1: string;
-  primary2: string;
-  primary3: string;
-  primary4: string;
-  primary5: string;
+import type { DefaultTheme } from "styled-components";
 
-  grey1: string;
-  grey2: string;
-  grey3: string;
-
-  bg1: string;
-  bg2: string;
-  bg3: string;
-
-  red1: string;
-  red2: string;
-  red3: string;
-}
-
-const darkPalette: Palette = {
+const darkPalette: DefaultTheme = {
   primary1: "#B2DFD7",
   primary2: "#4DB6A4",
   primary3: "#009680",
   primary4: "#007964",
   primary5: "#004D3A",
-  
+
   grey1: "#C2C2C2",
   grey2: "#979797",
   grey3: "#606060",
@@ -38,7 +20,7 @@ const darkPalette: Palette = {
   red3: "#C7392A",
 };
 
-const lightPalette: Palette = {
+const lightPalette: DefaultTheme = {
   primary1: "#004D3A",
   primary2: "#007964",
   primary3: "#009680",

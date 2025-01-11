@@ -1,13 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import { Outlet } from "react-router";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider, type DefaultTheme } from "styled-components";
 
 import PreferenceContext from "~/contexts/preference";
-import palette, { type Palette } from "~/styles/palette";
+import palette from "~/styles/palette";
 
 export default function App() {
   const preference = useContext(PreferenceContext);
-  const [theme, setTheme] = useState<Palette>(
+  const [theme, setTheme] = useState<DefaultTheme>(
     preference.theme === "dark" ? palette.dark : palette.light
   );
 
