@@ -4,6 +4,7 @@ import { MdTrendingUp, MdAdd, MdClose } from "react-icons/md";
 
 import Typography from "~/components/Typography";
 import Button from "~/components/Button";
+import Dot from "~/components/Dot";
 
 import type { Topic } from "common";
 
@@ -30,13 +31,6 @@ const Info = styled.div`
 
 const StyledTypography = styled(Typography)`
   white-space: nowrap;
-`;
-
-const Dot = styled.div`
-  min-width: 3px;
-  min-height: 3px;
-  border-radius: 50%;
-  background-color: ${(props) => props.theme.grey2};
 `;
 
 const Trending = styled.div`
@@ -74,7 +68,7 @@ export default function SearchResult({
         <StyledTypography color={theme?.grey1} size="20px">
           {topic.topic}
         </StyledTypography>
-        <Dot />
+        <Dot color={theme?.grey2} size="3px" />
 
         {/* 인기 여부 */}
         {topic.trending && (
@@ -85,7 +79,7 @@ export default function SearchResult({
                 인기
               </StyledTypography>
             </Trending>
-            <Dot />
+            <Dot color={theme?.grey2} size="3px" />
           </>
         )}
 
