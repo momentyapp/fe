@@ -9,7 +9,8 @@ import type { Topic } from "common";
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 10px 15px;
+  padding: 10px 15px 10px 0px;
+  gap: 10px;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
@@ -20,13 +21,14 @@ const Wrapper = styled.div`
 const Info = styled.div`
   display: flex;
   align-items: center;
+  padding-left: 15px;
   gap: 10px;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
 `;
 
-const Name = styled(Typography)`
-  text-overflow: ellipsis;
-  overflow: hidden;
+const StyledTypography = styled(Typography)`
   white-space: nowrap;
 `;
 
@@ -52,18 +54,26 @@ const StyledButton = styled(Button)`
 
 interface SearchResultProps {
   topic: Topic;
+  added: boolean;
+  onAdd: (topic: Topic) => void;
+  onRemove: (topic: Topic) => void;
 }
 
-export default function SearchResult({ topic }: SearchResultProps) {
+export default function SearchResult({
+  topic,
+  added,
+  onAdd,
+  onRemove,
+}: SearchResultProps) {
   const theme = useContext(ThemeContext);
 
   return (
     <Wrapper>
       <Info>
         {/* 이름 */}
-        <Name color={theme?.grey1} size="20px">
+        <StyledTypography color={theme?.grey1} size="20px">
           {topic.topic}
-        </Name>
+        </StyledTypography>
         <Dot />
 
         {/* 인기 여부 */}
@@ -71,37 +81,41 @@ export default function SearchResult({ topic }: SearchResultProps) {
           <>
             <Trending>
               <MdTrendingUp size="20" color={theme?.primary2} />
-              <Typography color={theme?.primary2} size="16px">
+              <StyledTypography color={theme?.primary2} size="16px">
                 인기
-              </Typography>
+              </StyledTypography>
             </Trending>
             <Dot />
           </>
         )}
 
         {/* 사용 횟수 */}
-        <Typography color={theme?.grey1} size="16px">
+        <StyledTypography color={theme?.grey1} size="16px">
           {topic.count?.toLocaleString() ?? 0}회
-        </Typography>
+        </StyledTypography>
       </Info>
+
+      {/* 추가 / 제거 버튼 */}
       <div>
-        {topic.enabled ? (
+        {!added ? (
           <StyledButton
             backgroundColor={theme?.primary3}
             icon={<MdAdd size="20" color={theme?.bg1} />}
+            onClick={() => onAdd(topic)}
           >
-            <Typography color={theme?.bg1} size="16px">
+            <StyledTypography color={theme?.bg1} size="16px">
               추가
-            </Typography>
+            </StyledTypography>
           </StyledButton>
         ) : (
           <StyledButton
             backgroundColor={theme?.bg3}
             icon={<MdClose size="20" color={theme?.grey1} />}
+            onClick={() => onRemove(topic)}
           >
-            <Typography color={theme?.grey1} size="16px">
+            <StyledTypography color={theme?.grey1} size="16px">
               제거
-            </Typography>
+            </StyledTypography>
           </StyledButton>
         )}
       </div>

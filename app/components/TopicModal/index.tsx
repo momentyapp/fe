@@ -7,9 +7,9 @@ import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 
 import SearchInput from "./SearchInput";
+import SearchResults from "./SearchResults";
 
 import type { Topic } from "common";
-import SearchResults from "./SearchResults";
 
 const Content = styled.div`
   width: 100%;
@@ -28,42 +28,46 @@ const StyledButton = styled(Button)`
   width: 100%;
 `;
 
-interface TopicModalProps extends ReactModal.Props {
-  addedTopicIds: number[];
-  onAddTopic: (topic: Topic) => void;
-  onRemoveTopic: (topicId: number) => void;
+const sampleTopics: Topic[] = [
+  { topic: "매일우유", id: 0, count: 232532, trending: true },
+  { topic: "국회의사당역", id: 1, count: 65342 },
+  { topic: "탄핵", id: 2, count: 30012 },
+  { topic: "양자컴퓨터", id: 6, count: 9232 },
+  { topic: "엔비디아", id: 7, count: 8923 },
+  { topic: "삼성", id: 8, count: 2342 },
+];
+
+interface TopicModalProps extends Omit<ReactModal.Props, "style"> {
+  addedTopics: Topic[];
+  setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
 }
 
 export default function TopicModal({
-  addedTopicIds,
-  onAddTopic,
-  onRemoveTopic,
-  style,
+  addedTopics,
+  setAddedTopics,
   onRequestClose,
   ...props
 }: TopicModalProps) {
   const theme = useContext(ThemeContext);
 
   const [searchValue, setSearchValue] = useState("");
-  const [topics, setTopics] = useState<Topic[]>([
-    {
-      id: 1,
-      topic: "토픽11111111111",
-      enabled: true,
-      count: 200,
-      trending: true,
-    },
-  ]);
+  const [topics, setTopics] = useState<Topic[]>(
+    sampleTopics.map((topic) => ({
+      ...topic,
+      enabled: addedTopics.some((addedTopic) => addedTopic.id === topic.id),
+    }))
+  );
 
   return (
-    <ReactModal closeTimeoutMS={200} {...props}>
+    <ReactModal closeTimeoutMS={300} onRequestClose={onRequestClose} {...props}>
       <Content>
         <Part>
-          {/* 검색 */}
           <SearchInput value={searchValue} onChange={setSearchValue} />
-
-          {/* 검색 결과 */}
-          <SearchResults topics={topics} />
+          <SearchResults
+            topics={topics}
+            addedTopics={addedTopics}
+            setAddedTopics={setAddedTopics}
+          />
         </Part>
 
         {/* 하단 버튼 */}

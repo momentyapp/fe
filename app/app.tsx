@@ -29,7 +29,6 @@ export default function App() {
   // 모달 기본 설정
   useEffect(() => {
     ReactModal.setAppElement("main");
-
     ReactModal.defaultStyles = {
       content: {
         background: theme.bg2,

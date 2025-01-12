@@ -62,23 +62,6 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
     setModalOpen(false);
   }
 
-  // 주제 추가 함수
-  function addTopic(topic: Topic) {
-    setTopics((prevTopics) => {
-      return [...prevTopics, topic];
-    });
-  }
-
-  // 주제 제거 함수
-  function removeTopic(id: number) {
-    setTopics((prevTopics) => {
-      return prevTopics.filter((topic) => topic.id !== id);
-    });
-  }
-
-  // 주제 아이디 배열
-  const topicIds = topics.map((topic) => topic.id);
-
   return (
     <>
       <TopicContainer>
@@ -98,9 +81,8 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
 
       {/* 주제 모달 */}
       <TopicModal
-        addedTopicIds={topicIds}
-        onAddTopic={addTopic}
-        onRemoveTopic={removeTopic}
+        addedTopics={topics}
+        setAddedTopics={setTopics}
         onRequestClose={closeModal}
         isOpen={modalOpen}
       />
