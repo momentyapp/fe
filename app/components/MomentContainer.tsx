@@ -22,53 +22,47 @@ export default function MomentContainer({
 }: MomentContainerProps) {
   // 반응 추가 함수
   function handleAddReaction(momentId: number, emoji: string) {
-    const moment = moments.find((moment) => moment.id === momentId);
-    if (moment === undefined) return;
+    setMoments((prevMoments) => {
+      const newMoments = [...prevMoments];
 
-    const myEmoji = moment.myEmoji;
-    setMoments((prevMoments) =>
-      prevMoments.map((moment) => {
-        if (moment.id === momentId) {
-          return {
-            ...moment,
-            reactions: {
-              ...moment.reactions,
-              ...(myEmoji !== undefined
-                ? { [myEmoji]: moment.reactions[myEmoji] - 1 }
-                : {}),
-              [emoji]: (moment.reactions[emoji] ?? 0) + 1,
-            },
-            myEmoji: emoji,
-          };
-        }
-        return moment;
-      })
-    );
+      const moment = newMoments.find((moment) => moment.id === momentId);
+      if (moment === undefined) return newMoments;
+      const { reactions, myEmoji } = moment;
+
+      if (myEmoji !== undefined) {
+        // 내가 반응한 이모지 개수가 1개일 경우
+        if (myEmoji !== undefined && reactions[myEmoji] === 1)
+          delete reactions[myEmoji];
+        else reactions[myEmoji] = reactions[myEmoji] - 1;
+      }
+
+      // 새 반응 추가
+      reactions[emoji] = (reactions[emoji] ?? 0) + 1;
+      moment.myEmoji = emoji;
+
+      return newMoments;
+    });
   }
 
   // 반응 제거 함수
   function handleRemoveReaction(momentId: number) {
-    const moment = moments.find((moment) => moment.id === momentId);
-    if (moment === undefined) return;
+    setMoments((prevMoments) => {
+      const newMoments = [...prevMoments];
 
-    const myEmoji = moment.myEmoji;
-    setMoments((prevMoments) =>
-      prevMoments.map((moment) => {
-        if (moment.id === momentId) {
-          return {
-            ...moment,
-            reactions: {
-              ...moment.reactions,
-              ...(myEmoji !== undefined
-                ? { [myEmoji]: moment.reactions[myEmoji] - 1 }
-                : {}),
-            },
-            myEmoji: undefined,
-          };
-        }
-        return moment;
-      })
-    );
+      const moment = newMoments.find((moment) => moment.id === momentId);
+      if (moment === undefined) return newMoments;
+      const { reactions, myEmoji } = moment;
+
+      if (myEmoji === undefined) return newMoments;
+
+      // 내가 반응한 이모지 개수가 1개일 경우
+      if (reactions[myEmoji] === 1) delete reactions[myEmoji];
+      else reactions[myEmoji] = reactions[myEmoji] - 1;
+
+      delete moment.myEmoji;
+
+      return newMoments;
+    });
   }
 
   return (

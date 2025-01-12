@@ -32,7 +32,6 @@ const PhotoContainer = styled.div`
 `;
 
 const StyledImg = styled.img`
-  width: 100%;
   max-height: 100%;
   object-fit: cover;
   border-radius: 10px;
