@@ -46,7 +46,7 @@ const sampleMoments: MomentType[] = [
     id: 2,
     createdAt: "2023-10-02T12:00:00Z",
     body: {
-      text: "두 번째 게시글입니다.",
+      text: "두 번째 게시글입니다. 😉",
     },
     topics: [
       { topic: "국회의사당역", id: 1 },

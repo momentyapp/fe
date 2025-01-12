@@ -10,7 +10,7 @@ const StyledP = styled.p<{
   color: ${(props) => props.$color};
   font-size: ${(props) => props.$size};
   font-weight: ${(props) => props.$weight};
-  font-family: "Pretendard Variable";
+  font-family: "Pretendard Variable", "Tossface";
 `;
 
 interface TypographyProps extends React.HTMLAttributes<HTMLParagraphElement> {

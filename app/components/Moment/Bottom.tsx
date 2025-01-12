@@ -6,6 +6,7 @@ import { MdAddReaction } from "react-icons/md";
 import Typography from "~/components/Typography";
 import Pressable from "~/components/Pressable";
 import Emoji from "~/components/Emoji";
+import EmojiPickerModal from "~/components/EmojiPickerModal";
 
 import type { Moment } from "common";
 
@@ -15,6 +16,7 @@ const Wrapper = styled.div`
   align-items: flex-start;
   gap: 10px;
   width: 100%;
+  overflow-x: auto;
 `;
 
 const ReactionContainer = styled.div`
@@ -60,30 +62,45 @@ export default function Bottom({
   }
 
   return (
-    <Wrapper>
-      <ReactionContainer>
-        <Reaction backgroundColor={theme?.bg1} onClick={handleShowEmojiPicker}>
-          <MdAddReaction size="20px" color={theme?.grey1} />
-        </Reaction>
-
-        {Object.keys(moment.reactions).map((emoji) => (
+    <>
+      <Wrapper>
+        <ReactionContainer>
           <Reaction
-            key={emoji}
-            backgroundColor={
-              moment.myEmoji === emoji ? theme?.primary5 : theme?.bg1
-            }
-            onClick={() => handleReactionClick(emoji)}
+            backgroundColor={theme?.bg1}
+            onClick={handleShowEmojiPicker}
           >
-            <Emoji size="18px">{emoji}</Emoji>
-            <Typography
-              color={moment.myEmoji === emoji ? theme?.primary1 : theme?.grey1}
-              size="16px"
-            >
-              {moment.reactions[emoji].toLocaleString()}
-            </Typography>
+            <MdAddReaction size="20px" color={theme?.grey1} />
           </Reaction>
-        ))}
-      </ReactionContainer>
-    </Wrapper>
+
+          {Object.keys(moment.reactions).map((emoji) => (
+            <Reaction
+              key={emoji}
+              backgroundColor={
+                moment.myEmoji === emoji ? theme?.primary5 : theme?.bg1
+              }
+              onClick={() => handleReactionClick(emoji)}
+            >
+              <Emoji size="18px">{emoji}</Emoji>
+              <Typography
+                color={
+                  moment.myEmoji === emoji ? theme?.primary1 : theme?.grey1
+                }
+                size="16px"
+              >
+                {moment.reactions[emoji].toLocaleString()}
+              </Typography>
+            </Reaction>
+          ))}
+        </ReactionContainer>
+      </Wrapper>
+
+      {/* 이모지 피커 */}
+      <EmojiPickerModal
+        isOpen={showEmojiPicker}
+        onRequestClose={() => setShowEmojiPicker(false)}
+        myEmoji={moment.myEmoji}
+        onSelect={handleReactionClick}
+      />
+    </>
   );
 }

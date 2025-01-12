@@ -68,7 +68,7 @@ export default function Content({ moment }: ContentProps) {
   return (
     <Wrapper>
       {/* 본문 */}
-      <StyledTypography color={theme?.grey1} size="16">
+      <StyledTypography color={theme?.grey1} size="16px">
         {moment.body.text}
       </StyledTypography>
 
