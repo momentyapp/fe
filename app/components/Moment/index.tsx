@@ -20,14 +20,25 @@ const Wrapper = styled.div`
 interface MomentProps {
   moment: Moment;
   trending?: boolean;
+  onAddReaction?: (emoji: string) => void;
+  onRemoveReaction?: () => void;
 }
 
-export default function Moment({ moment, trending }: MomentProps) {
+export default function Moment({
+  moment,
+  trending,
+  onAddReaction,
+  onRemoveReaction,
+}: MomentProps) {
   return (
     <Wrapper>
       <Top moment={moment} />
       <Content moment={moment} />
-      <Bottom moment={moment} />
+      <Bottom
+        moment={moment}
+        onAddReaction={onAddReaction}
+        onRemoveReaction={onRemoveReaction}
+      />
     </Wrapper>
   );
 }

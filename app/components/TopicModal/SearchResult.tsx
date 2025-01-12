@@ -10,7 +10,7 @@ import type { Topic } from "common";
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 10px 15px 10px 0px;
+  padding: 5px 10px;
   gap: 10px;
   justify-content: space-between;
   align-items: center;
@@ -22,7 +22,6 @@ const Wrapper = styled.div`
 const Info = styled.div`
   display: flex;
   align-items: center;
-  padding-left: 15px;
   gap: 10px;
   width: 100%;
   height: 100%;
@@ -65,7 +64,7 @@ export default function SearchResult({
     <Wrapper>
       <Info>
         {/* 이름 */}
-        <StyledTypography color={theme?.grey1} size="20px">
+        <StyledTypography color={theme?.grey1} size="18px">
           {topic.topic}
         </StyledTypography>
         <Dot color={theme?.grey2} size="3px" />
@@ -74,8 +73,8 @@ export default function SearchResult({
         {topic.trending && (
           <>
             <Trending>
-              <MdTrendingUp size="20" color={theme?.primary2} />
-              <StyledTypography color={theme?.primary2} size="16px">
+              <MdTrendingUp size="16" color={theme?.primary2} />
+              <StyledTypography color={theme?.primary2} size="14px">
                 인기
               </StyledTypography>
             </Trending>
@@ -84,7 +83,7 @@ export default function SearchResult({
         )}
 
         {/* 사용 횟수 */}
-        <StyledTypography color={theme?.grey1} size="16px">
+        <StyledTypography color={theme?.grey1} size="14px">
           {topic.count?.toLocaleString() ?? 0}회
         </StyledTypography>
       </Info>

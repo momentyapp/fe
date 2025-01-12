@@ -1,18 +1,10 @@
 import { useState } from "react";
-import { styled } from "styled-components";
 
 import AppBar from "~/components/AppBar";
 import TopicFilter from "~/components/TopicFilter";
-import Moment from "~/components/Moment";
+import MomentContainer from "~/components/MomentContainer";
 
 import type { Moment as MomentType, Topic } from "common";
-
-const MomentContainer = styled.div`
-  display: flex;
-  padding: 10px 10px 100px 10px;
-  flex-direction: column;
-  gap: 10px;
-`;
 
 const sampleTopics: Topic[] = [
   { topic: "매일우유", id: 0, enabled: false },
@@ -45,7 +37,7 @@ const sampleMoments: MomentType[] = [
     ],
     reactions: {
       "🤣": 10,
-      "❤": 5,
+      "👍": 5,
     },
     expiresAt: "2023-10-02T12:00:00Z",
     myEmoji: "👍",
@@ -69,6 +61,7 @@ const sampleMoments: MomentType[] = [
 
 export default function Feed() {
   const [topics, setTopics] = useState<Topic[]>(sampleTopics);
+  const [moments, setMoments] = useState<MomentType[]>(sampleMoments);
 
   return (
     <>
@@ -79,11 +72,7 @@ export default function Feed() {
       <TopicFilter topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
-      <MomentContainer>
-        {sampleMoments.map((moment) => (
-          <Moment key={moment.id} moment={moment} />
-        ))}
-      </MomentContainer>
+      <MomentContainer moments={moments} setMoments={setMoments} />
     </>
   );
 }
