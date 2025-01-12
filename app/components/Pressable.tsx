@@ -31,7 +31,7 @@ export interface PressableProps
 
 export default function Pressable({
   children,
-  backgroundColor = "#0000000",
+  backgroundColor = "transparent",
   ...props
 }: PressableProps) {
   return (

@@ -11,11 +11,14 @@ import type { Topic } from "common";
 
 const TopicContainer = styled.div`
   display: flex;
-  padding: 20px 10px;
+  padding: 10px;
   align-items: center;
   gap: 10px;
   box-sizing: border-box;
   overflow-x: scroll;
+  position: sticky;
+  top: 60px;
+  background-color: ${(props) => props.theme?.bg1};
 
   > * {
     flex-shrink: 0;

@@ -8,12 +8,13 @@ import Logo from "~/assets/svg/logo.svg?react";
 
 const StyledHeader = styled.header`
   display: flex;
-  padding: 20px 20px;
+  padding: 0px 20px;
+  height: 60px;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
-  background: ${(props) => props.theme.bg1};
+  background-color: ${(props) => props.theme?.bg1};
 `;
 
 const FullWidthDiv = styled.div`
@@ -33,14 +34,14 @@ export default function AppBar() {
     <StyledHeader>
       {/* left */}
       <FullWidthDiv style={{ justifyContent: "flex-start" }}>
-        <StyledPressable backgroundColor={theme?.bg1}>
-          <MdMenu size="36" color={theme?.grey1} />
+        <StyledPressable>
+          <MdMenu size="32" color={theme?.grey1} />
         </StyledPressable>
       </FullWidthDiv>
 
       {/* center */}
       <FullWidthDiv style={{ justifyContent: "center" }}>
-        <Logo width="60" height="100%" />
+        <Logo width="40" height="100%" />
       </FullWidthDiv>
 
       {/* right */}
