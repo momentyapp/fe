@@ -5,6 +5,7 @@ import { MdCheck } from "react-icons/md";
 
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
+import Slide from "~/components/Slide";
 
 import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";
@@ -18,10 +19,6 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-`;
-
-const Part = styled.div`
-  width: 100%;
 `;
 
 const StyledButton = styled(Button)`
@@ -42,12 +39,7 @@ interface TopicModalProps extends Omit<ReactModal.Props, "style"> {
   setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
 }
 
-export default function TopicModal({
-  addedTopics,
-  setAddedTopics,
-  onRequestClose,
-  ...props
-}: TopicModalProps) {
+export default function TopicModal({ addedTopics, setAddedTopics, onRequestClose, ...props }: TopicModalProps) {
   const theme = useContext(ThemeContext);
 
   const [searchValue, setSearchValue] = useState("");
@@ -59,19 +51,15 @@ export default function TopicModal({
   );
 
   return (
-    <ReactModal closeTimeoutMS={300} onRequestClose={onRequestClose} {...props}>
+    <ReactModal closeTimeoutMS={200} onRequestClose={onRequestClose} {...props}>
       <Content>
-        <Part>
+        <Slide visible={true} delay={50}>
           <SearchInput value={searchValue} onChange={setSearchValue} />
-          <SearchResults
-            topics={topics}
-            addedTopics={addedTopics}
-            setAddedTopics={setAddedTopics}
-          />
-        </Part>
+          <SearchResults topics={topics} addedTopics={addedTopics} setAddedTopics={setAddedTopics} />
+        </Slide>
 
         {/* 하단 버튼 */}
-        <Part>
+        <Slide visible={true} delay={100}>
           <StyledButton
             backgroundColor={theme?.primary3}
             icon={<MdCheck size="24" color={theme?.bg1} />}
@@ -81,7 +69,7 @@ export default function TopicModal({
               완료
             </Typography>
           </StyledButton>
-        </Part>
+        </Slide>
       </Content>
     </ReactModal>
   );

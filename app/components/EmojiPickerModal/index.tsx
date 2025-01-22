@@ -5,6 +5,7 @@ import { MdClose } from "react-icons/md";
 
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
+import Slide from "~/components/Slide";
 
 import EmojiList from "./EmojiList";
 
@@ -17,10 +18,6 @@ const Content = styled.div`
   gap: 10px;
 `;
 
-const Part = styled.div`
-  width: 100%;
-`;
-
 const StyledButton = styled(Button)`
   width: 100%;
 `;
@@ -30,23 +27,18 @@ interface EmojiPickerModal extends Omit<ReactModal.Props, "style"> {
   myEmoji?: string;
 }
 
-export default function TopicModal({
-  onSelect,
-  myEmoji,
-  onRequestClose,
-  ...props
-}: EmojiPickerModal) {
+export default function TopicModal({ onSelect, myEmoji, onRequestClose, ...props }: EmojiPickerModal) {
   const theme = useContext(ThemeContext);
 
   return (
-    <ReactModal closeTimeoutMS={300} onRequestClose={onRequestClose} {...props}>
+    <ReactModal closeTimeoutMS={200} onRequestClose={onRequestClose} {...props}>
       <Content>
-        <Part>
+        <Slide visible={true} delay={50}>
           <EmojiList onSelect={onSelect} myEmoji={myEmoji} />
-        </Part>
+        </Slide>
 
         {/* 하단 버튼 */}
-        <Part>
+        <Slide visible={true} delay={100}>
           <StyledButton
             backgroundColor={theme?.primary3}
             icon={<MdClose size="24" color={theme?.bg1} />}
@@ -56,7 +48,7 @@ export default function TopicModal({
               닫기
             </Typography>
           </StyledButton>
-        </Part>
+        </Slide>
       </Content>
     </ReactModal>
   );

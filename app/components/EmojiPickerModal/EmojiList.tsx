@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { styled, ThemeContext } from "styled-components";
 
 import Pressable from "~/components/Pressable";
+import Fade from "~/components/Fade";
 import Emoji from "~/components/Emoji";
 
 const Wrapper = styled.div`
@@ -35,13 +36,14 @@ export default function EmojiList({ onSelect, myEmoji }: EmojiListProps) {
   return (
     <Wrapper>
       {emojis.map((emoji, index) => (
-        <EmojiButton
-          key={index}
-          onClick={() => onSelect(emoji)}
-          backgroundColor={myEmoji === emoji ? theme?.primary5 : theme?.bg2}
-        >
-          <Emoji size="30px">{emoji}</Emoji>
-        </EmojiButton>
+        <Fade key={index} visible delay={index * 10} duration={300}>
+          <EmojiButton
+            onClick={() => onSelect(emoji)}
+            backgroundColor={myEmoji === emoji ? theme?.primary5 : theme?.bg2}
+          >
+            <Emoji size="30px">{emoji}</Emoji>
+          </EmojiButton>
+        </Fade>
       ))}
     </Wrapper>
   );

@@ -35,18 +35,20 @@ const GlobalStyle = createGlobalStyle`
     padding: 30px 0px;
     flex-direction: column;
     align-items: flex-start;
+    overflow: hidden;
     gap: 10px;
     border-radius: 20px;
-    transform: translateY(100%);
-    transition: transform 300ms cubic-bezier(0.175, 0.885, 0.3, 1.275);
+    transform: translateY(100px);
+    transition: transform 200ms ease-in-out, opacity 200ms ease-in-out;
   }
   
   .ReactModal__Content--after-open {
-    transform: translateY(-20px);;
+    transform: translateY(-20px);
   }
 
   .ReactModal__Content--before-close {
-    transform: translateY(100%);
+    transform: translateY(100px);
+    opacity: 0;
   }
 `;
 
