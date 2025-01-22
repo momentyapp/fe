@@ -9,4 +9,7 @@ export default defineConfig({
     tsconfigPaths(),
     svgr({ svgrOptions: { icon: true } }),
   ],
+  server: {
+    host: "0.0.0.0"
+  }
 });
