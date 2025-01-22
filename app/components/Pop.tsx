@@ -7,18 +7,20 @@ const StyledDiv = styled.div<{
   $delay: number;
   $visible: boolean;
 }>`
-  transition: opacity ${({ $duration: duration }) => duration}ms;
+  transition: transform ${({ $duration: duration }) => duration}ms cubic-bezier(0.42, 0, 0.48, 1.33),
+    opacity ${({ $duration: duration }) => duration}ms;
   transition-delay: ${({ $delay: delay }) => delay}ms;
+  transform: scale(${({ $visible: visible }) => (visible ? "1" : "0")});
   opacity: ${({ $visible: visible }) => (visible ? 1 : 0)};
 `;
 
-interface FadeProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PopProps extends React.HTMLAttributes<HTMLDivElement> {
   delay?: number;
   duration?: number;
   visible: boolean;
 }
 
-export default function Slide({ delay = 0, duration = 200, visible, children, ...props }: FadeProps) {
+export default function Pop({ delay = 0, duration = 200, visible, children, ...props }: PopProps) {
   const [actualVisible, setActualVisible] = useState(false);
 
   useEffect(() => {

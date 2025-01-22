@@ -6,6 +6,7 @@ import { MdTune } from "react-icons/md";
 import SwitchableTopic from "~/components/SwitchableTopic";
 import Pressable from "~/components/Pressable";
 import TopicModal from "~/components/TopicModal";
+import Slide from "~/components/Slide";
 
 import type { Topic } from "common";
 
@@ -72,23 +73,20 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
           <MdTune size="20" color={theme?.grey1} />
         </AddTopic>
 
-        {topics.map((topic) => (
-          <SwitchableTopic
-            topic={topic.topic}
-            enabled={topic.enabled}
-            onPress={() => switchTopic(topic.id)}
-            key={topic.id}
-          />
+        {topics.map((topic, index) => (
+          <Slide key={topic.id} direction="right" distance="10px" delay={index * 30} visible>
+            <SwitchableTopic
+              topic={topic.topic}
+              enabled={topic.enabled}
+              onPress={() => switchTopic(topic.id)}
+              key={topic.id}
+            />
+          </Slide>
         ))}
       </TopicContainer>
 
       {/* 주제 모달 */}
-      <TopicModal
-        addedTopics={topics}
-        setAddedTopics={setTopics}
-        onRequestClose={closeModal}
-        isOpen={modalOpen}
-      />
+      <TopicModal addedTopics={topics} setAddedTopics={setTopics} onRequestClose={closeModal} isOpen={modalOpen} />
     </>
   );
 }
