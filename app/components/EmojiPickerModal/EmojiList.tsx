@@ -36,7 +36,7 @@ export default function EmojiList({ onSelect, myEmoji }: EmojiListProps) {
   return (
     <Wrapper>
       {emojis.map((emoji, index) => (
-        <Fade key={index} visible delay={index * 10} duration={300}>
+        <Fade key={index} visible delay={((index % 5) + Math.floor(index / 5)) * 30} duration={300}>
           <EmojiButton
             onClick={() => onSelect(emoji)}
             backgroundColor={myEmoji === emoji ? theme?.primary5 : theme?.bg2}
