@@ -57,24 +57,31 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
   }
 
   // 모달 열기 함수
-  function openModal() {
+  function handleOpenModal() {
     setModalOpen(true);
   }
 
   // 모달 닫기 함수
-  function closeModal() {
+  function handleCloseModal() {
     setModalOpen(false);
   }
 
   return (
     <>
       <TopicContainer>
-        <AddTopic backgroundColor={theme?.bg2} onClick={openModal}>
+        <AddTopic backgroundColor={theme?.bg2} onClick={handleOpenModal}>
           <MdTune size="20" color={theme?.grey1} />
         </AddTopic>
 
         {topics.map((topic, index) => (
-          <Slide key={topic.id} direction="right" distance="10px" delay={index * 30} visible>
+          <Slide
+            key={topic.id}
+            direction="right"
+            duration={200}
+            distance="10px"
+            delay={index * 30}
+            visible
+          >
             <SwitchableTopic
               topic={topic.topic}
               enabled={topic.enabled}
@@ -86,7 +93,12 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
       </TopicContainer>
 
       {/* 주제 모달 */}
-      <TopicModal addedTopics={topics} setAddedTopics={setTopics} onRequestClose={closeModal} isOpen={modalOpen} />
+      <TopicModal
+        addedTopics={topics}
+        setAddedTopics={setTopics}
+        onRequestClose={handleCloseModal}
+        isOpen={modalOpen}
+      />
     </>
   );
 }

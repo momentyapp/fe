@@ -27,18 +27,37 @@ interface EmojiPickerModal extends Omit<ReactModal.Props, "style"> {
   myEmoji?: string;
 }
 
-export default function TopicModal({ onSelect, myEmoji, onRequestClose, ...props }: EmojiPickerModal) {
+export default function TopicModal({
+  onSelect,
+  myEmoji,
+  onRequestClose,
+  isOpen,
+  ...props
+}: EmojiPickerModal) {
   const theme = useContext(ThemeContext);
 
   return (
-    <ReactModal closeTimeoutMS={200} onRequestClose={onRequestClose} {...props}>
+    <ReactModal
+      closeTimeoutMS={200}
+      onRequestClose={onRequestClose}
+      isOpen={isOpen}
+      {...props}
+    >
       <Content>
-        <Slide visible={true} delay={50}>
+        <Slide
+          visible={isOpen}
+          delay={50}
+          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
+        >
           <EmojiList onSelect={onSelect} myEmoji={myEmoji} />
         </Slide>
 
         {/* 하단 버튼 */}
-        <Slide visible={true} delay={100}>
+        <Slide
+          visible={isOpen}
+          delay={100}
+          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
+        >
           <StyledButton
             backgroundColor={theme?.primary3}
             icon={<MdClose size="24" color={theme?.bg1} />}

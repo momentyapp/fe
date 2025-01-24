@@ -39,7 +39,13 @@ interface TopicModalProps extends Omit<ReactModal.Props, "style"> {
   setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
 }
 
-export default function TopicModal({ addedTopics, setAddedTopics, onRequestClose, ...props }: TopicModalProps) {
+export default function TopicModal({
+  addedTopics,
+  setAddedTopics,
+  onRequestClose,
+  isOpen,
+  ...props
+}: TopicModalProps) {
   const theme = useContext(ThemeContext);
 
   const [searchValue, setSearchValue] = useState("");
@@ -51,15 +57,32 @@ export default function TopicModal({ addedTopics, setAddedTopics, onRequestClose
   );
 
   return (
-    <ReactModal closeTimeoutMS={200} onRequestClose={onRequestClose} {...props}>
+    <ReactModal
+      closeTimeoutMS={300}
+      onRequestClose={onRequestClose}
+      isOpen={isOpen}
+      {...props}
+    >
       <Content>
-        <Slide visible={true} delay={50}>
+        <Slide
+          visible={isOpen}
+          delay={50}
+          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
+        >
           <SearchInput value={searchValue} onChange={setSearchValue} />
-          <SearchResults topics={topics} addedTopics={addedTopics} setAddedTopics={setAddedTopics} />
+          <SearchResults
+            topics={topics}
+            addedTopics={addedTopics}
+            setAddedTopics={setAddedTopics}
+          />
         </Slide>
 
         {/* 하단 버튼 */}
-        <Slide visible={true} delay={100}>
+        <Slide
+          visible={isOpen}
+          delay={100}
+          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
+        >
           <StyledButton
             backgroundColor={theme?.primary3}
             icon={<MdCheck size="24" color={theme?.bg1} />}

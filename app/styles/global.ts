@@ -38,8 +38,8 @@ const GlobalStyle = createGlobalStyle`
     overflow: hidden;
     gap: 10px;
     border-radius: 20px;
-    transform: translateY(100px);
-    transition: transform 200ms ease-in-out, opacity 200ms ease-in-out;
+    transform: translateY(30px);
+    transition: transform 300ms cubic-bezier(0.17,0.84,0.44,1), opacity 300ms;
   }
   
   .ReactModal__Content--after-open {
@@ -47,8 +47,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .ReactModal__Content--before-close {
-    transform: translateY(100px);
     opacity: 0;
+    transform: translateY(30px);
   }
 `;
 
