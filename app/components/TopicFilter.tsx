@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { createRef, useContext, useEffect, useState, type Ref } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { Transition, TransitionGroup } from "react-transition-group";
 
 import { MdTune } from "react-icons/md";
 
@@ -10,7 +11,7 @@ import Slide from "~/components/Slide";
 
 import type { Topic } from "common";
 
-const TopicContainer = styled.div`
+const TopicContainer = styled(TransitionGroup)`
   display: flex;
   padding: 10px;
   align-items: center;
@@ -43,6 +44,13 @@ interface TopicFilterProps {
 export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
   const theme = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
+  const [refs, setRefs] = useState<Ref<HTMLButtonElement>[]>([]);
+
+  useEffect(() => {
+    setRefs((prevRefs) => {
+      return topics.map((_, index) => prevRefs[index] ?? createRef());
+    });
+  }, [topics]);
 
   // 주제 활성화를 전환하는 함수
   function switchTopic(id: number) {
@@ -74,21 +82,24 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
         </AddTopic>
 
         {topics.map((topic, index) => (
-          <Slide
-            key={topic.id}
-            direction="right"
-            duration={200}
-            distance="10px"
-            delay={index * 30}
-            visible
-          >
-            <SwitchableTopic
-              topic={topic.topic}
-              enabled={topic.enabled}
-              onPress={() => switchTopic(topic.id)}
-              key={topic.id}
-            />
-          </Slide>
+          <Transition key={topic.id} timeout={200} nodeRef={refs[index]}>
+            {(state) => (
+              <Slide
+                direction="right"
+                duration={200}
+                distance="10px"
+                visible={state === "entered" || state === "entering"}
+              >
+                <SwitchableTopic
+                  ref={refs[index]}
+                  topic={topic.topic}
+                  enabled={topic.enabled}
+                  onPress={() => switchTopic(topic.id)}
+                  key={topic.id}
+                />
+              </Slide>
+            )}
+          </Transition>
         ))}
       </TopicContainer>
 

@@ -1,3 +1,4 @@
+import { type Ref } from "react";
 import { styled } from "styled-components";
 
 import isDarkColor from "~/utils/isDarkColor";
@@ -27,15 +28,17 @@ const Wrapper = styled.button<{ $background: string }>`
 export interface PressableProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   backgroundColor?: string;
+  ref?: Ref<HTMLButtonElement>;
 }
 
 export default function Pressable({
   children,
   backgroundColor = "transparent",
+  ref,
   ...props
 }: PressableProps) {
   return (
-    <Wrapper {...props} $background={backgroundColor}>
+    <Wrapper ref={ref} {...props} $background={backgroundColor}>
       {children}
     </Wrapper>
   );

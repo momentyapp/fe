@@ -1,7 +1,7 @@
-import { useContext } from "react";
+import { useContext, type Ref } from "react";
 import { styled, ThemeContext } from "styled-components";
 
-import Pressable from "~/components/Pressable";
+import Pressable, { type PressableProps } from "~/components/Pressable";
 import Typography from "~/components/Typography";
 
 const StyledPressable = styled(Pressable)`
@@ -17,16 +17,19 @@ const StyledTypography = styled(Typography)`
   transition: color 0.2s;
 `;
 
-interface SwitchableTopicProps {
+interface SwitchableTopicProps extends PressableProps {
   topic: string;
   enabled?: boolean;
   onPress?: () => void;
+  ref: Ref<HTMLButtonElement>;
 }
 
 export default function SwitchableTopic({
   topic,
   enabled = false,
   onPress,
+  ref,
+  ...props
 }: SwitchableTopicProps) {
   const theme = useContext(ThemeContext);
 
@@ -34,6 +37,8 @@ export default function SwitchableTopic({
     <StyledPressable
       backgroundColor={enabled ? theme?.primary3 : theme?.bg2}
       onClick={onPress}
+      ref={ref}
+      {...props}
     >
       <StyledTypography color={enabled ? theme?.bg1 : theme?.grey1} size="16px">
         {topic}
