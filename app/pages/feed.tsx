@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { styled, ThemeContext } from "styled-components";
+import { MdEdit } from "react-icons/md";
+import { useNavigate } from "react-router";
 
 import AppBar from "~/components/AppBar";
 import TopicFilter from "~/components/TopicFilter";
 import MomentContainer from "~/components/MomentContainer";
+import Pressable from "~/components/Pressable";
 
 import type { Moment as MomentType, Topic } from "common";
+
+const FloatingButton = styled(Pressable)`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const sampleTopics: Topic[] = [
   { topic: "매일우유", id: 0, enabled: false },
@@ -60,8 +75,15 @@ const sampleMoments: MomentType[] = [
 ];
 
 export default function Feed() {
+  const navigate = useNavigate();
+  const theme = useContext(ThemeContext);
+
   const [topics, setTopics] = useState<Topic[]>(sampleTopics);
   const [moments, setMoments] = useState<MomentType[]>(sampleMoments);
+
+  function handleWrite() {
+    navigate("/write");
+  }
 
   return (
     <>
@@ -73,6 +95,11 @@ export default function Feed() {
 
       {/* 모멘트 */}
       <MomentContainer moments={moments} setMoments={setMoments} />
+
+      {/* 글 쓰기 버튼 */}
+      <FloatingButton backgroundColor={theme?.primary3} onClick={handleWrite}>
+        <MdEdit size="20" color={theme?.bg1} />
+      </FloatingButton>
     </>
   );
 }
