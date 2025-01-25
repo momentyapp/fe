@@ -29,4 +29,9 @@ declare module "common" {
     createdAt: string;
     photo?: string;
   }
+
+  export interface PhotoFile {
+    file: File;
+    id: string;
+  }
 }

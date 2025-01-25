@@ -4,14 +4,13 @@ import { styled, ThemeContext } from "styled-components";
 import WriteBar from "~/components/WriteBar";
 import WriteBody from "~/components/WriteBody";
 
+import type { PhotoFile } from "common";
+
 export default function Write() {
   const theme = useContext(ThemeContext);
 
   const [text, setText] = useState("");
-  const [photos, setPhotos] = useState<string[]>([
-    "https://picsum.photos/1000",
-    "https://picsum.photos/400/800",
-  ]);
+  const [photos, setPhotos] = useState<PhotoFile[]>([]);
 
   return (
     <>

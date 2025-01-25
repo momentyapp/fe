@@ -1,8 +1,9 @@
-import { useState } from "react";
 import { styled } from "styled-components";
 import TextareaAutosize from "react-textarea-autosize";
 
-import WritePhoto from "~/components/WritePhoto";
+import PhotosContainer from "./PhotosContainer";
+
+import type { PhotoFile } from "common";
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,20 +29,11 @@ const Input = styled(TextareaAutosize)`
   }
 `;
 
-const PhotosContainer = styled.div`
-  display: flex;
-  height: 120px;
-  padding: 0px 20px;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-`;
-
 interface WriteBodyProps {
   value: string;
   onChange: (value: string) => void;
-  photos: string[];
-  onPhotosChange: (pictures: string[]) => void;
+  photos: PhotoFile[];
+  onPhotosChange: React.Dispatch<React.SetStateAction<PhotoFile[]>>;
 }
 
 export default function WriteBody({
@@ -54,13 +46,10 @@ export default function WriteBody({
     <Wrapper>
       <Input
         placeholder="지금 생각을 적어보세요."
+        value={value}
         onChange={(e) => onChange(e.target.value)}
       />
-      <PhotosContainer>
-        {photos.map((photo) => (
-          <WritePhoto photo={photo} onClick={() => {}} onDelete={() => {}} />
-        ))}
-      </PhotosContainer>
+      <PhotosContainer photos={photos} onPhotosChange={onPhotosChange} />
     </Wrapper>
   );
 }

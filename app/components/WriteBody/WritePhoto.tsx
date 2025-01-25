@@ -5,11 +5,13 @@ import { MdDelete } from "react-icons/md";
 import Pressable from "~/components/Pressable";
 
 const Wrapper = styled.div`
+  height: 120px;
   position: relative;
 `;
 
 const StyledImg = styled.img`
-  max-height: 100%;
+  height: 100%;
+  min-width: 100px;
   object-fit: cover;
   border-radius: 5px;
 `;
@@ -20,8 +22,11 @@ const DeleteButton = styled(Pressable)`
   bottom: 6px;
   background: ${(props) => props.theme.bg1};
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 interface WritePhotoProps {
@@ -38,11 +43,13 @@ export default function WritePhoto({
   const theme = useContext(ThemeContext);
 
   return (
-    <Wrapper>
-      <StyledImg src={photo} onClick={onClick} />
-      <DeleteButton onClick={onDelete}>
-        <MdDelete size="18" color={theme?.grey1} />
-      </DeleteButton>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <StyledImg src={photo} onClick={onClick} />
+        <DeleteButton onClick={onDelete}>
+          <MdDelete size="18" color={theme?.grey1} />
+        </DeleteButton>
+      </Wrapper>
+    </>
   );
 }
