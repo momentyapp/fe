@@ -28,7 +28,11 @@ const StyledButton = styled(Button)`
   border-radius: 10px;
 `;
 
-export default function WriteBar() {
+interface WriteBarProps {
+  onPost: () => void;
+}
+
+export default function WriteBar({ onPost }: WriteBarProps) {
   const theme = useContext(ThemeContext);
   const navigate = useNavigate();
 
@@ -47,6 +51,7 @@ export default function WriteBar() {
       <StyledButton
         backgroundColor={theme?.primary3}
         icon={<MdSend size="20" color={theme?.bg1} />}
+        onClick={onPost}
       >
         <Typography color={theme?.bg1} size="18px">
           게시하기

@@ -23,6 +23,11 @@ declare module "common" {
     myEmoji?: string;
   }
 
+  export interface MomentConfig {
+    expiresIn: number;
+    anonymous: boolean;
+  }
+
   export interface User {
     id: number;
     username: string;
