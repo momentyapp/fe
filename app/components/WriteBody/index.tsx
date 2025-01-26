@@ -8,7 +8,7 @@ import type { PhotoFile } from "common";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px 0;
+  padding: 20px 0 300px 0;
   width: 100%;
 `;
 

@@ -27,7 +27,7 @@ interface EmojiPickerModal extends Omit<ReactModal.Props, "style"> {
   myEmoji?: string;
 }
 
-export default function TopicModal({
+export default function EmojiPickerModal({
   onSelect,
   myEmoji,
   onRequestClose,

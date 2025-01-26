@@ -1,11 +1,12 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { styled, ThemeContext } from "styled-components";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdAdd } from "react-icons/md";
 
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 
 import type { Topic } from "common";
+import TopicModal from "../TopicModal";
 
 interface TopicsProps {
   topics: Topic[];
@@ -34,6 +35,7 @@ const StyledButton = styled(Button)`
 
 export default function Topics({ topics, setTopics }: TopicsProps) {
   const theme = useContext(ThemeContext);
+  const [modalOpen, setModalOpen] = useState(false);
 
   function handleClick(topic: Topic) {
     setTopics((prevTopics) => prevTopics.filter((t) => t.id !== topic.id));
@@ -41,6 +43,16 @@ export default function Topics({ topics, setTopics }: TopicsProps) {
 
   return (
     <Wrapper>
+      <StyledButton
+        backgroundColor={theme?.primary3}
+        icon={<MdAdd size="20" color={theme?.bg1} />}
+        iconPosition="left"
+        onClick={() => setModalOpen(true)}
+      >
+        <Typography color={theme?.bg1} size="16px">
+          직접 추가
+        </Typography>
+      </StyledButton>
       {topics.map((topic) => (
         <StyledButton
           backgroundColor={theme?.bg3}
@@ -54,6 +66,13 @@ export default function Topics({ topics, setTopics }: TopicsProps) {
           </Typography>
         </StyledButton>
       ))}
+
+      <TopicModal
+        addedTopics={topics}
+        setAddedTopics={setTopics}
+        isOpen={modalOpen}
+        onRequestClose={() => setModalOpen(false)}
+      />
     </Wrapper>
   );
 }
