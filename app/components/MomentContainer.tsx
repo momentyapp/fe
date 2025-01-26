@@ -1,8 +1,11 @@
+import { useState, useContext } from "react";
 import { styled } from "styled-components";
 
 import Moment from "~/components/Moment";
+import SessionContext from "~/contexts/session";
 
 import type { Moment as MomentType } from "common";
+import SimpleModal from "./SimpleModal";
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,8 +23,16 @@ export default function MomentContainer({
   moments,
   setMoments,
 }: MomentContainerProps) {
+  const session = useContext(SessionContext);
+  const [modalOpen, setModalOpen] = useState(false);
+
   // 반응 추가 함수
   function handleAddReaction(momentId: number, emoji: string) {
+    if (session.session === undefined) {
+      setModalOpen(true);
+      return;
+    }
+
     setMoments((prevMoments) => {
       const newMoments = [...prevMoments];
 
@@ -46,6 +57,11 @@ export default function MomentContainer({
 
   // 반응 제거 함수
   function handleRemoveReaction(momentId: number) {
+    if (session.session === undefined) {
+      setModalOpen(true);
+      return;
+    }
+
     setMoments((prevMoments) => {
       const newMoments = [...prevMoments];
 
@@ -75,6 +91,12 @@ export default function MomentContainer({
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
         />
       ))}
+
+      <SimpleModal
+        isOpen={modalOpen}
+        onRequestClose={() => setModalOpen(false)}
+        message="모멘트에 반응을 남기려면 로그인해야 합니다."
+      />
     </Wrapper>
   );
 }

@@ -39,4 +39,15 @@ declare module "common" {
     file: File;
     id: string;
   }
+
+  export interface Token {
+    token: string;
+    expiresAt: string;
+  }
+
+  export interface Session {
+    user: User;
+    accessToken: Token;
+    refreshToken: Token;
+  }
 }

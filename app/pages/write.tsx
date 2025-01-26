@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 
 import WriteBar from "~/components/WriteBar";
 import WriteBody from "~/components/WriteBody";
 import WriteFloatingBar from "~/components/WriteFloatingBar";
+import SessionContext from "~/contexts/session";
 
 import type { PhotoFile, MomentConfig, Topic } from "common";
 
@@ -17,13 +18,14 @@ const sampleTopics: Topic[] = [
 ];
 
 export default function Write() {
+  const session = useContext(SessionContext);
   const navigate = useNavigate();
 
   const [text, setText] = useState("");
   const [topics, setTopics] = useState<Topic[]>(sampleTopics);
   const [config, setConfig] = useState<MomentConfig>({
     expiresIn: 24,
-    anonymous: true,
+    anonymous: session.session === undefined,
   });
   const [photos, setPhotos] = useState<PhotoFile[]>([]);
 

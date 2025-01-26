@@ -7,8 +7,6 @@ import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 import Slide from "~/components/Slide";
 
-import EmojiList from "./EmojiList";
-
 const Content = styled.div`
   width: 100%;
   padding: 0 20px;
@@ -18,22 +16,24 @@ const Content = styled.div`
   gap: 10px;
 `;
 
+const StyledDiv = styled.div`
+  padding-bottom: 20px;
+`;
+
 const StyledButton = styled(Button)`
   width: 100%;
 `;
 
-interface EmojiPickerModalProps extends Omit<ReactModal.Props, "style"> {
-  onSelect: (emoji: string) => void;
-  myEmoji?: string;
+interface SimpleModal extends Omit<ReactModal.Props, "style"> {
+  message: string;
 }
 
-export default function EmojiPickerModal({
-  onSelect,
-  myEmoji,
+export default function SimpleModal({
+  message,
   onRequestClose,
   isOpen,
   ...props
-}: EmojiPickerModalProps) {
+}: SimpleModal) {
   const theme = useContext(ThemeContext);
 
   return (
@@ -49,7 +49,11 @@ export default function EmojiPickerModal({
           delay={50}
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
-          <EmojiList onSelect={onSelect} myEmoji={myEmoji} />
+          <StyledDiv>
+            <Typography size="18px" color={theme?.grey1}>
+              {message}
+            </Typography>
+          </StyledDiv>
         </Slide>
 
         {/* 하단 버튼 */}
