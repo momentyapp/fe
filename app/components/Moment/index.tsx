@@ -1,10 +1,13 @@
 import { styled } from "styled-components";
 
+import MomentModal from "~/components/MomentModal";
+
 import Content from "./Content";
 import Top from "./Top";
 import Bottom from "./Bottom";
 
 import type { Moment } from "common";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,14 +33,28 @@ export default function Moment({
   onAddReaction,
   onRemoveReaction,
 }: MomentProps) {
+  const [modalOepn, setModalOpen] = useState(false);
+
+  function handleReport() {}
+
+  function handleDelete() {}
+
   return (
     <Wrapper>
-      <Top moment={moment} />
+      <Top moment={moment} onDetail={() => setModalOpen(true)} />
       <Content moment={moment} />
       <Bottom
         moment={moment}
         onAddReaction={onAddReaction}
         onRemoveReaction={onRemoveReaction}
+      />
+
+      <MomentModal
+        moment={moment}
+        isOpen={modalOepn}
+        onRequestClose={() => setModalOpen(false)}
+        onReport={handleReport}
+        onDelete={handleDelete}
       />
     </Wrapper>
   );

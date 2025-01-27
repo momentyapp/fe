@@ -10,10 +10,6 @@ import getRelativeTime from "~/utils/getRelativeTime";
 
 import type { Moment } from "common";
 
-interface TopProps {
-  moment: Moment;
-}
-
 const Wrapper = styled.div`
   display: flex;
   padding: 0px 15px;
@@ -58,7 +54,12 @@ const StyledPressable = styled(Pressable)`
   border-radius: 50%;
 `;
 
-export default function Top({ moment }: TopProps) {
+interface TopProps {
+  moment: Moment;
+  onDetail: () => void;
+}
+
+export default function Top({ moment, onDetail }: TopProps) {
   const theme = useContext(ThemeContext);
 
   const [relativeTime, setRelativeTime] = useState(
@@ -93,7 +94,7 @@ export default function Top({ moment }: TopProps) {
       </Left>
 
       <Right>
-        <StyledPressable backgroundColor={theme?.bg2}>
+        <StyledPressable onClick={onDetail} backgroundColor={theme?.bg2}>
           <MdMoreVert size="24" color={theme?.grey1} />
         </StyledPressable>
       </Right>
