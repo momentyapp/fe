@@ -6,6 +6,7 @@ import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 import SessionContext from "~/contexts/session";
 import SimpleModal from "~/components/SimpleModal";
+import Switch from "~/components/Switch";
 
 import type { MomentConfig } from "common";
 
@@ -51,24 +52,28 @@ export default function Config({ config, setConfig, onPost }: ConfigProps) {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  function switchAnonymous() {
+  function setAnonymous(anonymous: boolean) {
     if (session.session === undefined) {
       setModalOpen(true);
       return;
     }
-    setConfig((prev) => ({ ...prev, anonymous: !prev.anonymous }));
+    setConfig((prev) => ({ ...prev, anonymous }));
   }
 
   return (
     <Wrapper>
       <div>
-        <ConfigContainer onClick={switchAnonymous}>
+        <ConfigContainer>
           <ConfigLabel>
             <MdVisibility size="20" color={theme?.grey1} />
             <Typography color={theme?.grey1} size="16px">
               모멘트를 익명으로 게시
             </Typography>
           </ConfigLabel>
+          <Switch
+            value={config.anonymous}
+            onChange={(value) => setAnonymous(value)}
+          />
         </ConfigContainer>
         <ConfigContainer>
           <ConfigLabel>
