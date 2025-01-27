@@ -13,8 +13,28 @@ interface SessionActions {
 
 type Session = SessionValues & SessionActions;
 
+// const defaultValue: Session = {
+//   session: undefined,
+//
+//   setSession: () => {},
+// };
+
 const defaultValue: Session = {
-  session: undefined,
+  session: {
+    user: {
+      id: 1,
+      username: "user",
+      createdAt: "2021-10-01T00:00:00Z",
+    },
+    accessToken: {
+      token: "access-token",
+      expiresAt: "2021-10-01T00:00:00Z",
+    },
+    refreshToken: {
+      token: "refresh-token",
+      expiresAt: "2021-10-01T00:00:00Z",
+    },
+  },
 
   setSession: () => {},
 };
