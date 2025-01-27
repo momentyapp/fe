@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import AppBar from "~/components/AppBar";
 import TopicFilter from "~/components/TopicFilter";
@@ -73,6 +73,8 @@ const sampleMoments: MomentType[] = [
 
 export default function Feed() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const theme = useContext(ThemeContext);
 
   const [topics, setTopics] = useState<Topic[]>(sampleTopics);
@@ -81,6 +83,17 @@ export default function Feed() {
   function handleWrite() {
     navigate("/write");
   }
+
+  const postedMoment = location.state?.postedMoment as MomentType | undefined;
+
+  useEffect(() => {
+    if (postedMoment === undefined) return;
+    setMoments((moments) => {
+      if (moments.some((moment) => moment.id === postedMoment.id))
+        return moments;
+      return [postedMoment, ...moments];
+    });
+  }, [moments, postedMoment]);
 
   return (
     <>
@@ -91,7 +104,11 @@ export default function Feed() {
       <TopicFilter topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
-      <MomentContainer moments={moments} setMoments={setMoments} />
+      <MomentContainer
+        moments={moments}
+        setMoments={setMoments}
+        my={postedMoment?.id}
+      />
 
       {/* 글 쓰기 버튼 */}
       <FloatingButton backgroundColor={theme?.primary3} onClick={handleWrite}>

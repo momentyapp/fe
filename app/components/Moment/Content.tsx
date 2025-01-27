@@ -48,6 +48,7 @@ const TopicContainer = styled.div`
 `;
 
 const Topic = styled.div`
+  flex-shrink: 0;
   display: flex;
   height: 36px;
   padding: 0px 10px;
@@ -72,7 +73,7 @@ export default function Content({ moment }: ContentProps) {
       </StyledTypography>
 
       {/* 사진 */}
-      {moment.body.photos && (
+      {moment.body.photos && moment.body.photos.length > 0 && (
         <PhotoContainer>
           {moment.body.photos.map((photo, index) => (
             <StyledImg key={index} src={photo} />

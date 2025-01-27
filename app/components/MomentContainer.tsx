@@ -17,11 +17,13 @@ const Wrapper = styled.div`
 interface MomentContainerProps {
   moments: MomentType[];
   setMoments: React.Dispatch<React.SetStateAction<MomentType[]>>;
+  my?: number;
 }
 
 export default function MomentContainer({
   moments,
   setMoments,
+  my,
 }: MomentContainerProps) {
   const session = useContext(SessionContext);
   const [modalOpen, setModalOpen] = useState(false);
@@ -89,6 +91,7 @@ export default function MomentContainer({
           moment={moment}
           onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
+          my={moment.id === my}
         />
       ))}
 

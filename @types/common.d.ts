@@ -24,7 +24,7 @@ declare module "common" {
   }
 
   export interface MomentConfig {
-    expiresIn: number;
+    expiresIn?: number;
     anonymous: boolean;
   }
 

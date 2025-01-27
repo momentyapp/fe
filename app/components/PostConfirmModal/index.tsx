@@ -45,6 +45,7 @@ interface PostConfirmModalProps extends Omit<ReactModal.Props, "style"> {
   expiresIn?: number;
   anonymous: boolean;
   onPost: () => void;
+  loading?: boolean;
 }
 
 export default function PostConfirmModal({
@@ -52,15 +53,21 @@ export default function PostConfirmModal({
   anonymous,
   onRequestClose,
   onPost,
+  loading = false,
   isOpen,
   ...props
 }: PostConfirmModalProps) {
   const theme = useContext(ThemeContext);
 
+  function handleRequestClose(event: React.MouseEvent | React.KeyboardEvent) {
+    if (loading) return;
+    onRequestClose?.(event);
+  }
+
   return (
     <ReactModal
       closeTimeoutMS={200}
-      onRequestClose={onRequestClose}
+      onRequestClose={handleRequestClose}
       isOpen={isOpen}
       {...props}
     >
@@ -93,7 +100,9 @@ export default function PostConfirmModal({
             />
             <Info
               icon={<MdWarningAmber size="24" color={theme?.grey1} />}
-              text="게시 후 수정 및 삭제 불가능"
+              text={
+                anonymous ? "게시 후 수정 및 삭제 불가능" : "게시 후 삭제 가능"
+              }
             />
             <Info
               icon={<MdVisibility size="24" color={theme?.grey1} />}
@@ -109,18 +118,31 @@ export default function PostConfirmModal({
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <Actions>
-            <Action backgroundColor={theme?.bg3} onClick={onRequestClose}>
-              <Typography color={theme?.grey1} size="18px">
+            <Action
+              backgroundColor={loading ? theme?.grey3 : theme?.bg3}
+              onClick={handleRequestClose}
+              disabled={loading}
+            >
+              <Typography
+                color={loading ? theme?.grey1 : theme?.grey1}
+                size="18px"
+              >
                 취소
               </Typography>
             </Action>
             <Action
-              backgroundColor={theme?.primary3}
+              backgroundColor={loading ? theme?.grey3 : theme?.primary3}
               onClick={onPost}
-              icon={<MdSend size="24" color={theme?.bg1} />}
+              icon={
+                <MdSend size="24" color={loading ? theme?.grey1 : theme?.bg1} />
+              }
+              disabled={loading}
             >
-              <Typography color={theme?.bg1} size="18px">
-                게시하기
+              <Typography
+                color={loading ? theme?.grey1 : theme?.bg1}
+                size="18px"
+              >
+                {loading ? "게시 중..." : "게시하기"}
               </Typography>
             </Action>
           </Actions>
