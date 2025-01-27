@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router";
 import { styled, ThemeContext } from "styled-components";
 
 import { MdAccountCircle, MdMenu } from "react-icons/md";
@@ -6,8 +7,9 @@ import { MdAccountCircle, MdMenu } from "react-icons/md";
 import Pressable from "~/components/Pressable";
 import SessionContext from "~/contexts/session";
 import Logo from "~/assets/svg/logo.svg?react";
+import logout from "~/utils/logout";
+
 import ProfileModal from "./ProfileModal";
-import { useNavigate } from "react-router";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -50,8 +52,7 @@ export default function AppBar() {
   const photo = user?.photo;
 
   function handleLogout() {
-    session.setSession(undefined);
-    navigate(0);
+    logout();
   }
 
   function handleDelete() {

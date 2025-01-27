@@ -13,28 +13,8 @@ interface SessionActions {
 
 type Session = SessionValues & SessionActions;
 
-// const defaultValue: Session = {
-//   session: undefined,
-//
-//   setSession: () => {},
-// };
-
 const defaultValue: Session = {
-  session: {
-    user: {
-      id: 1,
-      username: "user",
-      createdAt: "2021-10-01T00:00:00Z",
-    },
-    accessToken: {
-      token: "access-token",
-      expiresAt: "2021-10-01T00:00:00Z",
-    },
-    refreshToken: {
-      token: "refresh-token",
-      expiresAt: "2021-10-01T00:00:00Z",
-    },
-  },
+  session: undefined,
 
   setSession: () => {},
 };
@@ -44,31 +24,34 @@ const SessionContext = createContext<Session>(defaultValue);
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<SessionValues>(defaultValue);
 
-  // cookie에서 session을 가져옴
+  // cookie에서 refresh token을 가져옴
   useEffect(() => {
     const cookies = new Cookies();
     try {
-      const session = JSON.parse(cookies.get("session"));
+      const refreshToken = cookies.get("refresh_token");
 
-      function isSession(session: any): session is SessionType {
-        return session?.user && session?.accessToken && session?.refreshToken;
-      }
-
-      if (isSession(session)) {
-        setSession({ session });
+      // TODO: 서버에서 refresh token을 검증하고, access token을 발급받아야 함
+      if (typeof refreshToken === "string") {
+        setSession({
+          session: {
+            user: {
+              id: 1,
+              username: "user",
+              createdAt: "2021-10-01T00:00:00Z",
+            },
+            accessToken: {
+              token: "access-token",
+              expiresAt: "2021-10-01T00:00:00Z",
+            },
+            refreshToken: {
+              token: refreshToken,
+              expiresAt: "2021-10-01T00:00:00Z",
+            },
+          },
+        });
       }
     } catch (e) {}
   }, []);
-
-  // session이 변경되면 cookie에 저장
-  useEffect(() => {
-    if (session.session === undefined) return;
-
-    const cookies = new Cookies();
-    cookies.set("session", JSON.stringify(session.session), {
-      expires: new Date(session.session?.accessToken.expiresAt),
-    });
-  }, [session]);
 
   return (
     <SessionContext.Provider
