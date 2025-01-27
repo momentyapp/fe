@@ -1,59 +1,59 @@
 import { createRef, useContext, useEffect, useState, type Ref } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { MdClose } from "react-icons/md";
 
-import Pressable, { type PressableProps } from "~/components/Pressable";
+import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 
 import type { TransitionStatus } from "react-transition-group";
 
-const StyledPressable = styled(Pressable)<{
+const Wrapper = styled.div<{
   $in: boolean;
   $width: number;
 }>`
-  display: flex;
-  height: 36px;
-  justify-content: center;
-  padding: 0;
-  align-items: center;
-  border-radius: 10px;
   margin-right: ${(props) => (props.$in ? 10 : 0)}px;
-  width: ${(props) => (props.$in ? props.$width + 30 : 0)}px;
+  width: ${(props) => (props.$in ? props.$width + 20 : 0)}px;
   opacity: ${(props) => (props.$in ? 1 : 0)};
   transition: margin-right 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
     width 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1), background 0.2s, filter 0.2s,
-    transform 0.1s ease-in-out;
+    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
   overflow: hidden;
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 10px;
 `;
 
-const Content = styled.div`
-  display: flex;
+const StyledButton = styled(Button)`
+  height: 36px;
+  padding: 0px 10px;
+  justify-content: center;
   align-items: center;
-  height: 100%;
+  gap: 5px;
   flex-shrink: 0;
+  border-radius: 10px;
 `;
 
 const StyledTypography = styled(Typography)`
-  transition: color 0.2s;
+  word-break: break-all;
+  white-space: nowrap;
 `;
 
-interface SwitchableTopicProps extends PressableProps {
+interface TopicProps {
   topic: string;
-  enabled?: boolean;
+  onClick: () => void;
   transitionStatus?: TransitionStatus;
-  ref: Ref<HTMLButtonElement>;
+  ref: Ref<HTMLDivElement>;
 }
 
-export default function SwitchableTopic({
+export default function Topic({
   topic,
-  enabled = false,
+  onClick,
   ref,
   transitionStatus = "entered",
-  ...props
-}: SwitchableTopicProps) {
+}: TopicProps) {
   const theme = useContext(ThemeContext);
+  const contentRef = createRef<HTMLButtonElement>();
   const [width, setWidth] = useState(0);
-  const contentRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
     if (contentRef.current === null) return;
@@ -67,24 +67,25 @@ export default function SwitchableTopic({
   }, [contentRef]);
 
   return (
-    <StyledPressable
-      backgroundColor={enabled ? theme?.primary3 : theme?.bg2}
+    <Wrapper
       ref={ref}
       $in={
         width > 0 &&
         (transitionStatus === "entered" || transitionStatus === "entering")
       }
       $width={width}
-      {...props}
     >
-      <Content ref={contentRef}>
-        <StyledTypography
-          color={enabled ? theme?.bg1 : theme?.grey1}
-          size="16px"
-        >
+      <StyledButton
+        backgroundColor={theme?.bg3}
+        icon={<MdClose size="20" color={theme?.grey1} />}
+        iconPosition="right"
+        onClick={onClick}
+        ref={contentRef}
+      >
+        <StyledTypography color={theme?.grey1} size="16px">
           {topic}
         </StyledTypography>
-      </Content>
-    </StyledPressable>
+      </StyledButton>
+    </Wrapper>
   );
 }

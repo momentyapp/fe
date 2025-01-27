@@ -1,22 +1,19 @@
-import { useState, useContext } from "react";
+import { useState, useContext, type Ref, createRef, useEffect } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdClose, MdAdd } from "react-icons/md";
+import { Transition, TransitionGroup } from "react-transition-group";
 
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
+import TopicModal from "~/components/TopicModal";
 
-import type { Topic } from "common";
-import TopicModal from "../TopicModal";
+import Topic from "./Topic";
 
-interface TopicsProps {
-  topics: Topic[];
-  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
-}
+import type { Topic as TopicType } from "common";
 
-const Wrapper = styled.div`
+const Wrapper = styled(TransitionGroup)`
   display: flex;
   flex-direction: row;
-  gap: 10px;
   padding: 0 10px;
   width: 100%;
   overflow-x: auto;
@@ -31,13 +28,35 @@ const StyledButton = styled(Button)`
   gap: 5px;
   border-radius: 10px;
   flex-shrink: 0;
+  margin-right: 10px;
 `;
+
+interface TopicWithRef extends TopicType {
+  ref: Ref<HTMLDivElement>;
+}
+
+interface TopicsProps {
+  topics: TopicType[];
+  setTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
+}
 
 export default function Topics({ topics, setTopics }: TopicsProps) {
   const theme = useContext(ThemeContext);
-  const [modalOpen, setModalOpen] = useState(false);
 
-  function handleClick(topic: Topic) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [topicsWithRefs, setTopicsWithRefs] = useState<TopicWithRef[]>([]);
+
+  // topics 변경 감지
+  useEffect(() => {
+    setTopicsWithRefs(
+      topics.map((topic) => ({
+        ...topic,
+        ref: createRef<HTMLDivElement>(),
+      }))
+    );
+  }, [topics]);
+
+  function handleClick(topic: TopicType) {
     setTopics((prevTopics) => prevTopics.filter((t) => t.id !== topic.id));
   }
 
@@ -53,18 +72,19 @@ export default function Topics({ topics, setTopics }: TopicsProps) {
           직접 추가
         </Typography>
       </StyledButton>
-      {topics.map((topic) => (
-        <StyledButton
-          backgroundColor={theme?.bg3}
-          key={topic.id}
-          icon={<MdClose size="20" color={theme?.grey1} />}
-          iconPosition="right"
-          onClick={() => handleClick(topic)}
-        >
-          <Typography color={theme?.grey1} size="16px">
-            {topic.topic}
-          </Typography>
-        </StyledButton>
+
+      {topicsWithRefs.map((topic, index) => (
+        <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
+          {(state) => (
+            <Topic
+              ref={topic.ref}
+              topic={topic.topic}
+              onClick={() => handleClick(topic)}
+              transitionStatus={state}
+              key={topic.id}
+            />
+          )}
+        </Transition>
       ))}
 
       <TopicModal

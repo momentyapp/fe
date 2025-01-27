@@ -7,7 +7,6 @@ import { MdTune } from "react-icons/md";
 import SwitchableTopic from "~/components/SwitchableTopic";
 import Pressable from "~/components/Pressable";
 import TopicModal from "~/components/TopicModal";
-import Slide from "~/components/Slide";
 
 import type { Topic } from "common";
 
@@ -15,7 +14,6 @@ const TopicContainer = styled(TransitionGroup)`
   display: flex;
   padding: 10px;
   align-items: center;
-  gap: 10px;
   box-sizing: border-box;
   overflow-x: scroll;
   position: sticky;
@@ -34,7 +32,12 @@ const AddTopic = styled(Pressable)`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  margin-right: 10px;
 `;
+
+interface TopicWithRef extends Topic {
+  ref: Ref<HTMLButtonElement>;
+}
 
 interface TopicFilterProps {
   topics: Topic[];
@@ -44,12 +47,16 @@ interface TopicFilterProps {
 export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
   const theme = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
-  const [refs, setRefs] = useState<Ref<HTMLButtonElement>[]>([]);
+  const [topicsWithRefs, setTopicsWithRefs] = useState<TopicWithRef[]>([]);
 
+  // topics 변경 감지
   useEffect(() => {
-    setRefs((prevRefs) => {
-      return topics.map((_, index) => prevRefs[index] ?? createRef());
-    });
+    setTopicsWithRefs(
+      topics.map((topic) => ({
+        ...topic,
+        ref: createRef<HTMLButtonElement>(),
+      }))
+    );
   }, [topics]);
 
   // 주제 활성화를 전환하는 함수
@@ -81,23 +88,17 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
           <MdTune size="20" color={theme?.grey1} />
         </AddTopic>
 
-        {topics.map((topic, index) => (
-          <Transition key={topic.id} timeout={200} nodeRef={refs[index]}>
+        {topicsWithRefs.map((topic, index) => (
+          <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
             {(state) => (
-              <Slide
-                direction="right"
-                duration={200}
-                distance="10px"
-                visible={state === "entered" || state === "entering"}
-              >
-                <SwitchableTopic
-                  ref={refs[index]}
-                  topic={topic.topic}
-                  enabled={topic.enabled}
-                  onPress={() => switchTopic(topic.id)}
-                  key={topic.id}
-                />
-              </Slide>
+              <SwitchableTopic
+                ref={topic.ref}
+                topic={topic.topic}
+                enabled={topic.enabled}
+                onClick={() => switchTopic(topic.id)}
+                transitionStatus={state}
+                key={topic.id}
+              />
             )}
           </Transition>
         ))}

@@ -25,9 +25,6 @@ const sampleTopics: Topic[] = [
   { topic: "매일우유", id: 0, enabled: false },
   { topic: "국회의사당역", id: 1, enabled: false },
   { topic: "탄핵", id: 2, enabled: false },
-  { topic: "시위", id: 3, enabled: false },
-  { topic: "코로나19", id: 4, enabled: false },
-  { topic: "백신", id: 5, enabled: false },
 ];
 
 const sampleMoments: MomentType[] = [
