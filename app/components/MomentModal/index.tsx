@@ -49,7 +49,7 @@ const Action = styled(Button)`
 `;
 
 interface MomentModalProps extends Omit<ReactModal.Props, "style"> {
-  moment: Moment;
+  moment?: Moment;
   onReport: () => void;
   onDelete: () => void;
 }
@@ -80,7 +80,7 @@ export default function MomentModal({
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <Typography color={theme?.grey1} size="24px" weight="700">
-            {moment.author?.username ?? "익명"}의 모멘트
+            {moment?.author?.username ?? "익명"}의 모멘트
           </Typography>
         </Slide>
 
@@ -93,9 +93,11 @@ export default function MomentModal({
           <Infos>
             <Info
               icon={<MdCalendarMonth size="24" color={theme?.grey2} />}
-              text={`${new Date(moment.createdAt).toLocaleString()}에 작성`}
+              text={`${new Date(
+                moment?.createdAt ?? 0
+              ).toLocaleString()}에 작성`}
             />
-            {moment.expiresAt !== undefined && (
+            {moment?.expiresAt !== undefined && (
               <Info
                 icon={<MdAutoDelete size="24" color={theme?.grey2} />}
                 text={`${new Date(
@@ -123,7 +125,7 @@ export default function MomentModal({
               </Typography>
             </Action>
             {session.session !== undefined &&
-              session.session.user?.id === moment.author?.id && (
+              session.session.user?.id === moment?.author?.id && (
                 <Action
                   backgroundColor={theme?.bg2}
                   onClick={onDelete}

@@ -1,7 +1,5 @@
 import { styled } from "styled-components";
 
-import MomentModal from "~/components/MomentModal";
-
 import My from "./My";
 import Trending from "./Trending";
 import Content from "./Content";
@@ -9,7 +7,6 @@ import Top from "./Top";
 import Bottom from "./Bottom";
 
 import type { Moment } from "common";
-import { useState } from "react";
 
 const Wrapper = styled.div<{ $highlight?: boolean }>`
   display: flex;
@@ -30,6 +27,7 @@ interface MomentProps {
   my?: boolean;
   trending?: boolean;
   highlight?: boolean;
+  onDetail: (moment: Moment) => void;
   onAddReaction?: (emoji: string) => void;
   onRemoveReaction?: () => void;
 }
@@ -39,34 +37,21 @@ export default function Moment({
   my,
   trending,
   highlight = false,
+  onDetail,
   onAddReaction,
   onRemoveReaction,
 }: MomentProps) {
-  const [modalOepn, setModalOpen] = useState(false);
-
-  function handleReport() {}
-
-  function handleDelete() {}
-
   return (
     <Wrapper $highlight={highlight}>
       {my && <My />}
       {trending && <Trending />}
 
-      <Top moment={moment} onDetail={() => setModalOpen(true)} />
+      <Top moment={moment} onDetail={() => onDetail(moment)} />
       <Content moment={moment} />
       <Bottom
         moment={moment}
         onAddReaction={onAddReaction}
         onRemoveReaction={onRemoveReaction}
-      />
-
-      <MomentModal
-        moment={moment}
-        isOpen={modalOepn}
-        onRequestClose={() => setModalOpen(false)}
-        onReport={handleReport}
-        onDelete={handleDelete}
       />
     </Wrapper>
   );

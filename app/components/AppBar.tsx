@@ -5,11 +5,12 @@ import { styled, ThemeContext } from "styled-components";
 import { MdAccountCircle, MdMenu } from "react-icons/md";
 
 import Pressable from "~/components/Pressable";
+import ProfileModal from "~/components/ProfileModal";
+import NeedLoginModal from "~/components/NeedLoginModal";
+
 import SessionContext from "~/contexts/session";
 import Logo from "~/assets/svg/logo.svg?react";
 import logout from "~/utils/logout";
-
-import ProfileModal from "./ProfileModal";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -89,12 +90,18 @@ export default function AppBar() {
         </StyledPressable>
       </FullWidthDiv>
 
-      {/* 프로필 모달 */}
-      {user && (
+      {/* 모달 */}
+      {user ? (
         <ProfileModal
           user={user}
           onLogout={handleLogout}
           onDelete={handleDelete}
+          isOpen={modalOpen}
+          onRequestClose={() => setModalOpen(false)}
+        />
+      ) : (
+        <NeedLoginModal
+          message="프로필을 확인하려면 로그인하세요."
           isOpen={modalOpen}
           onRequestClose={() => setModalOpen(false)}
         />

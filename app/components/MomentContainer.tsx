@@ -2,10 +2,11 @@ import { useState, useContext } from "react";
 import { styled } from "styled-components";
 
 import Moment from "~/components/Moment";
+import NeedLoginModal from "~/components/NeedLoginModal";
+import MomentModal from "~/components/MomentModal";
 import SessionContext from "~/contexts/session";
 
 import type { Moment as MomentType } from "common";
-import SimpleModal from "./SimpleModal";
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,12 +27,13 @@ export default function MomentContainer({
   my,
 }: MomentContainerProps) {
   const session = useContext(SessionContext);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [warningModalOpen, setWarningModalOpen] = useState(false);
+  const [detailMoment, setDetailMoment] = useState<MomentType | null>(null);
 
   // 반응 추가 함수
   function handleAddReaction(momentId: number, emoji: string) {
     if (session.session === undefined) {
-      setModalOpen(true);
+      setWarningModalOpen(true);
       return;
     }
 
@@ -60,7 +62,7 @@ export default function MomentContainer({
   // 반응 제거 함수
   function handleRemoveReaction(momentId: number) {
     if (session.session === undefined) {
-      setModalOpen(true);
+      setWarningModalOpen(true);
       return;
     }
 
@@ -89,16 +91,25 @@ export default function MomentContainer({
         <Moment
           key={moment.id}
           moment={moment}
+          onDetail={setDetailMoment}
           onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
           my={moment.id === my}
         />
       ))}
 
-      <SimpleModal
-        isOpen={modalOpen}
-        onRequestClose={() => setModalOpen(false)}
+      <NeedLoginModal
+        isOpen={warningModalOpen}
+        onRequestClose={() => setWarningModalOpen(false)}
         message="모멘트에 반응을 남기려면 로그인해야 합니다."
+      />
+
+      <MomentModal
+        moment={detailMoment ?? undefined}
+        isOpen={detailMoment !== null}
+        onRequestClose={() => setDetailMoment(null)}
+        onReport={() => {}}
+        onDelete={() => {}}
       />
     </Wrapper>
   );

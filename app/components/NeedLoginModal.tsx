@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import ReactModal from "react-modal";
+import { useNavigate } from "react-router";
 import { styled, ThemeContext } from "styled-components";
-import { MdClose } from "react-icons/md";
+import {  MdLogin } from "react-icons/md";
 
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
@@ -20,21 +21,33 @@ const StyledDiv = styled.div`
   padding-bottom: 20px;
 `;
 
-const StyledButton = styled(Button)`
+const Actions = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  gap: 5px;
+`;
+
+const Action = styled(Button)`
   width: 100%;
 `;
 
-interface SimpleModalProps extends Omit<ReactModal.Props, "style"> {
+interface NeedLoginModalProps extends Omit<ReactModal.Props, "style"> {
   message: string;
 }
 
-export default function SimpleModal({
+export default function NeedLoginModal({
   message,
   onRequestClose,
   isOpen,
   ...props
-}: SimpleModalProps) {
+}: NeedLoginModalProps) {
+  const navigate = useNavigate();
   const theme = useContext(ThemeContext);
+
+  function handleLogin() {
+    navigate("/login");
+  }
 
   return (
     <ReactModal
@@ -62,15 +75,22 @@ export default function SimpleModal({
           delay={100}
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
-          <StyledButton
-            backgroundColor={theme?.primary3}
-            icon={<MdClose size="24" color={theme?.bg1} />}
-            onClick={onRequestClose}
-          >
-            <Typography color={theme?.bg1} size="18px">
-              닫기
-            </Typography>
-          </StyledButton>
+          <Actions>
+            <Action backgroundColor={theme?.bg3} onClick={onRequestClose}>
+              <Typography color={theme?.grey1} size="18px">
+                닫기
+              </Typography>
+            </Action>
+            <Action
+              backgroundColor={theme?.primary3}
+              onClick={handleLogin}
+              icon={<MdLogin size="24" color={theme?.bg1} />}
+            >
+              <Typography color={theme?.bg1} size="18px">
+                로그인
+              </Typography>
+            </Action>
+          </Actions>
         </Slide>
       </Content>
     </ReactModal>

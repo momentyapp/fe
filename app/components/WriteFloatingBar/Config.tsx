@@ -5,7 +5,7 @@ import { MdVisibility, MdAutoDelete, MdSend } from "react-icons/md";
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 import SessionContext from "~/contexts/session";
-import SimpleModal from "~/components/SimpleModal";
+import NeedLoginModal from "~/components/NeedLoginModal";
 import Switch from "~/components/Switch";
 import Pressable from "~/components/Pressable";
 
@@ -118,7 +118,7 @@ export default function Config({ config, setConfig, onPost }: ConfigProps) {
       </StyledButton>
 
       {/* 익명 게시글 경고 모달 */}
-      <SimpleModal
+      <NeedLoginModal
         isOpen={anonymousModalOpen}
         onRequestClose={() => setAnonymousModalOpen(false)}
         message="로그인되어 있지 않으면 모멘트를 익명으로만 게시할 수 있습니다."
