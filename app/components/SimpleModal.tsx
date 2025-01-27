@@ -24,7 +24,7 @@ const StyledButton = styled(Button)`
   width: 100%;
 `;
 
-interface SimpleModal extends Omit<ReactModal.Props, "style"> {
+interface SimpleModalProps extends Omit<ReactModal.Props, "style"> {
   message: string;
 }
 
@@ -33,7 +33,7 @@ export default function SimpleModal({
   onRequestClose,
   isOpen,
   ...props
-}: SimpleModal) {
+}: SimpleModalProps) {
   const theme = useContext(ThemeContext);
 
   return (

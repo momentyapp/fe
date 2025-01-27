@@ -22,6 +22,7 @@ export default function SearchInput({ value, onChange }: SearchInputProps) {
 
   return (
     <StyledTextInput
+      placeholder="검색어를 입력하세요."
       value={value}
       onChange={(e) => onChange(e.target.value)}
       icon={(focus) => (

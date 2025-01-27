@@ -70,7 +70,6 @@ export default function TextInput({
         onFocus={handleFocus}
         onBlur={handleBlur}
         type="text"
-        placeholder="검색어를 입력하세요."
       />
       {iconPosition === "right" && iconNode}
     </Wrapper>

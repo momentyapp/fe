@@ -7,6 +7,9 @@ import Typography from "~/components/Typography";
 import SessionContext from "~/contexts/session";
 import SimpleModal from "~/components/SimpleModal";
 import Switch from "~/components/Switch";
+import Pressable from "~/components/Pressable";
+
+import ExpireModal from "./ExpireModal";
 
 import type { MomentConfig } from "common";
 
@@ -46,18 +49,28 @@ const StyledButton = styled(Button)`
   border-radius: 15px;
 `;
 
+const ExpireButton = styled(Pressable)`
+  padding: 10px;
+  border-radius: 10px;
+`;
+
 export default function Config({ config, setConfig, onPost }: ConfigProps) {
   const theme = useContext(ThemeContext);
   const session = useContext(SessionContext);
 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
+  const [expireModalOpen, setExpireModalOpen] = useState(false);
 
   function setAnonymous(anonymous: boolean) {
     if (session.session === undefined) {
-      setModalOpen(true);
+      setAnonymousModalOpen(true);
       return;
     }
     setConfig((prev) => ({ ...prev, anonymous }));
+  }
+
+  function setExpiresIn(expiresIn: number | undefined) {
+    setConfig((prev) => ({ ...prev, expiresIn }));
   }
 
   return (
@@ -82,6 +95,16 @@ export default function Config({ config, setConfig, onPost }: ConfigProps) {
               자동 삭제
             </Typography>
           </ConfigLabel>
+          <ExpireButton
+            onClick={() => setExpireModalOpen(true)}
+            backgroundColor={theme?.bg2}
+          >
+            <Typography color={theme?.grey1} size="14px">
+              {config.expiresIn === undefined
+                ? "영구 게시"
+                : `${config.expiresIn}시간`}
+            </Typography>
+          </ExpireButton>
         </ConfigContainer>
       </div>
       <StyledButton
@@ -94,10 +117,19 @@ export default function Config({ config, setConfig, onPost }: ConfigProps) {
         </Typography>
       </StyledButton>
 
+      {/* 익명 게시글 경고 모달 */}
       <SimpleModal
-        isOpen={modalOpen}
-        onRequestClose={() => setModalOpen(false)}
+        isOpen={anonymousModalOpen}
+        onRequestClose={() => setAnonymousModalOpen(false)}
         message="로그인되어 있지 않으면 모멘트를 익명으로만 게시할 수 있습니다."
+      />
+
+      {/* 자동 삭제 설정 모달 */}
+      <ExpireModal
+        value={config.expiresIn ?? 0}
+        isOpen={expireModalOpen}
+        onRequestClose={() => setExpireModalOpen(false)}
+        onSubmit={setExpiresIn}
       />
     </Wrapper>
   );
