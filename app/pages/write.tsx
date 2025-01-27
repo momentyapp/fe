@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import WriteBar from "~/components/WriteBar";
 import WriteBody from "~/components/WriteBody";
 import WriteFloatingBar from "~/components/WriteFloatingBar";
+import PostConfirmModal from "~/components/PostConfirmModal";
 import SessionContext from "~/contexts/session";
 
 import type { PhotoFile, MomentConfig, Topic } from "common";
@@ -22,6 +23,7 @@ export default function Write() {
   const navigate = useNavigate();
 
   const [text, setText] = useState("");
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [topics, setTopics] = useState<Topic[]>(sampleTopics);
   const [config, setConfig] = useState<MomentConfig>({
     expiresIn: 24,
@@ -30,8 +32,7 @@ export default function Write() {
   const [photos, setPhotos] = useState<PhotoFile[]>([]);
 
   function handlePost() {
-    // TODO: 구현
-    navigate(-1);
+    setConfirmModalOpen(true);
   }
 
   return (
@@ -54,6 +55,16 @@ export default function Write() {
         config={config}
         setConfig={setConfig}
         onPost={handlePost}
+      />
+
+      <PostConfirmModal
+        expiresIn={config.expiresIn}
+        anonymous={config.anonymous}
+        isOpen={confirmModalOpen}
+        onRequestClose={() => setConfirmModalOpen(false)}
+        onPost={() => {
+          navigate(-1);
+        }}
       />
     </>
   );
