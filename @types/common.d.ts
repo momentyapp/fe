@@ -1,4 +1,10 @@
 declare module "common" {
+  export type ApiResponse<T = undefined> = {
+    message: string;
+    code: string;
+    result?: T;
+  };
+
   export interface Topic {
     topic: string;
     id: number;
