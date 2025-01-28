@@ -26,6 +26,10 @@ export default async function postMoment(
     });
   }
 
-  const result = await axios.post<Response>("/moment", formData);
+  const result = await axios.post<Response>("/moment", formData, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
   return result;
 }
