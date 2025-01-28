@@ -12,6 +12,6 @@ type Response = ApiResponse<{
 }>;
 
 export default async function getTrendingTopics() {
-  const result = await axios.get<Response>("/topics/trend");
+  const result = await axios.get<Response>("/topic/trend");
   return result;
 }

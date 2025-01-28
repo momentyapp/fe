@@ -10,6 +10,6 @@ type Response = ApiResponse<{
 }>;
 
 export default async function createTopic({ topic }: Props) {
-  const result = await axios.post<Response>("/topics", { topic });
+  const result = await axios.post<Response>("/topic", { topic });
   return result;
 }
