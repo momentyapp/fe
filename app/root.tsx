@@ -26,6 +26,11 @@ export const links: Route.LinksFunction = () => [
     type: "text/css",
     href: "https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css",
   },
+  {
+    rel: "icon",
+    type: "image/png",
+    href: "/favicon.png",
+  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
