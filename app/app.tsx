@@ -5,6 +5,7 @@ import ReactModal from "react-modal";
 
 import PreferenceContext from "~/contexts/preference";
 import { SessionProvider } from "~/contexts/session";
+import { CacheProvider } from "~/contexts/cache";
 
 import palette from "~/styles/palette";
 import GlobalStyle from "~/styles/global";
@@ -41,8 +42,10 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <SessionProvider>
-        <GlobalStyle />
-        <Outlet />
+        <CacheProvider>
+          <GlobalStyle />
+          <Outlet />
+        </CacheProvider>
       </SessionProvider>
     </ThemeProvider>
   );

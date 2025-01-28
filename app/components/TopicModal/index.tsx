@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactModal from "react-modal";
 import { styled, ThemeContext } from "styled-components";
 import { MdCheck } from "react-icons/md";
@@ -6,6 +6,7 @@ import { MdCheck } from "react-icons/md";
 import Button from "~/components/Button";
 import Typography from "~/components/Typography";
 import Slide from "~/components/Slide";
+import CacheContext from "~/contexts/cache";
 
 import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";
@@ -25,15 +26,6 @@ const StyledButton = styled(Button)`
   width: 100%;
 `;
 
-const sampleTopics: Topic[] = [
-  { topic: "매일우유", id: 0, count: 232532, trending: true },
-  { topic: "국회의사당역", id: 1, count: 65342 },
-  { topic: "탄핵", id: 2, count: 30012 },
-  { topic: "양자컴퓨터", id: 6, count: 9232 },
-  { topic: "엔비디아", id: 7, count: 8923 },
-  { topic: "삼성", id: 8, count: 2342 },
-];
-
 interface TopicModalProps extends Omit<ReactModal.Props, "style"> {
   addedTopics: Topic[];
   setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
@@ -47,14 +39,15 @@ export default function TopicModal({
   ...props
 }: TopicModalProps) {
   const theme = useContext(ThemeContext);
+  const cache = useContext(CacheContext);
 
   const [searchValue, setSearchValue] = useState("");
-  const [topics, setTopics] = useState<Topic[]>(
-    sampleTopics.map((topic) => ({
-      ...topic,
-      enabled: addedTopics.some((addedTopic) => addedTopic.id === topic.id),
-    }))
-  );
+  const [topics, setTopics] = useState<Topic[]>([]);
+
+  function handleChangeSearchValue(value: string) {
+    const replaced = value.replaceAll(" ", "");
+    setSearchValue(replaced);
+  }
 
   return (
     <ReactModal
@@ -69,9 +62,9 @@ export default function TopicModal({
           delay={50}
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
-          <SearchInput value={searchValue} onChange={setSearchValue} />
+          <SearchInput value={searchValue} onChange={handleChangeSearchValue} />
           <SearchResults
-            topics={topics}
+            topics={searchValue === "" ? cache.trendingTopics : topics}
             addedTopics={addedTopics}
             setAddedTopics={setAddedTopics}
           />

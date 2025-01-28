@@ -7,8 +7,7 @@ import AppBar from "~/components/AppBar";
 import TopicFilter from "~/components/TopicFilter";
 import MomentContainer from "~/components/MomentContainer";
 import Pressable from "~/components/Pressable";
-
-import API from "~/apis";
+import CacheContext from "~/contexts/cache";
 
 import type { Moment as MomentType, Topic } from "common";
 
@@ -28,33 +27,19 @@ export default function Feed() {
   const location = useLocation();
 
   const theme = useContext(ThemeContext);
+  const cache = useContext(CacheContext);
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [moments, setMoments] = useState<MomentType[]>([]);
 
-  useEffect(() => {
-    (async () => {
-      const trendingTopics = await API.topic.getTrendingTopics();
-      const { code, message, result } = trendingTopics.data;
-
-      if (code === "success" && result !== undefined) {
-        setTopics(
-          result.topics.map((topic) => ({
-            id: topic.id,
-            topic: topic.name,
-            trending: topic.trending,
-            count: topic.usage,
-          }))
-        );
-      }
-    })();
-  }, []);
-
-  function handleWrite() {
-    navigate("/write");
-  }
-
   const postedMoment = location.state?.postedMoment as MomentType | undefined;
+
+  // 캐시에서 실시간 트렌드 주제 가져오기
+  useEffect(() => {
+    const trendingTopics = cache.trendingTopics;
+    if (trendingTopics.length === 0) return;
+    setTopics(trendingTopics);
+  }, [cache.trendingTopics]);
 
   useEffect(() => {
     if (postedMoment === undefined) return;
@@ -64,6 +49,10 @@ export default function Feed() {
       return [postedMoment, ...moments];
     });
   }, [moments, postedMoment]);
+
+  function handleWrite() {
+    navigate("/write");
+  }
 
   return (
     <>

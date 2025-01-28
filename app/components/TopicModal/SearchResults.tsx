@@ -40,10 +40,10 @@ export default function SearchResults({
 
   return (
     <Wrapper>
-      {topics.map((topic) => (
+      {topics.map((topic, index) => (
         <SearchResult
           key={topic.id}
-          topic={topic}
+          topic={{ ...topic, trending: index === 0 }}
           added={addedTopics.some((addedTopic) => addedTopic.id === topic.id)}
           onAdd={handleAdd}
           onRemove={handleRemove}
