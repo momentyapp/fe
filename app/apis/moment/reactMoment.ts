@@ -1,4 +1,4 @@
-import axios from "~/apis";
+import { axiosInstance as axios } from "~/apis";
 import type { ApiResponse } from "common";
 
 interface Props {

@@ -1,4 +1,4 @@
-import axios from "~/apis";
+import { axiosInstance as axios } from "~/apis";
 import type { ApiResponse } from "common";
 
 type Response = ApiResponse<{
@@ -11,7 +11,7 @@ type Response = ApiResponse<{
   }[];
 }>;
 
-export default async function createTopic() {
+export default async function getTrendingTopics() {
   const result = await axios.get<Response>("/topics/trend");
   return result;
 }
