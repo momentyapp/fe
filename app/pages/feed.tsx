@@ -42,20 +42,24 @@ export default function Feed() {
     setTopics(trendingTopics.map((topic) => ({ ...topic, enabled: false })));
   }, [cache.trendingTopics]);
 
-  // 글 작성 후 새로운 모멘트 추가
+  // 캐시에서 모멘트 가져오기
   useEffect(() => {
-    if (postedMoment === undefined) return;
-    setMoments((moments) => {
-      if (moments.some((moment) => moment.id === postedMoment.id))
-        return moments;
-      return [postedMoment, ...moments];
-    });
-  }, [moments, postedMoment]);
+    const cachedMoments = cache.moments;
+    const enabledTopicsIds = topics
+      .filter((topic) => topic.enabled)
+      .map((topic) => topic.id);
 
-  // 모멘트 처음 로드
-  useEffect(() => {
-    loadMoments(true);
-  }, []);
+    // 선택된 주제가 있으면 필터링
+    if (enabledTopicsIds.length > 0) {
+      setMoments(
+        cachedMoments.filter((moment) =>
+          moment.topics.some((topic) => enabledTopicsIds.includes(topic.id))
+        )
+      );
+    } else {
+      setMoments(cachedMoments);
+    }
+  }, [cache.moments, topics]);
 
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
@@ -91,6 +95,7 @@ export default function Feed() {
 
       {/* 모멘트 */}
       <MomentList
+        postedMoment={postedMoment}
         moments={moments}
         setMoments={setMoments}
         onLoadMore={loadMoments}
