@@ -78,7 +78,9 @@ export default function Top({ moment, onDetail }: TopProps) {
     <Wrapper>
       <Left>
         {moment.author?.photo ? (
-          <Photo src={moment.author.photo} />
+          <Photo
+            src={`https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/file/moment/${moment.author.photo}`}
+          />
         ) : (
           <MdAccountCircle size="36" color={theme?.grey1} />
         )}

@@ -76,7 +76,10 @@ export default function Content({ moment }: ContentProps) {
       {moment.body.photos && moment.body.photos.length > 0 && (
         <PhotoContainer>
           {moment.body.photos.map((photo, index) => (
-            <StyledImg key={index} src={photo} />
+            <StyledImg
+              key={index}
+              src={`https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/file/moment/${photo}`}
+            />
           ))}
         </PhotoContainer>
       )}

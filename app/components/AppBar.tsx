@@ -84,7 +84,9 @@ export default function AppBar() {
           onClick={() => setModalOpen(true)}
         >
           {photo ? (
-            <Photo src={photo} />
+            <Photo
+              src={`https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/file/profile/${photo}`}
+            />
           ) : (
             <MdAccountCircle size="36" color={theme?.grey1} />
           )}
