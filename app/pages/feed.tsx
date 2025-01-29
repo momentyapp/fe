@@ -10,6 +10,7 @@ import Pressable from "~/components/Pressable";
 import CacheContext from "~/contexts/cache";
 
 import type { Moment as MomentType, Topic } from "common";
+import API from "~/apis";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -51,8 +52,31 @@ export default function Feed() {
     });
   }, [moments, postedMoment]);
 
+  // 모멘트 처음 로드
+  useEffect(() => {
+    setMoments([]);
+    handleLoadMore();
+  }, [topics]);
+
+  // 글 쓰기 버튼 클릭 시
   function handleWrite() {
     navigate("/write");
+  }
+
+  // 모멘트 로드
+  async function handleLoadMore() {
+    let before: number | undefined = undefined;
+    if (moments.length > 0) before = moments[moments.length - 1].id;
+
+    const newMoments = await API.moment.getMoments({
+      before,
+      topicIds: topics.map((topic) => topic.id),
+    });
+    const { code, message, result } = newMoments.data;
+
+    if (code === "success" && result !== undefined) {
+      setMoments((prev) => [...prev, ...result.moments]);
+    }
   }
 
   return (
@@ -67,6 +91,7 @@ export default function Feed() {
       <MomentList
         moments={moments}
         setMoments={setMoments}
+        onLoadMore={handleLoadMore}
         my={postedMoment?.id}
       />
 

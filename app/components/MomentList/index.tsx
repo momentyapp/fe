@@ -19,12 +19,14 @@ const Wrapper = styled.div`
 interface MomentListProps {
   moments: MomentType[];
   setMoments: React.Dispatch<React.SetStateAction<MomentType[]>>;
+  onLoadMore: () => Promise<void>;
   my?: number;
 }
 
 export default function MomentList({
   moments,
   setMoments,
+  onLoadMore,
   my,
 }: MomentListProps) {
   const session = useContext(SessionContext);
@@ -71,8 +73,18 @@ export default function MomentList({
     setEmojiModalMoment(null);
   }
 
+  // 스크롤 이벤트 핸들러
+  async function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+    if (
+      event.currentTarget.scrollHeight - event.currentTarget.scrollTop ===
+      event.currentTarget.clientHeight
+    ) {
+      await onLoadMore();
+    }
+  }
+
   return (
-    <Wrapper>
+    <Wrapper onScroll={handleScroll}>
       {moments.map((moment) => (
         <Moment
           key={moment.id}
