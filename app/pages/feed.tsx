@@ -33,7 +33,7 @@ export default function Feed() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [moments, setMoments] = useState<MomentType[]>([]);
 
-  const postedMoment = location.state?.postedMoment as MomentType | undefined;
+  const postedMomentId = location.state?.postedMoment as number | undefined;
 
   // 캐시에서 실시간 트렌드 주제 가져오기
   useEffect(() => {
@@ -95,11 +95,10 @@ export default function Feed() {
 
       {/* 모멘트 */}
       <MomentList
-        postedMoment={postedMoment}
         moments={moments}
         setMoments={setMoments}
         onLoadMore={loadMoments}
-        my={postedMoment?.id}
+        my={postedMomentId}
       />
 
       {/* 글 쓰기 버튼 */}

@@ -119,7 +119,7 @@ export default function PostConfirmModal({
         >
           <Actions>
             <Action
-              backgroundColor={loading ? theme?.grey3 : theme?.bg3}
+              backgroundColor={loading ? theme?.grey3 : theme?.grey3}
               onClick={handleRequestClose}
               disabled={loading}
             >

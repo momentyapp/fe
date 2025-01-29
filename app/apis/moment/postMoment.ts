@@ -9,12 +9,12 @@ interface Props {
 }
 
 type Response = ApiResponse<{
-  topicId: number;
+  momentId: number;
 }>;
 
 export default async function postMoment(
   { text, topicIds, expiresIn, photos }: Props,
-  accessToken: string
+  accessToken?: string
 ) {
   const formData = new FormData();
   formData.append("text", text);
@@ -26,10 +26,13 @@ export default async function postMoment(
     });
   }
 
-  const result = await axios.post<Response>("/moment", formData, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return result;
+  if (accessToken) {
+    return await axios.post<Response>("/moment", formData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } else {
+    return await axios.post<Response>("/moment", formData);
+  }
 }

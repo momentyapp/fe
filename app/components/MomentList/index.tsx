@@ -21,7 +21,6 @@ interface MomentWithRef extends MomentType {
 }
 
 interface MomentListProps {
-  postedMoment?: MomentType;
   moments: MomentType[];
   setMoments: React.Dispatch<React.SetStateAction<MomentType[]>>;
   onLoadMore: () => Promise<void>;
@@ -29,7 +28,6 @@ interface MomentListProps {
 }
 
 export default function MomentList({
-  postedMoment,
   moments,
   setMoments,
   onLoadMore,
@@ -103,17 +101,6 @@ export default function MomentList({
 
   return (
     <Wrapper onScroll={handleScroll}>
-      {postedMoment !== undefined && (
-        <Moment
-          moment={postedMoment}
-          onDetail={setDetailModalMoment}
-          onAddReaction={(emoji) => handleAddReaction(postedMoment.id, emoji)}
-          onRemoveReaction={() => handleRemoveReaction(postedMoment.id)}
-          onEmojiModalOpen={() => setEmojiModalMoment(postedMoment)}
-          my
-        />
-      )}
-
       {momentsWithRefs.map((moment) => (
         <Transition key={moment.id} timeout={500} nodeRef={moment.ref}>
           {(state) => (

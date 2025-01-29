@@ -8,6 +8,7 @@ import PostConfirmModal from "~/components/PostConfirmModal";
 import SessionContext from "~/contexts/session";
 
 import type { PhotoFile, MomentConfig, Topic, Moment } from "common";
+import API from "~/apis";
 
 export default function Write() {
   const session = useContext(SessionContext);
@@ -25,6 +26,33 @@ export default function Write() {
 
   function handlePost() {
     setConfirmModalOpen(true);
+  }
+
+  async function handleConfirmPost() {
+    // TODO: 게시 요청
+    setLoading(true);
+
+    const response = await API.moment.postMoment(
+      {
+        text,
+        photos: photos.map((photo) => photo.file),
+        topicIds: topics.map((topic) => topic.id),
+        expiresIn: config.expiresIn,
+      },
+      config.anonymous ? session.session?.accessToken.token : undefined
+    );
+    const { code, message, result } = response.data;
+
+    if (code === "success" && result !== undefined) {
+      navigate("/", {
+        state: {
+          postedMomentId: result.momentId,
+        },
+      });
+    }
+
+    setLoading(false);
+    setConfirmModalOpen(false);
   }
 
   return (
@@ -56,35 +84,7 @@ export default function Write() {
         isOpen={confirmModalOpen}
         onRequestClose={() => setConfirmModalOpen(false)}
         loading={loading}
-        onPost={() => {
-          // TODO: 게시 요청
-          setLoading(true);
-          setTimeout(() => {
-            setLoading(false);
-            const moment: Moment = {
-              id: 123,
-              author: !config.anonymous ? session.session?.user : undefined,
-              createdAt: new Date().toISOString(),
-              body: {
-                text,
-                photos: photos.map((photo) => photo.id),
-              },
-              topics,
-              reactions: {},
-              expiresAt: config.expiresIn
-                ? new Date(
-                    Date.now() + config.expiresIn * 60 * 60 * 1000
-                  ).toISOString()
-                : undefined,
-            };
-
-            navigate("/", {
-              state: {
-                postedMoment: moment,
-              },
-            });
-          }, 2000);
-        }}
+        onPost={handleConfirmPost}
       />
     </>
   );
