@@ -16,6 +16,7 @@ const GlobalStyle = createGlobalStyle`
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.5);
     transition: opacity 200ms;
+    z-index: 1000;
   }
 
   .ReactModal__Overlay--after-open{
@@ -40,6 +41,7 @@ const GlobalStyle = createGlobalStyle`
     border-radius: 20px;
     transform: translateY(30px);
     transition: transform 300ms cubic-bezier(0.17,0.84,0.44,1), opacity 300ms;
+    z-index: 1001;
   }
   
   .ReactModal__Content--after-open {

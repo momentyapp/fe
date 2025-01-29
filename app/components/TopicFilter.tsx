@@ -19,6 +19,7 @@ const TopicContainer = styled(TransitionGroup)`
   position: sticky;
   top: 60px;
   background-color: ${(props) => props.theme?.bg1};
+  z-index: 1;
 
   > * {
     flex-shrink: 0;

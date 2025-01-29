@@ -21,6 +21,7 @@ const StyledHeader = styled.header`
   position: sticky;
   top: 0;
   background-color: ${(props) => props.theme?.bg1};
+  z-index: 1;
 `;
 
 const FullWidthDiv = styled.div`

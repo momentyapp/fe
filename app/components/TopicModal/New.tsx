@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
-import { MdAdd } from "react-icons/md";
+import { MdAddCircle } from "react-icons/md";
 
 import Typography from "~/components/Typography";
 import Button from "~/components/Button";
@@ -80,7 +80,7 @@ export default function New({ topic, onCreate }: NewProps) {
             isValidName && !loading ? theme?.primary3 : theme?.grey3
           }
           icon={
-            <MdAdd
+            <MdAddCircle
               size="20"
               color={isValidName && !loading ? theme?.bg1 : theme?.grey1}
             />
