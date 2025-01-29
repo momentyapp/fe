@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import SearchResult from "./SearchResult";
 
 import type { Topic } from "common";
+import New from "./New";
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,12 +17,16 @@ interface SearchResultsProps {
   topics: Topic[];
   addedTopics: Topic[];
   setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
+  searchValue: string;
+  onCreate: () => void;
 }
 
 export default function SearchResults({
   topics,
   addedTopics,
   setAddedTopics,
+  searchValue,
+  onCreate,
 }: SearchResultsProps) {
   // 주제 추가 함수
   function handleAdd(newTopic: Topic) {
@@ -40,10 +45,15 @@ export default function SearchResults({
 
   return (
     <Wrapper>
+      {searchValue !== "" &&
+        topics.every((topic) => topic.name !== searchValue) && (
+          <New topic={searchValue} onCreate={onCreate} />
+        )}
+
       {topics.map((topic, index) => (
         <SearchResult
           key={topic.id}
-          topic={{ ...topic, trending: index === 0 }}
+          topic={topic}
           added={addedTopics.some((addedTopic) => addedTopic.id === topic.id)}
           onAdd={handleAdd}
           onRemove={handleRemove}

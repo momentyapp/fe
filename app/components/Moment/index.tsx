@@ -75,7 +75,6 @@ export default function Moment({
     if (contentRef.current === null) return;
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        console.log(entry.contentRect);
         setHeight(entry.contentRect.height);
       }
     });

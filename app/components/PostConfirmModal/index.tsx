@@ -124,7 +124,7 @@ export default function PostConfirmModal({
               disabled={loading}
             >
               <Typography
-                color={loading ? theme?.grey1 : theme?.grey1}
+                color={loading ? theme?.grey1 : theme?.bg1}
                 size="18px"
               >
                 취소

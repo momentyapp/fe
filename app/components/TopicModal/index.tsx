@@ -12,6 +12,7 @@ import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";
 
 import type { Topic } from "common";
+import API from "~/apis";
 
 const Content = styled.div`
   width: 100%;
@@ -44,9 +45,32 @@ export default function TopicModal({
   const [searchValue, setSearchValue] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
 
-  function handleChangeSearchValue(value: string) {
+  // 검색 함수
+  async function handleChangeSearchValue(value: string) {
     const replaced = value.replaceAll(" ", "");
     setSearchValue(replaced);
+
+    if (replaced.length === 0 || !/^[가-힣\da-zA-Z]*$/g.test(replaced)) return;
+
+    const filteredTopics = await API.topic.searchTopic({ query: replaced });
+    const { code, message, result } = filteredTopics.data;
+
+    if (code === "success" && result !== undefined) {
+      setTopics(
+        result.topics.map((topic) => ({
+          id: topic.id,
+          name: topic.name,
+          trending: topic.trending,
+          count: topic.usage,
+          enabled: addedTopics.some((addedTopic) => addedTopic.id === topic.id),
+        }))
+      );
+    }
+  }
+
+  // 주제 생성 함수
+  function handleCreate() {
+    handleChangeSearchValue(searchValue);
   }
 
   return (
@@ -64,9 +88,11 @@ export default function TopicModal({
         >
           <SearchInput value={searchValue} onChange={handleChangeSearchValue} />
           <SearchResults
-            topics={searchValue === "" ? cache.trendingTopics : topics}
+            topics={searchValue.length === 0 ? cache.trendingTopics : topics}
             addedTopics={addedTopics}
             setAddedTopics={setAddedTopics}
+            searchValue={searchValue}
+            onCreate={handleCreate}
           />
         </Slide>
 
