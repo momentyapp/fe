@@ -1,5 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, type Ref, createRef, useEffect } from "react";
 import { styled } from "styled-components";
+import { Transition, TransitionGroup } from "react-transition-group";
 
 import API from "~/apis";
 import Moment from "~/components/Moment";
@@ -9,12 +10,15 @@ import Modals from "./Modals";
 
 import type { Moment as MomentType } from "common";
 
-const Wrapper = styled.div`
+const Wrapper = styled(TransitionGroup)`
   display: flex;
   padding: 10px 10px 100px 10px;
   flex-direction: column;
-  gap: 10px;
 `;
+
+interface MomentWithRef extends MomentType {
+  ref: Ref<HTMLDivElement>;
+}
 
 interface MomentListProps {
   postedMoment?: MomentType;
@@ -33,6 +37,8 @@ export default function MomentList({
 }: MomentListProps) {
   const session = useContext(SessionContext);
 
+  const [momentsWithRefs, setMomentsWithRefs] = useState<MomentWithRef[]>([]);
+
   const [detailModalMoment, setDetailModalMoment] = useState<MomentType | null>(
     null
   );
@@ -41,6 +47,16 @@ export default function MomentList({
   );
 
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
+
+  // moments 변경 감지
+  useEffect(() => {
+    setMomentsWithRefs(
+      moments.map((moment) => ({
+        ...moment,
+        ref: createRef<HTMLDivElement>(),
+      }))
+    );
+  }, [moments]);
 
   // 반응 추가 함수
   function handleAddReaction(momentId: number, emoji: string) {
@@ -98,16 +114,22 @@ export default function MomentList({
         />
       )}
 
-      {moments.map((moment) => (
-        <Moment
-          key={moment.id}
-          moment={moment}
-          onDetail={setDetailModalMoment}
-          onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
-          onRemoveReaction={() => handleRemoveReaction(moment.id)}
-          onEmojiModalOpen={() => setEmojiModalMoment(moment)}
-          my={moment.id === my}
-        />
+      {momentsWithRefs.map((moment) => (
+        <Transition key={moment.id} timeout={500} nodeRef={moment.ref}>
+          {(state) => (
+            <Moment
+              key={moment.id}
+              moment={moment}
+              ref={moment.ref}
+              onDetail={setDetailModalMoment}
+              onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
+              onRemoveReaction={() => handleRemoveReaction(moment.id)}
+              onEmojiModalOpen={() => setEmojiModalMoment(moment)}
+              my={moment.id === my}
+              transitionStatus={state}
+            />
+          )}
+        </Transition>
       ))}
 
       <Modals

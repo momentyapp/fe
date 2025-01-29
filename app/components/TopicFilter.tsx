@@ -88,7 +88,7 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
           <MdTune size="20" color={theme?.grey1} />
         </AddTopic>
 
-        {topicsWithRefs.map((topic, index) => (
+        {topicsWithRefs.map((topic) => (
           <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
             {(state) => (
               <SwitchableTopic
