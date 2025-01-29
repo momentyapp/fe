@@ -69,8 +69,12 @@ export default function TopicModal({
   }
 
   // 주제 생성 함수
-  function handleCreate() {
+  function handleCreate(topic: string, topicId: number) {
     handleChangeSearchValue(searchValue);
+    setAddedTopics((prevTopics) => [
+      { name: topic, id: topicId, enabled: true, trending: false, usage: 0 },
+      ...prevTopics,
+    ]);
   }
 
   return (

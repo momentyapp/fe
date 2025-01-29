@@ -39,7 +39,7 @@ const StyledButton = styled(Button)`
 
 interface NewProps {
   topic: string;
-  onCreate: () => void;
+  onCreate: (topic: string, topicId: number) => void;
 }
 
 export default function New({ topic, onCreate }: NewProps) {
@@ -51,11 +51,12 @@ export default function New({ topic, onCreate }: NewProps) {
     if (!isValidName) return;
     setLoading(true);
 
-    const response = await API.topic.createTopic({ topic });
+    const name = topic;
+    const response = await API.topic.createTopic({ topic: name });
     const { code, message, result } = response.data;
 
     if (code === "success" && result !== undefined) {
-      onCreate();
+      onCreate(name, result.topicId);
     }
 
     setLoading(false);

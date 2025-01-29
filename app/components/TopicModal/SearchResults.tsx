@@ -18,7 +18,7 @@ interface SearchResultsProps {
   addedTopics: Topic[];
   setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
   searchValue: string;
-  onCreate: () => void;
+  onCreate: (topic:string, topicId: number) => void;
 }
 
 export default function SearchResults({
