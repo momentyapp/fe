@@ -9,15 +9,6 @@ import SessionContext from "~/contexts/session";
 
 import type { PhotoFile, MomentConfig, Topic, Moment } from "common";
 
-const sampleTopics: Topic[] = [
-  { topic: "매일우유", id: 0, count: 232532, trending: true },
-  { topic: "국회의사당역", id: 1, count: 65342 },
-  { topic: "탄핵", id: 2, count: 30012 },
-  { topic: "양자컴퓨터", id: 6, count: 9232 },
-  { topic: "엔비디아", id: 7, count: 8923 },
-  { topic: "삼성", id: 8, count: 2342 },
-];
-
 export default function Write() {
   const session = useContext(SessionContext);
   const navigate = useNavigate();
@@ -25,7 +16,7 @@ export default function Write() {
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState("");
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [topics, setTopics] = useState<Topic[]>(sampleTopics);
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [config, setConfig] = useState<MomentConfig>({
     expiresIn: 24,
     anonymous: session.session === undefined,

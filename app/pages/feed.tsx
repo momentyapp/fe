@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 
 import AppBar from "~/components/AppBar";
 import TopicFilter from "~/components/TopicFilter";
-import MomentContainer from "~/components/MomentContainer";
+import MomentList from "~/components/MomentList";
 import Pressable from "~/components/Pressable";
 import CacheContext from "~/contexts/cache";
 
@@ -38,9 +38,10 @@ export default function Feed() {
   useEffect(() => {
     const trendingTopics = cache.trendingTopics;
     if (trendingTopics.length === 0) return;
-    setTopics(trendingTopics);
+    setTopics(trendingTopics.map((topic) => ({ ...topic, enabled: false })));
   }, [cache.trendingTopics]);
 
+  // 글 작성 후 새로운 모멘트 추가
   useEffect(() => {
     if (postedMoment === undefined) return;
     setMoments((moments) => {
@@ -63,7 +64,7 @@ export default function Feed() {
       <TopicFilter topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
-      <MomentContainer
+      <MomentList
         moments={moments}
         setMoments={setMoments}
         my={postedMoment?.id}

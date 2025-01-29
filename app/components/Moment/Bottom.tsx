@@ -6,10 +6,9 @@ import { MdAddReaction } from "react-icons/md";
 import Typography from "~/components/Typography";
 import Pressable from "~/components/Pressable";
 import Emoji from "~/components/Emoji";
-import EmojiPickerModal from "~/components/EmojiPickerModal";
+import Slide from "~/components/Slide";
 
 import type { Moment } from "common";
-import Slide from "../Slide";
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,7 +25,7 @@ const ReactionContainer = styled.div`
   gap: 10px;
 `;
 
-const Reaction = styled(Pressable)<{ $myEmoji?: boolean }>`
+const AddReaction = styled(Pressable)<{ $myEmoji?: boolean }>`
   display: flex;
   height: 38px;
   padding: 0px 10px;
@@ -51,27 +50,18 @@ export default function Bottom({
 }: BottomProps) {
   const theme = useContext(ThemeContext);
 
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
   function handleReactionClick(emoji: string) {
     if (moment.myEmoji === emoji) onRemoveReaction?.();
     else onAddReaction?.(emoji);
-  }
-
-  function handleShowEmojiPicker() {
-    setShowEmojiPicker(true);
   }
 
   return (
     <>
       <Wrapper>
         <ReactionContainer>
-          <Reaction
-            backgroundColor={theme?.bg1}
-            onClick={handleShowEmojiPicker}
-          >
+          <AddReaction backgroundColor={theme?.bg1}>
             <MdAddReaction size="20px" color={theme?.grey1} />
-          </Reaction>
+          </AddReaction>
 
           {Object.keys(moment.reactions).map((emoji, index) => (
             <Slide
@@ -82,7 +72,7 @@ export default function Bottom({
               direction="right"
               distance="5px"
             >
-              <Reaction
+              <AddReaction
                 key={emoji}
                 backgroundColor={
                   moment.myEmoji === emoji ? theme?.primary5 : theme?.bg1
@@ -98,19 +88,11 @@ export default function Bottom({
                 >
                   {moment.reactions[emoji].toLocaleString()}
                 </Typography>
-              </Reaction>
+              </AddReaction>
             </Slide>
           ))}
         </ReactionContainer>
       </Wrapper>
-
-      {/* 이모지 피커 */}
-      <EmojiPickerModal
-        isOpen={showEmojiPicker}
-        onRequestClose={() => setShowEmojiPicker(false)}
-        myEmoji={moment.myEmoji}
-        onSelect={handleReactionClick}
-      />
     </>
   );
 }
