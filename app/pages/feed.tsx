@@ -54,9 +54,8 @@ export default function Feed() {
 
   // 모멘트 처음 로드
   useEffect(() => {
-    setMoments([]);
-    handleLoadMore();
-  }, [topics]);
+    loadMoments(true);
+  }, []);
 
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
@@ -64,18 +63,21 @@ export default function Feed() {
   }
 
   // 모멘트 로드
-  async function handleLoadMore() {
+  async function loadMoments(overwrite = false) {
     let before: number | undefined = undefined;
     if (moments.length > 0) before = moments[moments.length - 1].id;
 
     const newMoments = await API.moment.getMoments({
       before,
-      topicIds: topics.map((topic) => topic.id),
+      topicIds: topics
+        .filter((topic) => topic.enabled)
+        .map((topic) => topic.id),
     });
     const { code, message, result } = newMoments.data;
 
     if (code === "success" && result !== undefined) {
-      setMoments((prev) => [...prev, ...result.moments]);
+      if (overwrite) setMoments(result.moments);
+      else setMoments((prev) => [...prev, ...result.moments]);
     }
   }
 
@@ -91,7 +93,7 @@ export default function Feed() {
       <MomentList
         moments={moments}
         setMoments={setMoments}
-        onLoadMore={handleLoadMore}
+        onLoadMore={loadMoments}
         my={postedMoment?.id}
       />
 

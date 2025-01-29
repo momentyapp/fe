@@ -84,9 +84,9 @@ export default function Content({ moment }: ContentProps) {
       {/* 주제 */}
       <TopicContainer>
         {moment.topics.map((topic, index) => (
-          <Topic key={index}>
+          <Topic key={topic.id}>
             <Typography color={theme?.grey1} size="14px">
-              {topic.topic}
+              {topic.name}
             </Typography>
           </Topic>
         ))}

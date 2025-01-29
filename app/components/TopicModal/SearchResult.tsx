@@ -65,7 +65,7 @@ export default function SearchResult({
       <Info>
         {/* 이름 */}
         <StyledTypography color={theme?.grey1} size="18px">
-          {topic.topic}
+          {topic.name}
         </StyledTypography>
         <Dot color={theme?.grey2} size="3px" />
 

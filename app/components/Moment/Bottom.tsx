@@ -39,27 +39,29 @@ const AddReaction = styled(Pressable)<{ $myEmoji?: boolean }>`
 
 interface BottomProps {
   moment: Moment;
-  onAddReaction?: (emoji: string) => void;
-  onRemoveReaction?: () => void;
+  onAddReaction: (emoji: string) => void;
+  onRemoveReaction: () => void;
+  onEmojiModalOpen: () => void;
 }
 
 export default function Bottom({
   moment,
   onAddReaction,
   onRemoveReaction,
+  onEmojiModalOpen,
 }: BottomProps) {
   const theme = useContext(ThemeContext);
 
   function handleReactionClick(emoji: string) {
-    if (moment.myEmoji === emoji) onRemoveReaction?.();
-    else onAddReaction?.(emoji);
+    if (moment.myEmoji === emoji) onRemoveReaction();
+    else onAddReaction(emoji);
   }
 
   return (
     <>
       <Wrapper>
         <ReactionContainer>
-          <AddReaction backgroundColor={theme?.bg1}>
+          <AddReaction backgroundColor={theme?.bg1} onClick={onEmojiModalOpen}>
             <MdAddReaction size="20px" color={theme?.grey1} />
           </AddReaction>
 

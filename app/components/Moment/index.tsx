@@ -28,8 +28,9 @@ interface MomentProps {
   trending?: boolean;
   highlight?: boolean;
   onDetail: (moment: Moment) => void;
-  onAddReaction?: (emoji: string) => void;
-  onRemoveReaction?: () => void;
+  onAddReaction: (emoji: string) => void;
+  onRemoveReaction: () => void;
+  onEmojiModalOpen: () => void;
 }
 
 export default function Moment({
@@ -40,6 +41,7 @@ export default function Moment({
   onDetail,
   onAddReaction,
   onRemoveReaction,
+  onEmojiModalOpen,
 }: MomentProps) {
   return (
     <Wrapper $highlight={highlight}>
@@ -52,6 +54,7 @@ export default function Moment({
         moment={moment}
         onAddReaction={onAddReaction}
         onRemoveReaction={onRemoveReaction}
+        onEmojiModalOpen={onEmojiModalOpen}
       />
     </Wrapper>
   );

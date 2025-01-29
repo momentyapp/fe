@@ -93,7 +93,7 @@ export default function TopicFilter({ topics, setTopics }: TopicFilterProps) {
             {(state) => (
               <SwitchableTopic
                 ref={topic.ref}
-                topic={topic.topic}
+                topic={topic.name}
                 enabled={topic.enabled}
                 onClick={() => switchTopic(topic.id)}
                 transitionStatus={state}

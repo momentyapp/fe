@@ -34,7 +34,7 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
           ...prev,
           trendingTopics: result.topics.map((topic) => ({
             id: topic.id,
-            topic: topic.name,
+            name: topic.name,
             trending: topic.trending,
             count: topic.usage,
             enabled: true,

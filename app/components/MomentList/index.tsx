@@ -76,8 +76,8 @@ export default function MomentList({
   // 스크롤 이벤트 핸들러
   async function handleScroll(event: React.UIEvent<HTMLDivElement>) {
     if (
-      event.currentTarget.scrollHeight - event.currentTarget.scrollTop ===
-      event.currentTarget.clientHeight
+      event.currentTarget.scrollHeight - event.currentTarget.scrollTop <
+      event.currentTarget.clientHeight + 100
     ) {
       await onLoadMore();
     }
@@ -92,6 +92,7 @@ export default function MomentList({
           onDetail={setDetailModalMoment}
           onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
+          onEmojiModalOpen={() => setEmojiModalMoment(moment)}
           my={moment.id === my}
         />
       ))}

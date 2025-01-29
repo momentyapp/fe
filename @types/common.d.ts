@@ -6,7 +6,7 @@ declare module "common" {
   };
 
   export interface Topic {
-    topic: string;
+    name: string;
     id: number;
     count?: number;
     trending?: boolean;

@@ -12,7 +12,7 @@ type Response = ApiResponse<{
 }>;
 
 export default async function getMoments({ topicIds, before }: Props) {
-  const result = await axios.post<Response>("/moment", {
+  const result = await axios.post<Response>("/moment/get", {
     topicIds,
     before,
   });

@@ -78,7 +78,7 @@ export default function Topics({ topics, setTopics }: TopicsProps) {
           {(state) => (
             <Topic
               ref={topic.ref}
-              topic={topic.topic}
+              topic={topic.name}
               onClick={() => handleClick(topic)}
               transitionStatus={state}
               key={topic.id}
