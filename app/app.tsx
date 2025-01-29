@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import { ThemeProvider, type DefaultTheme } from "styled-components";
 import ReactModal from "react-modal";
 
-import PreferenceContext from "~/contexts/preference";
+import PreferenceContext, { PreferenceProvider } from "~/contexts/preference";
 import { SessionProvider } from "~/contexts/session";
 import { CacheProvider } from "~/contexts/cache";
 
@@ -41,12 +41,14 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <SessionProvider>
-        <CacheProvider>
-          <GlobalStyle />
-          <Outlet />
-        </CacheProvider>
-      </SessionProvider>
+      <PreferenceProvider>
+        <SessionProvider>
+          <CacheProvider>
+            <GlobalStyle />
+            <Outlet />
+          </CacheProvider>
+        </SessionProvider>
+      </PreferenceProvider>
     </ThemeProvider>
   );
 }
