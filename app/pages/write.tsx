@@ -10,6 +10,10 @@ export default function Write() {
     setText,
     topics,
     setTopics,
+    generatedKnwonTopics,
+    setGeneratedKnownTopics,
+    generatedUnknownTopics,
+    setGeneratedUnknownTopics,
     config,
     setConfig,
     photos,
@@ -37,6 +41,10 @@ export default function Write() {
       <WriteFloatingBar
         topics={topics}
         setTopics={setTopics}
+        generatedKnownTopics={generatedKnwonTopics}
+        generatedUnknownTopics={generatedUnknownTopics}
+        setGeneratedKnownTopics={setGeneratedKnownTopics}
+        setGeneratedUnknownTopics={setGeneratedUnknownTopics}
         config={config}
         setConfig={setConfig}
         onPost={() => setConfirmModalOpen(true)}

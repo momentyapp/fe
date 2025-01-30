@@ -18,6 +18,8 @@ const darkPalette: DefaultTheme = {
   red1: "#DC756E",
   red2: "#E74C3C",
   red3: "#C7392A",
+
+  blue: "#03A9F4",
 };
 
 const lightPalette: DefaultTheme = {
@@ -38,6 +40,8 @@ const lightPalette: DefaultTheme = {
   red1: "#C7392A",
   red2: "#E74C3C",
   red3: "#DC756E",
+
+  blue: "#0487d1",
 };
 
 const palette = {

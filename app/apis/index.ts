@@ -11,6 +11,8 @@ import searchTopic from "./topic/searchTopic";
 
 import signup from "./user/signup";
 
+import getTopicRecommendation from "./ai/getTopicRecommendation";
+
 export const axiosInstance = axios.create({
   baseURL:
     "https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/api/",
@@ -34,5 +36,9 @@ export default class API {
 
   static user = {
     signup,
+  };
+
+  static ai = {
+    getTopicRecommendation,
   };
 }

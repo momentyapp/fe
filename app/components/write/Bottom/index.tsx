@@ -25,6 +25,10 @@ const Wrapper = styled.div`
 interface WriteFloatingBarProps {
   topics: Topic[];
   setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
+  generatedKnownTopics: Topic[];
+  setGeneratedKnownTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
+  generatedUnknownTopics: string[];
+  setGeneratedUnknownTopics: React.Dispatch<React.SetStateAction<string[]>>;
   config: MomentConfig;
   setConfig: React.Dispatch<React.SetStateAction<MomentConfig>>;
   onPost: () => void;
@@ -33,13 +37,24 @@ interface WriteFloatingBarProps {
 export default function WriteFloatingBar({
   topics,
   setTopics,
+  generatedKnownTopics,
+  setGeneratedKnownTopics,
+  generatedUnknownTopics,
+  setGeneratedUnknownTopics,
   config,
   setConfig,
   onPost,
 }: WriteFloatingBarProps) {
   return (
     <Wrapper>
-      <TopicList topics={topics} setTopics={setTopics} />
+      <TopicList
+        topics={topics}
+        setTopics={setTopics}
+        generatedKnownTopics={generatedKnownTopics}
+        setGeneratedKnownTopics={setGeneratedKnownTopics}
+        generatedUnknownTopics={generatedUnknownTopics}
+        setGeneratedUnknownTopics={setGeneratedUnknownTopics}
+      />
       <Island config={config} setConfig={setConfig} onPost={onPost} />
     </Wrapper>
   );

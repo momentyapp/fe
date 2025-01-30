@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import API from "~/apis";
@@ -10,8 +10,14 @@ export default function useWriteState() {
   const session = useContext(SessionContext);
   const navigate = useNavigate();
 
+  const lastTimeout = useRef<NodeJS.Timeout>(null);
+
   const [text, setText] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [generatedKnwonTopics, setGeneratedKnownTopics] = useState<Topic[]>([]);
+  const [generatedUnknownTopics, setGeneratedUnknownTopics] = useState<
+    string[]
+  >([]);
   const [config, setConfig] = useState<MomentConfig>({
     expiresIn: 24,
     anonymous: session.session === undefined,
@@ -19,6 +25,27 @@ export default function useWriteState() {
   const [photos, setPhotos] = useState<PhotoFile[]>([]);
   const [posting, setPosting] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  function handleTextChange(value: string) {
+    setText(value);
+
+    if (lastTimeout.current !== null) clearTimeout(lastTimeout.current);
+
+    lastTimeout.current = setTimeout(async () => {
+      if (value.length >= 10 && value.length <= 1000) {
+        const response = await API.ai.getTopicRecommendation({ text: value });
+        const { code, message, result } = response.data;
+
+        if (code === "success" && result !== undefined) {
+          setGeneratedKnownTopics(result.known);
+          setGeneratedUnknownTopics(result.unknown);
+        }
+      } else {
+        setGeneratedKnownTopics([]);
+        setGeneratedUnknownTopics([]);
+      }
+    }, 1000);
+  }
 
   async function handleConfirmPost() {
     setPosting(true);
@@ -48,9 +75,13 @@ export default function useWriteState() {
 
   return {
     text,
-    setText,
+    setText: handleTextChange,
     topics,
     setTopics,
+    generatedKnwonTopics,
+    setGeneratedKnownTopics,
+    generatedUnknownTopics,
+    setGeneratedUnknownTopics,
     config,
     setConfig,
     photos,
