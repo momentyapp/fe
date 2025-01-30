@@ -3,10 +3,10 @@ import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router";
 
-import AppBar from "~/components/AppBar";
-import TopicFilter from "~/components/TopicFilter";
-import MomentList from "~/components/MomentList";
-import Pressable from "~/components/Pressable";
+import AppBar from "~/components/feed/AppBar";
+import TopicToggleList from "~/components/feed/TopicToggleList";
+import MomentList from "~/components/feed/MomentList";
+import Pressable from "~/components/common/Pressable";
 import CacheContext from "~/contexts/cache";
 
 import type { Moment as MomentType, Topic } from "common";
@@ -91,7 +91,7 @@ export default function Feed() {
       <AppBar />
 
       {/* 주제 목록 */}
-      <TopicFilter topics={topics} setTopics={setTopics} />
+      <TopicToggleList topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
       <MomentList

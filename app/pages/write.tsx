@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 
-import WriteBar from "~/components/WriteBar";
-import WriteBody from "~/components/WriteBody";
-import WriteFloatingBar from "~/components/WriteFloatingBar";
-import PostConfirmModal from "~/components/PostConfirmModal";
+import Top from "~/components/write/Top";
+import Body from "~/components/write/Body";
+import WriteFloatingBar from "~/components/write/Bottom";
+import ConfirmModal from "~/components/write/ConfirmModal";
 import SessionContext from "~/contexts/session";
 
 import type { PhotoFile, MomentConfig, Topic, Moment } from "common";
@@ -58,10 +58,10 @@ export default function Write() {
   return (
     <>
       {/* 상단 바 */}
-      <WriteBar onPost={handlePost} />
+      <Top onPost={handlePost} />
 
       {/* 본문 */}
-      <WriteBody
+      <Body
         value={text}
         onChange={setText}
         photos={photos}
@@ -78,7 +78,7 @@ export default function Write() {
       />
 
       {/* 게시 확인 모달 */}
-      <PostConfirmModal
+      <ConfirmModal
         expiresIn={config.expiresIn}
         anonymous={config.anonymous}
         isOpen={confirmModalOpen}
