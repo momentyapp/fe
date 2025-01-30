@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 
-import Topics from "./Topics";
-import Config from "./Config";
+import TopicList from "./TopicList";
+import Island from "./Island";
 
 import type { MomentConfig, Topic } from "common";
 
@@ -39,8 +39,8 @@ export default function WriteFloatingBar({
 }: WriteFloatingBarProps) {
   return (
     <Wrapper>
-      <Topics topics={topics} setTopics={setTopics} />
-      <Config config={config} setConfig={setConfig} onPost={onPost} />
+      <TopicList topics={topics} setTopics={setTopics} />
+      <Island config={config} setConfig={setConfig} onPost={onPost} />
     </Wrapper>
   );
 }

@@ -29,17 +29,13 @@ const DeleteButton = styled(Pressable)`
   align-items: center;
 `;
 
-interface WritePhotoProps {
+interface PhotoProps {
   photo: string;
   onClick: () => void;
   onDelete: () => void;
 }
 
-export default function WritePhoto({
-  photo,
-  onClick,
-  onDelete,
-}: WritePhotoProps) {
+export default function Photo({ photo, onClick, onDelete }: PhotoProps) {
   const theme = useContext(ThemeContext);
 
   return (

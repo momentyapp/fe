@@ -1,10 +1,11 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdAddAPhoto } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
+import usePhotoHandler from "~/hooks/write/usePhotoHandler";
 
-import WritePhoto from "./WritePhoto";
+import Photo from "./Photo";
 
 import type { PhotoFile } from "common";
 
@@ -28,41 +29,18 @@ const AddPhotoButton = styled(Pressable)`
   padding: 0;
 `;
 
-interface PhotosContainerProps {
+interface PhotoListProps {
   photos: PhotoFile[];
   onPhotosChange: React.Dispatch<React.SetStateAction<PhotoFile[]>>;
 }
 
-export default function PhotosContainer({
+export default function PhotoList({
   photos,
   onPhotosChange,
-}: PhotosContainerProps) {
+}: PhotoListProps) {
   const theme = useContext(ThemeContext);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleAddPhoto() {
-    if (inputRef.current) inputRef.current.click();
-  }
-
-  function handleDeletePhoto(id: string) {
-    onPhotosChange((prevPhotos) =>
-      prevPhotos.filter((photo) => photo.id !== id)
-    );
-  }
-
-  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (!files) return;
-
-    const newPhotos = await Promise.all(
-      Array.from(files).map(async (file) => ({
-        id: URL.createObjectURL(file),
-        file,
-      }))
-    );
-
-    onPhotosChange((prevPhotos) => [...newPhotos, ...prevPhotos]);
-  }
+  const { handleAddPhoto, handleDeletePhoto } = usePhotoHandler(onPhotosChange);
 
   return (
     <Wrapper>
@@ -70,21 +48,13 @@ export default function PhotosContainer({
         <MdAddAPhoto size="36" color={theme?.grey1} />
       </AddPhotoButton>
       {photos.map((photo) => (
-        <WritePhoto
+        <Photo
           key={photo.id}
           photo={photo.id}
           onClick={() => {}}
           onDelete={() => handleDeletePhoto(photo.id)}
         />
       ))}
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        ref={inputRef}
-        onChange={handlePhotoChange}
-        hidden
-      />
     </Wrapper>
   );
 }

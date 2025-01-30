@@ -1,64 +1,29 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router";
-
 import Top from "~/components/write/Top";
 import Body from "~/components/write/Body";
 import WriteFloatingBar from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
-import SessionContext from "~/contexts/session";
-
-import type { PhotoFile, MomentConfig, Topic, Moment } from "common";
-import API from "~/apis";
+import useWriteState from "~/hooks/write/useWriteState";
 
 export default function Write() {
-  const session = useContext(SessionContext);
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-  const [text, setText] = useState("");
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [topics, setTopics] = useState<Topic[]>([]);
-  const [config, setConfig] = useState<MomentConfig>({
-    expiresIn: 24,
-    anonymous: session.session === undefined,
-  });
-  const [photos, setPhotos] = useState<PhotoFile[]>([]);
-
-  function handlePost() {
-    setConfirmModalOpen(true);
-  }
-
-  async function handleConfirmPost() {
-    // TODO: 게시 요청
-    setLoading(true);
-
-    const response = await API.moment.postMoment(
-      {
-        text,
-        photos: photos.map((photo) => photo.file),
-        topicIds: topics.map((topic) => topic.id),
-        expiresIn: config.expiresIn,
-      },
-      config.anonymous ? session.session?.accessToken.token : undefined
-    );
-    const { code, message, result } = response.data;
-
-    if (code === "success" && result !== undefined) {
-      navigate("/", {
-        state: {
-          postedMomentId: result.momentId,
-        },
-      });
-    }
-
-    setLoading(false);
-    setConfirmModalOpen(false);
-  }
+  const {
+    text,
+    setText,
+    topics,
+    setTopics,
+    config,
+    setConfig,
+    photos,
+    setPhotos,
+    posting,
+    confirmModalOpen,
+    setConfirmModalOpen,
+    handleConfirmPost,
+  } = useWriteState();
 
   return (
     <>
       {/* 상단 바 */}
-      <Top onPost={handlePost} />
+      <Top onPost={() => setConfirmModalOpen(true)} />
 
       {/* 본문 */}
       <Body
@@ -74,7 +39,7 @@ export default function Write() {
         setTopics={setTopics}
         config={config}
         setConfig={setConfig}
-        onPost={handlePost}
+        onPost={() => setConfirmModalOpen(true)}
       />
 
       {/* 게시 확인 모달 */}
@@ -83,7 +48,7 @@ export default function Write() {
         anonymous={config.anonymous}
         isOpen={confirmModalOpen}
         onRequestClose={() => setConfirmModalOpen(false)}
-        loading={loading}
+        loading={posting}
         onPost={handleConfirmPost}
       />
     </>

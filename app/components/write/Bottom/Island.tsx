@@ -1,23 +1,17 @@
 import { useState, useContext } from "react";
 import { styled, ThemeContext } from "styled-components";
-import { MdVisibility, MdAutoDelete, MdSend } from "react-icons/md";
+import { MdSend } from "react-icons/md";
 
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
-import Switch from "~/components/common/Switch";
 import Pressable from "~/components/common/Pressable";
 import SessionContext from "~/contexts/session";
 
 import ExpireModal from "./ExpireModal";
+import ConfigList from "./ConfigList";
 
 import type { MomentConfig } from "common";
-
-interface ConfigProps {
-  config: MomentConfig;
-  setConfig: React.Dispatch<React.SetStateAction<MomentConfig>>;
-  onPost: () => void;
-}
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,21 +23,6 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   background-color: ${(props) => props.theme.bg3};
 `;
-
-const ConfigContainer = styled.div`
-  display: flex;
-  height: 40px;
-  padding: 0px 10px;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ConfigLabel = styled.div`
-  display: flex;
-  gap: 5px;
-  align-items: center;
-`;
-
 const StyledButton = styled(Button)`
   padding: 15px;
   border-radius: 15px;
@@ -54,7 +33,13 @@ const ExpireButton = styled(Pressable)`
   border-radius: 10px;
 `;
 
-export default function Config({ config, setConfig, onPost }: ConfigProps) {
+interface IslandProps {
+  config: MomentConfig;
+  setConfig: React.Dispatch<React.SetStateAction<MomentConfig>>;
+  onPost: () => void;
+}
+
+export default function Island({ config, setConfig, onPost }: IslandProps) {
   const theme = useContext(ThemeContext);
   const session = useContext(SessionContext);
 
@@ -75,38 +60,14 @@ export default function Config({ config, setConfig, onPost }: ConfigProps) {
 
   return (
     <Wrapper>
-      <div>
-        <ConfigContainer>
-          <ConfigLabel>
-            <MdVisibility size="20" color={theme?.grey1} />
-            <Typography color={theme?.grey1} size="16px">
-              모멘트를 익명으로 게시
-            </Typography>
-          </ConfigLabel>
-          <Switch
-            value={config.anonymous}
-            onChange={(value) => setAnonymous(value)}
-          />
-        </ConfigContainer>
-        <ConfigContainer>
-          <ConfigLabel>
-            <MdAutoDelete size="20" color={theme?.grey1} />
-            <Typography color={theme?.grey1} size="16px">
-              자동 삭제
-            </Typography>
-          </ConfigLabel>
-          <ExpireButton
-            onClick={() => setExpireModalOpen(true)}
-            backgroundColor={theme?.bg2}
-          >
-            <Typography color={theme?.grey1} size="14px">
-              {config.expiresIn === undefined
-                ? "영구 게시"
-                : `${config.expiresIn}시간`}
-            </Typography>
-          </ExpireButton>
-        </ConfigContainer>
-      </div>
+      {/* 설정 */}
+      <ConfigList
+        config={config}
+        setAnonymous={setAnonymous}
+        setExpireModalOpen={setExpireModalOpen}
+      />
+
+      {/* 게시 버튼 */}
       <StyledButton
         backgroundColor={theme?.primary3}
         icon={<MdSend size="20" color={theme?.bg1} />}
@@ -121,7 +82,7 @@ export default function Config({ config, setConfig, onPost }: ConfigProps) {
       <NeedLoginModal
         isOpen={anonymousModalOpen}
         onRequestClose={() => setAnonymousModalOpen(false)}
-        message="로그인되어 있지 않으면 모멘트를 익명으로만 게시할 수 있습니다."
+        message="로그인되어 있지 않으면 모멘트를 익명으로만 게시할 수 있어요."
       />
 
       {/* 자동 삭제 설정 모달 */}

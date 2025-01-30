@@ -36,14 +36,10 @@ export default function Top({ onPost }: TopProps) {
   const theme = useContext(ThemeContext);
   const navigate = useNavigate();
 
-  function handleBack() {
-    navigate(-1);
-  }
-
   return (
     <StyledHeader>
       {/* left */}
-      <StyledPressable onClick={handleBack}>
+      <StyledPressable onClick={() => navigate(-1)}>
         <MdNavigateBefore size="36" color={theme?.grey1} />
       </StyledPressable>
 

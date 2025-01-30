@@ -11,17 +11,17 @@ const Wrapper = styled.div`
 
 interface InfoProps {
   icon: React.ReactNode;
-  text: string;
+  children: string;
 }
 
-export default function Info({ icon, text }: InfoProps) {
+export default function Info({ icon, children }: InfoProps) {
   const theme = useContext(ThemeContext);
 
   return (
     <Wrapper>
       {icon}
       <Typography color={theme?.grey1} size="18px">
-        {text}
+        {children}
       </Typography>
     </Wrapper>
   );

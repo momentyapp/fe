@@ -35,12 +35,12 @@ interface TopicWithRef extends TopicType {
   ref: Ref<HTMLDivElement>;
 }
 
-interface TopicsProps {
+interface TopicListProps {
   topics: TopicType[];
   setTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
 }
 
-export default function Topics({ topics, setTopics }: TopicsProps) {
+export default function TopicList({ topics, setTopics }: TopicListProps) {
   const theme = useContext(ThemeContext);
 
   const [modalOpen, setModalOpen] = useState(false);

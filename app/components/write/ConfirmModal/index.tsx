@@ -1,18 +1,13 @@
 import { useContext } from "react";
 import ReactModal from "react-modal";
 import { styled, ThemeContext } from "styled-components";
-import {
-  MdAutoDelete,
-  MdWarningAmber,
-  MdVisibility,
-  MdSend,
-} from "react-icons/md";
+import { MdAutoDelete, MdWarningAmber, MdVisibility } from "react-icons/md";
 
-import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
 
 import Info from "./Info";
+import ActionList from "./ActionList";
 
 const Content = styled.div`
   width: 100%;
@@ -23,22 +18,11 @@ const Content = styled.div`
   gap: 10px;
 `;
 
-const Infos = styled.div`
+const InfoList = styled.div`
   display: flex;
   padding: 10px 0;
   flex-direction: column;
   gap: 10px;
-`;
-
-const Actions = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  gap: 5px;
-`;
-
-const Action = styled(Button)`
-  width: 100%;
 `;
 
 interface ConfirmModalProps extends Omit<ReactModal.Props, "style"> {
@@ -89,26 +73,20 @@ export default function ConfirmModal({
           delay={100}
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
-          <Infos>
-            <Info
-              icon={<MdAutoDelete size="24" color={theme?.grey1} />}
-              text={
-                expiresIn !== undefined
-                  ? `게시 ${expiresIn}시간 후 자동 삭제`
-                  : "게시 후 영구 보관"
-              }
-            />
-            <Info
-              icon={<MdWarningAmber size="24" color={theme?.grey1} />}
-              text={
-                anonymous ? "게시 후 수정 및 삭제 불가능" : "게시 후 삭제 가능"
-              }
-            />
-            <Info
-              icon={<MdVisibility size="24" color={theme?.grey1} />}
-              text={anonymous ? "익명으로 게시" : "실명으로 게시"}
-            />
-          </Infos>
+          <InfoList>
+            <Info icon={<MdAutoDelete size="24" color={theme?.grey1} />}>
+              {expiresIn !== undefined
+                ? `게시 ${expiresIn}시간 후 자동 삭제`
+                : "게시 후 영구 보관"}
+            </Info>
+            <Info icon={<MdWarningAmber size="24" color={theme?.grey1} />}>
+              {anonymous ? "게시 후 수정 및 삭제 불가능" : "게시 후 삭제 가능"}
+            </Info>
+
+            <Info icon={<MdVisibility size="24" color={theme?.grey1} />}>
+              {anonymous ? "익명으로 게시" : "실명으로 게시"}
+            </Info>
+          </InfoList>
         </Slide>
 
         {/* 하단 버튼 */}
@@ -117,35 +95,11 @@ export default function ConfirmModal({
           delay={150}
           timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
-          <Actions>
-            <Action
-              backgroundColor={loading ? theme?.grey3 : theme?.grey3}
-              onClick={handleRequestClose}
-              disabled={loading}
-            >
-              <Typography
-                color={loading ? theme?.grey1 : theme?.bg1}
-                size="18px"
-              >
-                취소
-              </Typography>
-            </Action>
-            <Action
-              backgroundColor={loading ? theme?.grey3 : theme?.primary3}
-              onClick={onPost}
-              icon={
-                <MdSend size="24" color={loading ? theme?.grey1 : theme?.bg1} />
-              }
-              disabled={loading}
-            >
-              <Typography
-                color={loading ? theme?.grey1 : theme?.bg1}
-                size="18px"
-              >
-                {loading ? "게시 중..." : "게시하기"}
-              </Typography>
-            </Action>
-          </Actions>
+          <ActionList
+            loading={loading}
+            onCancel={handleRequestClose}
+            onPost={onPost}
+          />
         </Slide>
       </Content>
     </ReactModal>

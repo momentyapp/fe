@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import TextareaAutosize from "react-textarea-autosize";
 
-import PhotosContainer from "./PhotosContainer";
+import PhotoList from "./PhotoList";
 
 import type { PhotoFile } from "common";
 
@@ -49,7 +49,7 @@ export default function Body({
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
-      <PhotosContainer photos={photos} onPhotosChange={onPhotosChange} />
+      <PhotoList photos={photos} onPhotosChange={onPhotosChange} />
     </Wrapper>
   );
 }
