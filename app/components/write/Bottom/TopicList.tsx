@@ -71,8 +71,15 @@ export default function TopicList({
     ref: createRef<HTMLDivElement>(),
   }));
 
-  function handleAddTopic(topic: TopicType) {
+  function handleRemoveTopic(topic: TopicType) {
     setTopics((prevTopics) => prevTopics.filter((t) => t.id !== topic.id));
+  }
+
+  function handleAddTopic(topic: TopicType) {
+    setTopics((prevTopics) => [...prevTopics, topic]);
+    setGeneratedKnownTopics((prevTopics) =>
+      prevTopics.filter((t) => t.id !== topic.id)
+    );
   }
 
   function handleCreateAndAddTopic(topicName: string) {
@@ -98,7 +105,7 @@ export default function TopicList({
             <Topic
               ref={topic.ref}
               topic={topic.name}
-              onClick={() => handleAddTopic(topic)}
+              onClick={() => handleRemoveTopic(topic)}
               transitionStatus={state}
               key={topic.id}
             />

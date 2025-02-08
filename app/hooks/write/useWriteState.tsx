@@ -37,8 +37,16 @@ export default function useWriteState() {
         const { code, message, result } = response.data;
 
         if (code === "success" && result !== undefined) {
-          setGeneratedKnownTopics(result.known);
-          setGeneratedUnknownTopics(result.unknown);
+          setGeneratedKnownTopics(
+            result.known.filter((topic) =>
+              topics.every((t) => t.id !== topic.id)
+            )
+          );
+          setGeneratedUnknownTopics(
+            result.unknown.filter((topic) =>
+              topics.every((t) => t.name !== topic)
+            )
+          );
         }
       } else {
         setGeneratedKnownTopics([]);

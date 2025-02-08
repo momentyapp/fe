@@ -18,7 +18,7 @@ interface SearchResultsProps {
   addedTopics: Topic[];
   setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
   searchValue: string;
-  onCreate: (topic:string, topicId: number) => void;
+  onCreate: (topic: string, topicId: number) => void;
 }
 
 export default function SearchResults({
@@ -46,9 +46,9 @@ export default function SearchResults({
   return (
     <Wrapper>
       {searchValue !== "" &&
-        topics.every((topic) => topic.name !== searchValue) && (
-          <New topic={searchValue} onCreate={onCreate} />
-        )}
+        topics.every(
+          (topic) => topic.name.toLowerCase() !== searchValue.toLowerCase()
+        ) && <New topic={searchValue} onCreate={onCreate} />}
 
       {topics.map((topic, index) => (
         <SearchResult
