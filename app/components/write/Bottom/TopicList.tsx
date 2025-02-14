@@ -12,6 +12,7 @@ import KnownTopic from "./KnownTopic";
 import UnknownTopic from "./UnknownTopic";
 
 import type { Topic as TopicType } from "common";
+import API from "~/apis";
 
 const Wrapper = styled(TransitionGroup)`
   display: flex;
@@ -33,7 +34,9 @@ const StyledButton = styled(Button)`
   margin-right: 10px;
 `;
 
-interface TopicWithRef extends TopicType {
+interface UnknownTopic {
+  name: string;
+  loading: boolean;
   ref: Ref<HTMLDivElement>;
 }
 
@@ -66,10 +69,19 @@ export default function TopicList({
     ...topic,
     ref: createRef<HTMLDivElement>(),
   }));
-  const unknownTopicsWithRefs = generatedUnknownTopics.map((topic) => ({
-    name: topic,
-    ref: createRef<HTMLDivElement>(),
-  }));
+  const [unknownTopicsWithRefs, setUnknownTopicsWithRefs] = useState<
+    UnknownTopic[]
+  >([]);
+
+  useEffect(() => {
+    setUnknownTopicsWithRefs(
+      generatedUnknownTopics.map((topic) => ({
+        name: topic,
+        ref: createRef<HTMLDivElement>(),
+        loading: false,
+      }))
+    );
+  }, [generatedUnknownTopics]);
 
   function handleRemoveTopic(topic: TopicType) {
     setTopics((prevTopics) => prevTopics.filter((t) => t.id !== topic.id));
@@ -82,8 +94,34 @@ export default function TopicList({
     );
   }
 
-  function handleCreateAndAddTopic(topicName: string) {
-    // TODO: Implement this function
+  async function handleCreateAndAddTopic(topicName: string) {
+    function setLoading(prevTopics: UnknownTopic[], loading: boolean) {
+      const index = prevTopics.findIndex((t) => t.name === topicName);
+      if (index === -1) return prevTopics;
+
+      const newTopics = [...prevTopics];
+      newTopics[index].loading = loading;
+      return newTopics;
+    }
+
+    setUnknownTopicsWithRefs((prevTopics) => setLoading(prevTopics, true));
+
+    const response = await API.topic.createTopic({ topic: topicName });
+    const { code, message, result } = response.data;
+
+    if (code === "success" && result !== undefined) {
+      const newTopic = {
+        id: result.topicId,
+        name: topicName.trim(),
+      };
+
+      setTopics((prevTopics) => [...prevTopics, newTopic]);
+      setGeneratedUnknownTopics((prevTopics) =>
+        prevTopics.filter((t) => t !== topicName)
+      );
+    } else {
+      setUnknownTopicsWithRefs((prevTopics) => setLoading(prevTopics, false));
+    }
   }
 
   return (
@@ -133,6 +171,7 @@ export default function TopicList({
             <UnknownTopic
               ref={topic.ref}
               topic={topic.name}
+              loading={topic.loading}
               onClick={() => handleCreateAndAddTopic(topic.name)}
               transitionStatus={state}
               key={topic.name}
