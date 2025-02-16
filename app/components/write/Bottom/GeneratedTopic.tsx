@@ -5,6 +5,7 @@ import { MdAdd } from "react-icons/md";
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Emoji from "~/components/common/Emoji";
+import CircularProgress from "~/components/common/CircularProgress";
 
 import type { TransitionStatus } from "react-transition-group";
 
@@ -100,7 +101,7 @@ export default function GeneratedTopic({
           {!loading && <Emoji>✨</Emoji>}
 
           {/* 로딩 중일 시 로딩 아이콘 표시 */}
-          {loading && <Emoji>🔄</Emoji>}
+          {loading && <CircularProgress size={20} color={theme?.grey1} />}
           {topic}
         </StyledTypography>
       </StyledButton>
