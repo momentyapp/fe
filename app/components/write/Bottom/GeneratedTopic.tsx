@@ -43,7 +43,7 @@ const StyledTypography = styled(Typography)`
   gap: 5px;
 `;
 
-interface UnknownTopicProps {
+interface GeneratedTopicProps {
   topic: string;
   loading?: boolean;
   onClick: () => void;
@@ -51,13 +51,13 @@ interface UnknownTopicProps {
   ref: Ref<HTMLDivElement>;
 }
 
-export default function UnknownTopic({
+export default function GeneratedTopic({
   topic,
   loading = false,
   onClick,
   ref,
   transitionStatus = "entered",
-}: UnknownTopicProps) {
+}: GeneratedTopicProps) {
   const theme = useContext(ThemeContext);
   const contentRef = createRef<HTMLButtonElement>();
   const [width, setWidth] = useState(0);

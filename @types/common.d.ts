@@ -8,9 +8,17 @@ declare module "common" {
   export interface Topic {
     name: string;
     id: number;
-    count?: number;
+    usage?: number;
     trending?: boolean;
     enabled?: boolean;
+  }
+
+  export interface GeneratedTopic {
+    registered: boolean;
+    id?: number;
+    name: string;
+    trending?: boolean;
+    usage?: number;
   }
 
   export interface Moment {

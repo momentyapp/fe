@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import API from "~/apis";
 import SessionContext from "~/contexts/session";
 
-import type { Topic, MomentConfig, PhotoFile } from "common";
+import type { Topic, GeneratedTopic, MomentConfig, PhotoFile } from "common";
 
 export default function useWriteState() {
   const session = useContext(SessionContext);
@@ -14,10 +14,7 @@ export default function useWriteState() {
 
   const [text, setText] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [generatedKnwonTopics, setGeneratedKnownTopics] = useState<Topic[]>([]);
-  const [generatedUnknownTopics, setGeneratedUnknownTopics] = useState<
-    string[]
-  >([]);
+  const [generatedTopics, setGeneratedTopics] = useState<GeneratedTopic[]>([]);
   const [config, setConfig] = useState<MomentConfig>({
     expiresIn: 24,
     anonymous: session.session === undefined,
@@ -26,6 +23,7 @@ export default function useWriteState() {
   const [posting, setPosting] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
+  // 본문 변경 디바운싱
   function handleTextChange(value: string) {
     setText(value);
 
@@ -33,28 +31,23 @@ export default function useWriteState() {
 
     lastTimeout.current = setTimeout(async () => {
       if (value.length >= 10 && value.length <= 1000) {
-        const response = await API.ai.getTopicRecommendation({ text: value });
+        const response = await API.topic.generateTopics({ text: value });
         const { code, message, result } = response.data;
 
         if (code === "success" && result !== undefined) {
-          setGeneratedKnownTopics(
-            result.known.filter((topic) =>
-              topics.every((t) => t.id !== topic.id)
-            )
-          );
-          setGeneratedUnknownTopics(
-            result.unknown.filter((topic) =>
-              topics.every((t) => t.name !== topic)
+          setGeneratedTopics(
+            result.topics.filter((topic) =>
+              topics.every((t) => t.name !== topic.name)
             )
           );
         }
       } else {
-        setGeneratedKnownTopics([]);
-        setGeneratedUnknownTopics([]);
+        setGeneratedTopics([]);
       }
     }, 1000);
   }
 
+  // 최종 게시하는 함수
   async function handleConfirmPost() {
     setPosting(true);
 
@@ -86,10 +79,8 @@ export default function useWriteState() {
     setText: handleTextChange,
     topics,
     setTopics,
-    generatedKnwonTopics,
-    setGeneratedKnownTopics,
-    generatedUnknownTopics,
-    setGeneratedUnknownTopics,
+    generatedTopics,
+    setGeneratedTopics,
     config,
     setConfig,
     photos,

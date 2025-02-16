@@ -84,7 +84,7 @@ export default function SearchResult({
 
         {/* 사용 횟수 */}
         <StyledTypography color={theme?.grey1} size="14px">
-          {topic.count?.toLocaleString() ?? 0}회
+          {topic.usage?.toLocaleString() ?? 0}회
         </StyledTypography>
       </Info>
 

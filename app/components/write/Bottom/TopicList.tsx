@@ -1,4 +1,10 @@
-import { useState, useContext, type Ref, createRef, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  createRef,
+  useMemo,
+  useEffect,
+} from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdAdd } from "react-icons/md";
 import { Transition, TransitionGroup } from "react-transition-group";
@@ -8,10 +14,12 @@ import Typography from "~/components/common/Typography";
 import TopicModal from "~/components/common/TopicModal";
 
 import Topic from "./Topic";
-import KnownTopic from "./KnownTopic";
-import UnknownTopic from "./UnknownTopic";
+import GeneratedTopic from "./GeneratedTopic";
 
-import type { Topic as TopicType } from "common";
+import type {
+  Topic as TopicType,
+  GeneratedTopic as GeneratedTopicType,
+} from "common";
 import API from "~/apis";
 
 const Wrapper = styled(TransitionGroup)`
@@ -34,94 +42,85 @@ const StyledButton = styled(Button)`
   margin-right: 10px;
 `;
 
-interface UnknownTopic {
-  name: string;
-  loading: boolean;
-  ref: Ref<HTMLDivElement>;
-}
-
 interface TopicListProps {
   topics: TopicType[];
   setTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
-  generatedKnownTopics: TopicType[];
-  setGeneratedKnownTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
-  generatedUnknownTopics: string[];
-  setGeneratedUnknownTopics: React.Dispatch<React.SetStateAction<string[]>>;
+  generatedTopics: GeneratedTopicType[];
+  setGeneratedTopics: React.Dispatch<
+    React.SetStateAction<GeneratedTopicType[]>
+  >;
 }
 
 export default function TopicList({
   topics,
   setTopics,
-  generatedKnownTopics,
-  setGeneratedKnownTopics,
-  generatedUnknownTopics,
-  setGeneratedUnknownTopics,
+  generatedTopics,
+  setGeneratedTopics,
 }: TopicListProps) {
   const theme = useContext(ThemeContext);
-
   const [modalOpen, setModalOpen] = useState(false);
+  const [loadings, setLoadings] = useState<Record<string, boolean>>({});
 
-  const topicsWithRefs = topics.map((topic) => ({
-    ...topic,
-    ref: createRef<HTMLDivElement>(),
-  }));
-  const knownTopicsWithRefs = generatedKnownTopics.map((topic) => ({
-    ...topic,
-    ref: createRef<HTMLDivElement>(),
-  }));
-  const [unknownTopicsWithRefs, setUnknownTopicsWithRefs] = useState<
-    UnknownTopic[]
-  >([]);
+  // 주제 개수만큼 ref 생성
+  const topicRefs = useMemo(
+    () =>
+      Array.from({ length: topics.length + generatedTopics.length }, () =>
+        createRef<HTMLDivElement>()
+      ),
+    [topics.length + generatedTopics.length]
+  );
 
+  // 생성된 주제 개수만큼 loadings 크기 조절
   useEffect(() => {
-    setUnknownTopicsWithRefs(
-      generatedUnknownTopics.map((topic) => ({
-        name: topic,
-        ref: createRef<HTMLDivElement>(),
-        loading: false,
-      }))
-    );
-  }, [generatedUnknownTopics]);
+    setLoadings((prev) => {
+      const newLoadings: Record<string, boolean> = {};
 
+      for (const topic of generatedTopics) {
+        if (topic.name in prev) newLoadings[topic.name] = prev[topic.name];
+        else newLoadings[topic.name] = false;
+      }
+
+      return newLoadings;
+    });
+  }, [generatedTopics.length]);
+
+  // 주제 삭제 함수
   function handleRemoveTopic(topic: TopicType) {
     setTopics((prevTopics) => prevTopics.filter((t) => t.id !== topic.id));
   }
 
-  function handleAddTopic(topic: TopicType) {
-    setTopics((prevTopics) => [...prevTopics, topic]);
-    setGeneratedKnownTopics((prevTopics) =>
-      prevTopics.filter((t) => t.id !== topic.id)
+  // 생성된 주제를 생성하고 추가하는 함수
+  async function handleAddGeneratedTopic(topic: GeneratedTopicType) {
+    const topicToAdd: TopicType = {
+      name: topic.name,
+      id: topic.id ?? 0,
+      usage: topic.usage ?? 0,
+      trending: topic.trending,
+    };
+
+    // 주제가 등록되지 않았으면 생성
+    if (!topic.registered) {
+      setLoadings((prev) => ({ ...prev, [topic.name]: true }));
+
+      const response = await API.topic.createTopic({ topic: topic.name });
+      const { code, message, result } = response.data;
+
+      if (code === "success" && result !== undefined)
+        topicToAdd.id = result.topicId;
+      else {
+        setLoadings((prev) => ({ ...prev, [topic.name]: false }));
+        return;
+      }
+    }
+
+    // 생성된 주제 삭제
+    setGeneratedTopics((prevTopics) =>
+      prevTopics.filter((t) => t.name !== topic.name)
     );
-  }
 
-  async function handleCreateAndAddTopic(topicName: string) {
-    function setLoading(prevTopics: UnknownTopic[], loading: boolean) {
-      const index = prevTopics.findIndex((t) => t.name === topicName);
-      if (index === -1) return prevTopics;
-
-      const newTopics = [...prevTopics];
-      newTopics[index].loading = loading;
-      return newTopics;
-    }
-
-    setUnknownTopicsWithRefs((prevTopics) => setLoading(prevTopics, true));
-
-    const response = await API.topic.createTopic({ topic: topicName });
-    const { code, message, result } = response.data;
-
-    if (code === "success" && result !== undefined) {
-      const newTopic = {
-        id: result.topicId,
-        name: topicName.trim(),
-      };
-
-      setTopics((prevTopics) => [...prevTopics, newTopic]);
-      setGeneratedUnknownTopics((prevTopics) =>
-        prevTopics.filter((t) => t !== topicName)
-      );
-    } else {
-      setUnknownTopicsWithRefs((prevTopics) => setLoading(prevTopics, false));
-    }
+    // 주제 추가
+    setTopics((prevTopics) => [...prevTopics, topicToAdd]);
+    setLoadings((prev) => ({ ...prev, [topic.name]: false }));
   }
 
   return (
@@ -137,11 +136,12 @@ export default function TopicList({
         </Typography>
       </StyledButton>
 
-      {topicsWithRefs.map((topic) => (
-        <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
+      {/* 추가된 주제 */}
+      {topics.map((topic, index) => (
+        <Transition key={topic.id} timeout={500} nodeRef={topicRefs[index]}>
           {(state) => (
             <Topic
-              ref={topic.ref}
+              ref={topicRefs[index]}
               topic={topic.name}
               onClick={() => handleRemoveTopic(topic)}
               transitionStatus={state}
@@ -151,30 +151,21 @@ export default function TopicList({
         </Transition>
       ))}
 
-      {knownTopicsWithRefs.map((topic) => (
-        <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
+      {/* 생성된 주제 */}
+      {generatedTopics.map((topic, index) => (
+        <Transition
+          key={topic.id}
+          timeout={500}
+          nodeRef={topicRefs[topics.length + index]}
+        >
           {(state) => (
-            <KnownTopic
-              ref={topic.ref}
+            <GeneratedTopic
+              ref={topicRefs[topics.length + index]}
               topic={topic.name}
-              onClick={() => handleAddTopic(topic)}
+              loading={loadings[topic.name]}
+              onClick={() => handleAddGeneratedTopic(topic)}
               transitionStatus={state}
               key={topic.id}
-            />
-          )}
-        </Transition>
-      ))}
-
-      {unknownTopicsWithRefs.map((topic) => (
-        <Transition key={topic.name} timeout={500} nodeRef={topic.ref}>
-          {(state) => (
-            <UnknownTopic
-              ref={topic.ref}
-              topic={topic.name}
-              loading={topic.loading}
-              onClick={() => handleCreateAndAddTopic(topic.name)}
-              transitionStatus={state}
-              key={topic.name}
             />
           )}
         </Transition>

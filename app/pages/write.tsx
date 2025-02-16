@@ -1,6 +1,6 @@
 import Top from "~/components/write/Top";
 import Body from "~/components/write/Body";
-import WriteFloatingBar from "~/components/write/Bottom";
+import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
 import useWriteState from "~/hooks/write/useWriteState";
 
@@ -10,10 +10,8 @@ export default function Write() {
     setText,
     topics,
     setTopics,
-    generatedKnwonTopics,
-    setGeneratedKnownTopics,
-    generatedUnknownTopics,
-    setGeneratedUnknownTopics,
+    generatedTopics,
+    setGeneratedTopics,
     config,
     setConfig,
     photos,
@@ -38,13 +36,11 @@ export default function Write() {
       />
 
       {/* 하단 바 */}
-      <WriteFloatingBar
+      <Bottom
         topics={topics}
         setTopics={setTopics}
-        generatedKnownTopics={generatedKnwonTopics}
-        generatedUnknownTopics={generatedUnknownTopics}
-        setGeneratedKnownTopics={setGeneratedKnownTopics}
-        setGeneratedUnknownTopics={setGeneratedUnknownTopics}
+        generatedTopics={generatedTopics}
+        setGeneratedTopics={setGeneratedTopics}
         config={config}
         setConfig={setConfig}
         onPost={() => setConfirmModalOpen(true)}

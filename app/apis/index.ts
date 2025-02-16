@@ -8,10 +8,9 @@ import reactMoment from "./moment/reactMoment";
 import createTopic from "./topic/createTopic";
 import getTrendingTopics from "./topic/getTrendingTopics";
 import searchTopic from "./topic/searchTopic";
+import generateTopics from "./topic/generateTopics";
 
 import signup from "./user/signup";
-
-import getTopicRecommendation from "./ai/getTopicRecommendation";
 
 export const axiosInstance = axios.create({
   baseURL:
@@ -32,13 +31,10 @@ export default class API {
     createTopic,
     getTrendingTopics,
     searchTopic,
+    generateTopics,
   };
 
   static user = {
     signup,
-  };
-
-  static ai = {
-    getTopicRecommendation,
   };
 }

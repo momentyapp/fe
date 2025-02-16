@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import TopicList from "./TopicList";
 import Island from "./Island";
 
-import type { MomentConfig, Topic } from "common";
+import type { MomentConfig, Topic, GeneratedTopic } from "common";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -22,38 +22,32 @@ const Wrapper = styled.div`
   )`};
 `;
 
-interface WriteFloatingBarProps {
+interface BottomProps {
   topics: Topic[];
   setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
-  generatedKnownTopics: Topic[];
-  setGeneratedKnownTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
-  generatedUnknownTopics: string[];
-  setGeneratedUnknownTopics: React.Dispatch<React.SetStateAction<string[]>>;
+  generatedTopics: GeneratedTopic[];
+  setGeneratedTopics: React.Dispatch<React.SetStateAction<GeneratedTopic[]>>;
   config: MomentConfig;
   setConfig: React.Dispatch<React.SetStateAction<MomentConfig>>;
   onPost: () => void;
 }
 
-export default function WriteFloatingBar({
+export default function Bottom({
   topics,
   setTopics,
-  generatedKnownTopics,
-  setGeneratedKnownTopics,
-  generatedUnknownTopics,
-  setGeneratedUnknownTopics,
+  generatedTopics,
+  setGeneratedTopics,
   config,
   setConfig,
   onPost,
-}: WriteFloatingBarProps) {
+}: BottomProps) {
   return (
     <Wrapper>
       <TopicList
         topics={topics}
         setTopics={setTopics}
-        generatedKnownTopics={generatedKnownTopics}
-        setGeneratedKnownTopics={setGeneratedKnownTopics}
-        generatedUnknownTopics={generatedUnknownTopics}
-        setGeneratedUnknownTopics={setGeneratedUnknownTopics}
+        generatedTopics={generatedTopics}
+        setGeneratedTopics={setGeneratedTopics}
       />
       <Island config={config} setConfig={setConfig} onPost={onPost} />
     </Wrapper>
