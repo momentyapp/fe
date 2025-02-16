@@ -7,10 +7,11 @@ import AppBar from "~/components/feed/AppBar";
 import TopicToggleList from "~/components/feed/TopicToggleList";
 import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
+
 import CacheContext from "~/contexts/cache";
+import API from "~/apis";
 
 import type { Moment as MomentType, Topic } from "common";
-import API from "~/apis";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -48,17 +49,17 @@ export default function Feed() {
     const enabledTopicsIds = topics
       .filter((topic) => topic.enabled)
       .map((topic) => topic.id);
+    let filteredMoments: MomentType[];
 
-    // 선택된 주제가 있으면 필터링
     if (enabledTopicsIds.length > 0) {
-      setMoments(
-        cachedMoments.filter((moment) =>
-          moment.topics.some((topic) => enabledTopicsIds.includes(topic.id))
-        )
+      filteredMoments = cachedMoments.filter((moment) =>
+        moment.topics.some((topic) => enabledTopicsIds.includes(topic.id))
       );
     } else {
-      setMoments(cachedMoments);
+      filteredMoments = cachedMoments;
     }
+
+    setMoments(filteredMoments);
   }, [cache.moments, topics]);
 
   // 글 쓰기 버튼 클릭 시
@@ -67,23 +68,7 @@ export default function Feed() {
   }
 
   // 모멘트 로드
-  async function loadMoments(overwrite = false) {
-    let before: number | undefined = undefined;
-    if (moments.length > 0) before = moments[moments.length - 1].id;
-
-    const newMoments = await API.moment.getMoments({
-      before,
-      topicIds: topics
-        .filter((topic) => topic.enabled)
-        .map((topic) => topic.id),
-    });
-    const { code, message, result } = newMoments.data;
-
-    if (code === "success" && result !== undefined) {
-      if (overwrite) setMoments(result.moments);
-      else setMoments((prev) => [...prev, ...result.moments]);
-    }
-  }
+  async function handleLoadMore() {}
 
   return (
     <>
@@ -97,7 +82,7 @@ export default function Feed() {
       <MomentList
         moments={moments}
         setMoments={setMoments}
-        onLoadMore={loadMoments}
+        onLoadMore={handleLoadMore}
         my={postedMomentId}
       />
 
