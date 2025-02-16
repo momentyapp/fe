@@ -4,6 +4,7 @@ import { MdSend } from "react-icons/md";
 
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
+import CircularProgress from "~/components/common/CircularProgress";
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,7 +44,13 @@ export default function ActionList({
       <Action
         backgroundColor={loading ? theme?.grey3 : theme?.primary3}
         onClick={onPost}
-        icon={<MdSend size="24" color={loading ? theme?.grey1 : theme?.bg1} />}
+        icon={
+          loading ? (
+            <CircularProgress size={24} color={theme?.grey1} />
+          ) : (
+            <MdSend size="24" color={theme?.bg1} />
+          )
+        }
         disabled={loading}
       >
         <Typography color={loading ? theme?.grey1 : theme?.bg1} size="18px">
