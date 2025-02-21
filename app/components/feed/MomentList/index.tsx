@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { styled } from "styled-components";
 
-import API from "~/apis";
+import useMomentListState from "~/hooks/moment/useMomentListState";
 import SessionContext from "~/contexts/session";
 
 import Moment from "./Moment";
@@ -31,61 +31,22 @@ export default function MomentList({
 }: MomentListProps) {
   const session = useContext(SessionContext);
 
-  const [detailModalMoment, setDetailModalMoment] = useState<MomentType | null>(
-    null
-  );
-  const [emojiModalMoment, setEmojiModalMoment] = useState<MomentType | null>(
-    null
-  );
-
-  const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
-
-  // 반응 추가 함수
-  function handleAddReaction(momentId: number, emoji: string) {
-    if (session.session === undefined) {
-      setNeedLoginModalOpen(true);
-      return;
-    }
-
-    API.moment.reactMoment(
-      { momentId, emoji },
-      session.session.accessToken.token
-    );
-  }
-
-  // 반응 제거 함수
-  function handleRemoveReaction(momentId: number) {
-    if (session.session === undefined) {
-      setNeedLoginModalOpen(true);
-      return;
-    }
-
-    API.moment.reactMoment(
-      { momentId, emoji: null },
-      session.session.accessToken.token
-    );
-  }
-
-  // 이모지 선택 함수
-  function handleSelectEmoji(moment: MomentType, emoji: string) {
-    if (moment.myEmoji === emoji) handleRemoveReaction(moment.id);
-    else handleAddReaction(moment.id, emoji);
-    setEmojiModalMoment(null);
-  }
-
-  // 스크롤 이벤트 핸들러
-  async function handleScroll(event: React.UIEvent<HTMLDivElement>) {
-    if (
-      event.currentTarget.scrollHeight - event.currentTarget.scrollTop <
-      event.currentTarget.clientHeight + 100
-    ) {
-      await onLoadMore();
-    }
-  }
+  const {
+    lastMomentRef,
+    detailModalMoment,
+    setDetailModalMoment,
+    emojiModalMoment,
+    setEmojiModalMoment,
+    needLoginModalOpen,
+    setNeedLoginModalOpen,
+    handleAddReaction,
+    handleRemoveReaction,
+    handleSelectEmoji,
+  } = useMomentListState(session.session);
 
   return (
-    <Wrapper onScroll={handleScroll}>
-      {moments.map((moment) => (
+    <Wrapper>
+      {moments.map((moment, index) => (
         <Moment
           key={moment.id}
           moment={moment}
@@ -94,6 +55,7 @@ export default function MomentList({
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
           onEmojiModalOpen={() => setEmojiModalMoment(moment)}
           my={moment.id === my}
+          ref={index === moments.length - 1 ? lastMomentRef : undefined}
         />
       ))}
 

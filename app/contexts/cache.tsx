@@ -44,7 +44,7 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
           id: topic.id,
           name: topic.name,
           trending: topic.trending,
-          count: topic.usage,
+          usage: topic.usage,
           enabled: true,
         })),
       }));

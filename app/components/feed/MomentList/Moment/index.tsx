@@ -41,6 +41,7 @@ interface MomentProps {
   my?: boolean;
   trending?: boolean;
   highlight?: boolean;
+  ref?: React.Ref<HTMLDivElement>;
   onDetail: (moment: Moment) => void;
   onAddReaction: (emoji: string) => void;
   onRemoveReaction: () => void;
@@ -52,16 +53,15 @@ export default function Moment({
   my,
   trending,
   highlight = false,
+  ref,
   onDetail,
   onAddReaction,
   onRemoveReaction,
   onEmojiModalOpen,
 }: MomentProps) {
   return (
-    <Wrapper
-      $highlight={highlight}
-    >
-      <MomentContent>
+    <Wrapper $highlight={highlight}>
+      <MomentContent ref={ref}>
         {my && <My />}
         {trending && <Trending />}
 
