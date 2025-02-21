@@ -32,7 +32,7 @@ export default function MomentList({
   const session = useContext(SessionContext);
 
   const {
-    lastMomentRef,
+    handleLastMomentHit,
     detailModalMoment,
     setDetailModalMoment,
     emojiModalMoment,
@@ -55,7 +55,7 @@ export default function MomentList({
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
           onEmojiModalOpen={() => setEmojiModalMoment(moment)}
           my={moment.id === my}
-          ref={index === moments.length - 1 ? lastMomentRef : undefined}
+          ref={index === moments.length - 1 ? handleLastMomentHit : undefined}
         />
       ))}
 

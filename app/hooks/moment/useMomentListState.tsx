@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import API from "~/apis";
 
@@ -12,23 +12,24 @@ export default function useMomentListState(session?: Session) {
 
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
 
-  const lastMomentRef = useRef<HTMLDivElement>(null);
+  const observer = useRef(
+    new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) console.log("visible");
+      },
+      { threshold: 0.01 }
+    )
+  );
 
   // 마지막 모멘트가 보이는지 감지
-  useEffect(() => {
-    if (lastMomentRef.current === null) return;
-
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) console.log("visible");
-      else console.log("invisible");
-    });
-
-    observer.observe(lastMomentRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [lastMomentRef.current]);
+  const handleLastMomentHit = useCallback((node: HTMLDivElement | null) => {
+    if (observer.current === null) return;
+    if (node !== null) {
+      observer.current.observe(node);
+    } else {
+      observer.current.disconnect();
+    }
+  }, []);
 
   // 반응 추가 함수
   function handleAddReaction(momentId: number, emoji: string) {
@@ -61,7 +62,7 @@ export default function useMomentListState(session?: Session) {
   }
 
   return {
-    lastMomentRef,
+    handleLastMomentHit,
     detailModalMoment,
     setDetailModalMoment,
     emojiModalMoment,
