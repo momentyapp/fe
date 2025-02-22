@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactModal from "react-modal";
 import { styled, ThemeContext } from "styled-components";
 import { MdCheck } from "react-icons/md";
@@ -42,16 +42,19 @@ export default function TopicModal({
   const theme = useContext(ThemeContext);
   const cache = useContext(CacheContext);
 
+  const lastTimeout = useRef<NodeJS.Timeout>(null);
+
   const [searchValue, setSearchValue] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
 
-  // 검색 함수
+  // 검색어 변경 디바운싱
   async function handleChangeSearchValue(value: string) {
     const replaced = value.replaceAll(" ", "");
     setSearchValue(replaced);
 
     if (replaced.length === 0 || !/^[가-힣\da-zA-Z]*$/g.test(replaced)) return;
 
+    // 즉시 검색
     const filteredTopics = await API.topic.searchTopic({ query: replaced });
     const { code, message, result } = filteredTopics.data;
 
@@ -65,7 +68,38 @@ export default function TopicModal({
           enabled: addedTopics.some((addedTopic) => addedTopic.id === topic.id),
         }))
       );
+    } else {
+      setTopics([]);
     }
+
+    if (lastTimeout.current !== null) clearTimeout(lastTimeout.current);
+
+    // 500ms 이후 의미 검색
+    lastTimeout.current = setTimeout(async () => {
+      const generatedTopics = await API.topic.generateTopics({
+        text: replaced,
+      });
+      const { code, message, result } = generatedTopics.data;
+
+      if (code === "success" && result !== undefined) {
+        setTopics((prev) => [
+          ...prev,
+          ...result.topics
+            .filter(
+              (topic) => !prev.some((prevTopic) => prevTopic.id === topic.id)
+            )
+            .map((topic) => ({
+              id: topic.id,
+              name: topic.name,
+              trending: topic.trending,
+              count: topic.usage,
+              enabled: addedTopics.some(
+                (addedTopic) => addedTopic.id === topic.id
+              ),
+            })),
+        ]);
+      }
+    }, 500);
   }
 
   // 주제 생성 함수

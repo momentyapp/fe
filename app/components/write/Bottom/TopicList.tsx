@@ -20,7 +20,6 @@ import type {
   Topic as TopicType,
   GeneratedTopic as GeneratedTopicType,
 } from "common";
-import API from "~/apis";
 
 const Wrapper = styled(TransitionGroup)`
   display: flex;
@@ -59,7 +58,6 @@ export default function TopicList({
 }: TopicListProps) {
   const theme = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
-  const [loadings, setLoadings] = useState<Record<string, boolean>>({});
 
   // 주제 개수만큼 ref 생성
   const topicRefs = useMemo(
@@ -70,26 +68,12 @@ export default function TopicList({
     [topics.length + generatedTopics.length]
   );
 
-  // 생성된 주제 개수만큼 loadings 크기 조절
-  useEffect(() => {
-    setLoadings((prev) => {
-      const newLoadings: Record<string, boolean> = {};
-
-      for (const topic of generatedTopics) {
-        if (topic.name in prev) newLoadings[topic.name] = prev[topic.name];
-        else newLoadings[topic.name] = false;
-      }
-
-      return newLoadings;
-    });
-  }, [generatedTopics.length]);
-
   // 주제 삭제 함수
   function handleRemoveTopic(topic: TopicType) {
     setTopics((prevTopics) => prevTopics.filter((t) => t.id !== topic.id));
   }
 
-  // 생성된 주제를 생성하고 추가하는 함수
+  // 생성된 주제를 추가하는 함수
   async function handleAddGeneratedTopic(topic: GeneratedTopicType) {
     const topicToAdd: TopicType = {
       name: topic.name,
@@ -98,21 +82,6 @@ export default function TopicList({
       trending: topic.trending,
     };
 
-    // 주제가 등록되지 않았으면 생성
-    if (!topic.registered) {
-      setLoadings((prev) => ({ ...prev, [topic.name]: true }));
-
-      const response = await API.topic.createTopic({ topic: topic.name });
-      const { code, message, result } = response.data;
-
-      if (code === "success" && result !== undefined)
-        topicToAdd.id = result.topicId;
-      else {
-        setLoadings((prev) => ({ ...prev, [topic.name]: false }));
-        return;
-      }
-    }
-
     // 생성된 주제 삭제
     setGeneratedTopics((prevTopics) =>
       prevTopics.filter((t) => t.name !== topic.name)
@@ -120,7 +89,6 @@ export default function TopicList({
 
     // 주제 추가
     setTopics((prevTopics) => [...prevTopics, topicToAdd]);
-    setLoadings((prev) => ({ ...prev, [topic.name]: false }));
   }
 
   return (
@@ -162,7 +130,6 @@ export default function TopicList({
             <GeneratedTopic
               ref={topicRefs[topics.length + index]}
               topic={topic.name}
-              loading={loadings[topic.name]}
               onClick={() => handleAddGeneratedTopic(topic)}
               transitionStatus={state}
               key={topic.id}

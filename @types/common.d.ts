@@ -14,11 +14,11 @@ declare module "common" {
   }
 
   export interface GeneratedTopic {
-    registered: boolean;
-    id?: number;
     name: string;
-    trending?: boolean;
+    id: number;
     usage?: number;
+    trending?: boolean;
+    score: number;
   }
 
   export interface Moment {

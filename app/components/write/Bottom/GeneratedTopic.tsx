@@ -5,7 +5,6 @@ import { MdAdd } from "react-icons/md";
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Emoji from "~/components/common/Emoji";
-import CircularProgress from "~/components/common/CircularProgress";
 
 import type { TransitionStatus } from "react-transition-group";
 
@@ -46,7 +45,6 @@ const StyledTypography = styled(Typography)`
 
 interface GeneratedTopicProps {
   topic: string;
-  loading?: boolean;
   onClick: () => void;
   transitionStatus?: TransitionStatus;
   ref: Ref<HTMLDivElement>;
@@ -54,7 +52,6 @@ interface GeneratedTopicProps {
 
 export default function GeneratedTopic({
   topic,
-  loading = false,
   onClick,
   ref,
   transitionStatus = "entered",
@@ -74,11 +71,6 @@ export default function GeneratedTopic({
     return () => observer.disconnect();
   }, [contentRef]);
 
-  function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    if (loading) return;
-    onClick();
-  }
-
   return (
     <Wrapper
       ref={ref}
@@ -92,16 +84,11 @@ export default function GeneratedTopic({
         backgroundColor={theme?.bg1}
         icon={<MdAdd size="20" color={theme?.grey1} />}
         iconPosition="right"
-        onClick={handleClick}
-        disabled={loading}
+        onClick={onClick}
         ref={contentRef}
       >
         <StyledTypography color={theme?.grey1} size="16px">
-          {/* 로딩 중이 아닐 시 AI 이모지 표시 */}
-          {!loading && <Emoji>✨</Emoji>}
-
-          {/* 로딩 중일 시 로딩 아이콘 표시 */}
-          {loading && <CircularProgress size={20} color={theme?.grey1} />}
+          <Emoji>✨</Emoji>
           {topic}
         </StyledTypography>
       </StyledButton>

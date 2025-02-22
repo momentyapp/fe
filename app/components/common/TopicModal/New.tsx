@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdAddCircle } from "react-icons/md";
 
 import Typography from "~/components/common/Typography";
 import Button from "~/components/common/Button";
 import API from "~/apis";
+import CircularProgress from "../CircularProgress";
 
 const Wrapper = styled.div`
   display: flex;
@@ -45,7 +46,11 @@ interface NewProps {
 export default function New({ topic, onCreate }: NewProps) {
   const theme = useContext(ThemeContext);
   const [loading, setLoading] = useState(false);
-  const isValidName = topic.length <= 20 && /^[가-힣\da-zA-Z]*$/g.test(topic);
+
+  const isValidName = useMemo(
+    () => topic.length <= 20 && /^[가-힣\da-zA-Z]*$/g.test(topic),
+    [topic]
+  );
 
   async function handleCreate() {
     if (!isValidName) return;
@@ -55,11 +60,10 @@ export default function New({ topic, onCreate }: NewProps) {
     const response = await API.topic.createTopic({ topic: name });
     const { code, message, result } = response.data;
 
+    setLoading(false);
     if (code === "success" && result !== undefined) {
       onCreate(name, result.topicId);
     }
-
-    setLoading(false);
   }
 
   return (
@@ -81,10 +85,11 @@ export default function New({ topic, onCreate }: NewProps) {
             isValidName && !loading ? theme?.primary3 : theme?.grey3
           }
           icon={
-            <MdAddCircle
-              size="20"
-              color={isValidName && !loading ? theme?.bg1 : theme?.grey1}
-            />
+            isValidName && !loading ? (
+              <MdAddCircle size="20" color={theme?.bg1} />
+            ) : (
+              <CircularProgress size={20} color={theme?.grey1} />
+            )
           }
           disabled={!isValidName && !loading}
           onClick={handleCreate}
