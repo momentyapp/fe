@@ -16,11 +16,15 @@ type Response = ApiResponse<{
   }[];
 }>;
 
-export default async function generateTopics({ text }: Props) {
+export default async function generateTopics(
+  { text }: Props,
+  signal?: AbortSignal
+) {
   const result = await axios.get<Response>("/topic/generate", {
     params: {
       text,
     },
+    signal,
   });
   return result;
 }

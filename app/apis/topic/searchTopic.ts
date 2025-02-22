@@ -15,9 +15,13 @@ type Response = ApiResponse<{
   }[];
 }>;
 
-export default async function searchTopic({ query }: Props) {
+export default async function searchTopic(
+  { query }: Props,
+  signal?: AbortSignal
+) {
   const result = await axios.get<Response>("/topic/search", {
     params: { query },
+    signal,
   });
   return result;
 }

@@ -33,7 +33,7 @@ export default function CircularProgress({
         r={size / 2 - size / 10}
         fill="none"
         stroke={color}
-        stroke-width={size / 10}
+        strokeWidth={size / 10}
         strokeDasharray={`${(size * Math.PI) / 2} ${size * Math.PI}`}
       />
     </svg>

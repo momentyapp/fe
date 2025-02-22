@@ -85,8 +85,11 @@ export default function New({ topic, onCreate }: NewProps) {
             isValidName && !loading ? theme?.primary3 : theme?.grey3
           }
           icon={
-            isValidName && !loading ? (
-              <MdAddCircle size="20" color={theme?.bg1} />
+            !loading ? (
+              <MdAddCircle
+                size="20"
+                color={isValidName ? theme?.bg1 : theme?.grey1}
+              />
             ) : (
               <CircularProgress size={20} color={theme?.grey1} />
             )
