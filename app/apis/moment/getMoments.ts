@@ -11,10 +11,19 @@ type Response = ApiResponse<{
   moments: Moment[];
 }>;
 
-export default async function getMoments({ topicIds, before }: Props) {
-  const result = await axios.post<Response>("/moment/get", {
-    topicIds,
-    before,
-  });
+export default async function getMoments(
+  { topicIds, before }: Props,
+  signal?: AbortSignal
+) {
+  const result = await axios.post<Response>(
+    "/moment/get",
+    {
+      topicIds,
+      before,
+    },
+    {
+      signal,
+    }
+  );
   return result;
 }

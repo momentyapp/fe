@@ -4,6 +4,7 @@ import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
 import useWriteState from "~/hooks/write/useWriteState";
 import ErrorModal from "~/components/common/ErrorModal";
+import { useEffect } from "react";
 
 export default function Write() {
   const {

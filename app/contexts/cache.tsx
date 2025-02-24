@@ -11,8 +11,7 @@ interface CacheValues {
 interface CacheActions {
   setTrendingTopics: (trendingTopics: CacheValues["trendingTopics"]) => void;
   setMoments: (moments: CacheValues["moments"]) => void;
-  lPushMoments: (moments: Moment[]) => void;
-  rPushMoments: (moments: Moment[]) => void;
+  addMoments: (moments: Moment[]) => void;
 }
 
 type Cache = CacheValues & CacheActions;
@@ -23,8 +22,7 @@ const defaultValue: Cache = {
 
   setTrendingTopics: () => {},
   setMoments: () => {},
-  lPushMoments: () => {},
-  rPushMoments: () => {},
+  addMoments: () => {},
 };
 
 const CacheContext = createContext<Cache>(defaultValue);
@@ -51,19 +49,8 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // 모멘트 가져오기
-  async function loadMoments() {
-    const moments = await API.moment.getMoments({ topicIds: [] });
-    const { code, message, result } = moments.data;
-
-    if (code === "success" && result !== undefined) {
-      setCache((prev) => ({ ...prev, moments: result.moments }));
-    }
-  }
-
   useEffect(() => {
     loadTrendingTopics();
-    loadMoments();
   }, []);
 
   return (
@@ -77,18 +64,11 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
         // setMoments
         setMoments: (moments) => setCache((prev) => ({ ...prev, moments })),
 
-        // lPushMoments
-        lPushMoments: (moments) =>
+        // addMoment
+        addMoments: (moments) =>
           setCache((prev) => ({
             ...prev,
-            moments: [...moments, ...prev.moments].sort((a, b) => b.id - a.id),
-          })),
-
-        // rPushMoments
-        rPushMoments: (moments) =>
-          setCache((prev) => ({
-            ...prev,
-            moments: [...prev.moments, ...moments].sort((a, b) => b.id - a.id),
+            moments: [...prev.moments, ...moments].sort((a, b) => a.id - b.id),
           })),
       }}
     >

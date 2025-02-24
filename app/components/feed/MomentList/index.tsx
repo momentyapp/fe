@@ -18,14 +18,12 @@ const Wrapper = styled.div`
 
 interface MomentListProps {
   moments: MomentType[];
-  setMoments: React.Dispatch<React.SetStateAction<MomentType[]>>;
-  onLoadMore: () => Promise<void>;
+  onLoadMore: () => void;
   my?: number;
 }
 
 export default function MomentList({
   moments,
-  setMoments,
   onLoadMore,
   my,
 }: MomentListProps) {
@@ -42,7 +40,7 @@ export default function MomentList({
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
-  } = useMomentListState(session.session);
+  } = useMomentListState(onLoadMore, session.session);
 
   return (
     <Wrapper>

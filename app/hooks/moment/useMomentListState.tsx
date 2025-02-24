@@ -1,21 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import API from "~/apis";
 
 import type { Moment, Session } from "common";
 
-export default function useMomentListState(session?: Session) {
+export default function useMomentListState(
+  onLoadMore: () => void,
+  session?: Session
+) {
   const [detailModalMoment, setDetailModalMoment] = useState<Moment | null>(
     null
   );
   const [emojiModalMoment, setEmojiModalMoment] = useState<Moment | null>(null);
-
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
 
   const observer = useRef(
     new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) console.log("visible");
+        if (entries[0].isIntersecting) onLoadMore();
       },
       { threshold: 0.01 }
     )

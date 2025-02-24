@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router";
@@ -33,8 +33,19 @@ export default function Feed() {
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [moments, setMoments] = useState<MomentType[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const more = useRef(true);
 
   const postedMomentId = location.state?.postedMoment as number | undefined;
+
+  // 최초 모멘트 가져오기
+  useEffect(() => {
+    const abortController = new AbortController();
+    handleLoadMore(abortController.signal);
+
+    return () => abortController.abort();
+  }, []);
 
   // 캐시에서 실시간 트렌드 주제 가져오기
   useEffect(() => {
@@ -67,8 +78,37 @@ export default function Feed() {
     navigate("/write");
   }
 
-  // 모멘트 로드
-  async function handleLoadMore() {}
+  // 모멘트 더 로드
+  async function handleLoadMore(signal?: AbortSignal) {
+    if (!more.current || loading) return;
+
+    try {
+      setLoading(true);
+      const response = await API.moment.getMoments(
+        {
+          topicIds: topics
+            .filter((topic) => topic.enabled)
+            .map((topic) => topic.id),
+          before:
+            moments.length > 0 ? moments[moments.length - 1].id : undefined,
+        },
+        signal
+      );
+      setLoading(false);
+
+      const { code, message, result } = response.data;
+
+      if (code === "success" && result !== undefined) {
+        const { moments: moreMoments } = result;
+
+        cache.addMoments(moreMoments);
+        if (moreMoments.length < 10) more.current = false;
+      }
+    } catch (e) {
+      if (e instanceof Error && e.name === "CanceledError") return;
+      throw e;
+    }
+  }
 
   return (
     <>
@@ -81,7 +121,6 @@ export default function Feed() {
       {/* 모멘트 */}
       <MomentList
         moments={moments}
-        setMoments={setMoments}
         onLoadMore={handleLoadMore}
         my={postedMomentId}
       />
