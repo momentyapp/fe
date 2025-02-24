@@ -11,6 +11,7 @@ export default function useWriteState() {
   const navigate = useNavigate();
 
   const lastTimeout = useRef<NodeJS.Timeout>(null);
+  const abortController = useRef<AbortController>(new AbortController());
 
   const [text, setText] = useState("");
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -25,24 +26,33 @@ export default function useWriteState() {
 
   // 본문 변경 디바운싱
   function handleTextChange(value: string) {
+    abortController.current.abort();
+    abortController.current = new AbortController();
+
     setText(value);
 
     if (lastTimeout.current !== null) clearTimeout(lastTimeout.current);
 
+    // 1000ms 이후
     lastTimeout.current = setTimeout(async () => {
-      if (value.length >= 10 && value.length <= 1000) {
-        const response = await API.topic.generateTopics({ text: value });
-        const { code, message, result } = response.data;
-
-        if (code === "success" && result !== undefined) {
-          setGeneratedTopics(
-            result.topics.filter((topic) =>
-              topics.every((t) => t.name !== topic.name)
-            )
-          );
-        }
-      } else {
+      if (value.length < 10 || value.length > 1000) {
         setGeneratedTopics([]);
+        return;
+      }
+
+      // 주제 생성
+      const response = await API.topic.generateTopics(
+        { text: value },
+        abortController.current.signal
+      );
+      const { code, message, result } = response.data;
+
+      if (code === "success" && result !== undefined) {
+        setGeneratedTopics(
+          result.topics.filter((topic) =>
+            topics.every((t) => t.name !== topic.name)
+          )
+        );
       }
     }, 1000);
   }

@@ -58,10 +58,14 @@ export default function TopicModal({
     setSearchValue(replaced);
 
     if (lastTimeout.current !== null) clearTimeout(lastTimeout.current);
-    if (replaced.length === 0 || !/^[가-힣\da-zA-Z]*$/g.test(replaced)) return;
 
     // 200ms 이후
     lastTimeout.current = setTimeout(async () => {
+      if (replaced.length === 0 || !/^[가-힣\da-zA-Z]*$/g.test(replaced)) {
+        setTopics([]);
+        return;
+      }
+
       // 문자열 검색
       {
         setLoading(true);
@@ -84,8 +88,6 @@ export default function TopicModal({
               ),
             }))
           );
-        } else {
-          setTopics([]);
         }
       }
 
