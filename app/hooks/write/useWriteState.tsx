@@ -70,6 +70,10 @@ export default function useWriteState() {
       },
       config.anonymous ? session.session?.accessToken.token : undefined
     );
+
+    setPosting(false);
+    setConfirmModalOpen(false);
+
     const { code, message, result } = response.data;
 
     if (code === "success" && result !== undefined) {
@@ -79,9 +83,6 @@ export default function useWriteState() {
         },
       });
     }
-
-    setPosting(false);
-    setConfirmModalOpen(false);
   }
 
   return {

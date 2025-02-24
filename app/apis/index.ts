@@ -17,6 +17,8 @@ export const axiosInstance = axios.create({
     "https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/api/",
 });
 
+axiosInstance.defaults.validateStatus = () => true;
+
 export default class API {
   private constructor() {}
 
