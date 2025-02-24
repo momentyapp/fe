@@ -3,6 +3,7 @@ import Body from "~/components/write/Body";
 import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
 import useWriteState from "~/hooks/write/useWriteState";
+import ErrorModal from "~/components/common/ErrorModal";
 
 export default function Write() {
   const {
@@ -20,6 +21,9 @@ export default function Write() {
     confirmModalOpen,
     setConfirmModalOpen,
     handleConfirmPost,
+    errorModalOpen,
+    setErrorModalOpen,
+    errorMessage,
   } = useWriteState();
 
   return (
@@ -54,6 +58,14 @@ export default function Write() {
         onRequestClose={() => setConfirmModalOpen(false)}
         loading={posting}
         onPost={handleConfirmPost}
+      />
+
+      {/* 오류 모달 */}
+      <ErrorModal
+        message={errorMessage}
+        isOpen={errorModalOpen}
+        onRequestClose={() => setErrorModalOpen(false)}
+        onRetry={handleConfirmPost}
       />
     </>
   );

@@ -23,6 +23,8 @@ export default function useWriteState() {
   const [photos, setPhotos] = useState<PhotoFile[]>([]);
   const [posting, setPosting] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // 본문 변경 디바운싱
   function handleTextChange(value: string) {
@@ -82,6 +84,9 @@ export default function useWriteState() {
           postedMomentId: result.momentId,
         },
       });
+    } else {
+      setErrorMessage(message);
+      setErrorModalOpen(true);
     }
   }
 
@@ -100,5 +105,8 @@ export default function useWriteState() {
     confirmModalOpen,
     setConfirmModalOpen,
     handleConfirmPost,
+    errorModalOpen,
+    setErrorModalOpen,
+    errorMessage,
   };
 }

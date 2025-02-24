@@ -13,7 +13,6 @@ import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";
 
 import type { Topic } from "common";
-import API from "~/apis";
 
 const Content = styled.div`
   width: 100%;
