@@ -39,14 +39,6 @@ export default function Feed() {
 
   const postedMomentId = location.state?.postedMoment as number | undefined;
 
-  // 최초 모멘트 가져오기
-  useEffect(() => {
-    const abortController = new AbortController();
-    handleLoadMore(abortController.signal);
-
-    return () => abortController.abort();
-  }, []);
-
   // 캐시에서 실시간 트렌드 주제 가져오기
   useEffect(() => {
     const trendingTopics = cache.trendingTopics;
@@ -79,7 +71,7 @@ export default function Feed() {
   }
 
   // 모멘트 더 로드
-  async function handleLoadMore(signal?: AbortSignal) {
+  async function handleLoadMore(before: number, signal?: AbortSignal) {
     if (!more.current || loading) return;
 
     try {
@@ -89,8 +81,7 @@ export default function Feed() {
           topicIds: topics
             .filter((topic) => topic.enabled)
             .map((topic) => topic.id),
-          before:
-            moments.length > 0 ? moments[moments.length - 1].id : undefined,
+          before: before,
         },
         signal
       );

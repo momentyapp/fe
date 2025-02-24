@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 
 interface MomentListProps {
   moments: MomentType[];
-  onLoadMore: () => void;
+  onLoadMore: (before: number) => void;
   my?: number;
 }
 
@@ -40,7 +40,14 @@ export default function MomentList({
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
-  } = useMomentListState(onLoadMore, session.session);
+  } = useMomentListState(handleLoadMore, session.session);
+
+  function handleLoadMore() {
+    console.log("handleLoadMore");
+    const lastMoment = moments[moments.length - 1];
+    if (lastMoment === undefined) return;
+    onLoadMore(lastMoment.id);
+  }
 
   return (
     <Wrapper>
