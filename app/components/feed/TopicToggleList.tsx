@@ -11,8 +11,9 @@ import TopicToggle from "./TopicToggle";
 
 import type { Topic } from "common";
 
-const Wrapper = styled(TransitionGroup)`
+const Wrapper = styled.div`
   display: flex;
+  flex-direction: row;
   padding: 10px;
   align-items: center;
   box-sizing: border-box;
@@ -21,6 +22,12 @@ const Wrapper = styled(TransitionGroup)`
   top: 60px;
   background-color: ${(props) => props.theme?.bg1};
   z-index: 1;
+`;
+
+const InsideTopicToggleList = styled(TransitionGroup)`
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 
   > * {
     flex-shrink: 0;
@@ -87,12 +94,11 @@ export default function TopicToggleList({
   }
 
   return (
-    <>
-      <Wrapper>
-        <AddTopic backgroundColor={theme?.bg2} onClick={handleOpenModal}>
-          <MdTune size="20" color={theme?.grey1} />
-        </AddTopic>
-
+    <Wrapper>
+      <AddTopic backgroundColor={theme?.bg2} onClick={handleOpenModal}>
+        <MdTune size="20" color={theme?.grey1} />
+      </AddTopic>
+      <InsideTopicToggleList>
         {topicsWithRefs.map((topic) => (
           <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
             {(state) => (
@@ -107,7 +113,7 @@ export default function TopicToggleList({
             )}
           </Transition>
         ))}
-      </Wrapper>
+      </InsideTopicToggleList>
 
       {/* 주제 모달 */}
       <TopicModal
@@ -116,6 +122,6 @@ export default function TopicToggleList({
         onRequestClose={handleCloseModal}
         isOpen={modalOpen}
       />
-    </>
+    </Wrapper>
   );
 }
