@@ -40,14 +40,7 @@ export default function MomentList({
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
-  } = useMomentListState(handleLoadMore, session.session);
-
-  function handleLoadMore() {
-    console.log("handleLoadMore");
-    const lastMoment = moments[moments.length - 1];
-    if (lastMoment === undefined) return;
-    onLoadMore(lastMoment.id);
-  }
+  } = useMomentListState(moments, onLoadMore, session.session);
 
   return (
     <Wrapper>

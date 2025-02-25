@@ -63,6 +63,7 @@ export default function Feed() {
     }
 
     setMoments(filteredMoments);
+    more.current = true;
   }, [cache.moments, topics]);
 
   // 글 쓰기 버튼 클릭 시
