@@ -10,6 +10,8 @@ import { CacheProvider } from "~/contexts/cache";
 import GlobalStyle from "~/styles/global";
 import palette from "~/styles/palette";
 
+import NewMomentListener from "~/socket/NewMomentListener";
+
 import App from "./app";
 
 import type { Route } from "./+types/root";
@@ -85,6 +87,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <SessionProvider>
               <CacheProvider>
                 <GlobalStyle />
+                <NewMomentListener />
                 <main>{children}</main>
               </CacheProvider>
             </SessionProvider>
