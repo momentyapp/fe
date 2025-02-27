@@ -5,6 +5,7 @@ import getTrendingMoments from "./moment/getTrendingMoments";
 import postMoment from "./moment/postMoment";
 import reactMoment from "./moment/reactMoment";
 import getMomentById from "./moment/getMomentById";
+import getMomentByIds from "./moment/getMomentByIds";
 
 import createTopic from "./topic/createTopic";
 import getTrendingTopics from "./topic/getTrendingTopics";
@@ -29,6 +30,7 @@ export default class API {
     postMoment,
     reactMoment,
     getMomentById,
+    getMomentByIds,
   };
 
   static topic = {

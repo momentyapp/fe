@@ -49,24 +49,8 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // 모멘트 가져오기
-  async function loadMoments() {
-    const response = await API.moment.getMoments({ topicIds: [] });
-    const { code, message, result } = response.data;
-
-    if (code === "success" && result !== undefined) {
-      const { moments } = result;
-
-      setCache((prev) => ({
-        ...prev,
-        moments: moments,
-      }));
-    }
-  }
-
   useEffect(() => {
     loadTrendingTopics();
-    loadMoments();
   }, []);
 
   return (
@@ -81,11 +65,20 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
         setMoments: (moments) => setCache((prev) => ({ ...prev, moments })),
 
         // addMoment
-        addMoments: (moments) =>
-          setCache((prev) => ({
-            ...prev,
-            moments: [...prev.moments, ...moments].sort((a, b) => b.id - a.id),
-          })),
+        addMoments: (moments) => {
+          setCache((prev) => {
+            const newMoments = moments.filter((moment) =>
+              prev.moments.every((prevMoment) => prevMoment.id !== moment.id)
+            );
+
+            return {
+              ...prev,
+              moments: [...prev.moments, ...newMoments].sort(
+                (a, b) => b.id - a.id
+              ),
+            };
+          });
+        },
       }}
     >
       {children}

@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { styled } from "styled-components";
+import { styled, ThemeContext } from "styled-components";
 
 import useMomentListState from "~/hooks/moment/useMomentListState";
+import CircularProgress from "~/components/common/CircularProgress";
 import SessionContext from "~/contexts/session";
 
 import Moment from "./Moment";
@@ -11,26 +12,37 @@ import type { Moment as MomentType } from "common";
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 10px 10px 100px 10px;
+  padding: 10px;
   flex-direction: column;
   gap: 10px;
 `;
 
+const End = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 interface MomentListProps {
   moments: MomentType[];
-  onLoadMore: (before: number) => void;
+  onLoadMore: () => void;
+  loading: boolean;
   my?: number;
 }
 
 export default function MomentList({
   moments,
   onLoadMore,
+  loading,
   my,
 }: MomentListProps) {
   const session = useContext(SessionContext);
+  const theme = useContext(ThemeContext);
 
   const {
-    handleLastMomentHit,
+    endRef,
     detailModalMoment,
     setDetailModalMoment,
     emojiModalMoment,
@@ -40,11 +52,11 @@ export default function MomentList({
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
-  } = useMomentListState(moments, onLoadMore, session.session);
+  } = useMomentListState(onLoadMore, session.session);
 
   return (
     <Wrapper>
-      {moments.map((moment, index) => (
+      {moments.map((moment) => (
         <Moment
           key={moment.id}
           moment={moment}
@@ -53,9 +65,12 @@ export default function MomentList({
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
           onEmojiModalOpen={() => setEmojiModalMoment(moment)}
           my={moment.id === my}
-          ref={index === moments.length - 1 ? handleLastMomentHit : undefined}
         />
       ))}
+
+      <End ref={endRef}>
+        {loading && <CircularProgress size={36} color={theme?.grey2} />}
+      </End>
 
       <Modals
         detailModalMoment={detailModalMoment}

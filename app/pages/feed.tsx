@@ -1,12 +1,14 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 import AppBar from "~/components/feed/AppBar";
 import TopicToggleList from "~/components/feed/TopicToggleList";
 import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
+
+import listenNewMoment from "~/hooks/moment/listenNewMoment";
 
 import CacheContext from "~/contexts/cache";
 import API from "~/apis";
@@ -26,10 +28,10 @@ const FloatingButton = styled(Pressable)`
 
 export default function Feed() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const theme = useContext(ThemeContext);
   const cache = useContext(CacheContext);
+  listenNewMoment(handleNewMoment);
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [moments, setMoments] = useState<MomentType[]>([]);
@@ -37,7 +39,10 @@ export default function Feed() {
 
   const more = useRef(true);
 
-  const postedMomentId = location.state?.postedMoment as number | undefined;
+  const enabledTopicsIds = useMemo(
+    () => topics.filter((topic) => topic.enabled).map((topic) => topic.id),
+    [topics]
+  );
 
   // 캐시에서 실시간 트렌드 주제 가져오기
   useEffect(() => {
@@ -49,9 +54,6 @@ export default function Feed() {
   // 캐시에서 모멘트 가져오기
   useEffect(() => {
     const cachedMoments = cache.moments;
-    const enabledTopicsIds = topics
-      .filter((topic) => topic.enabled)
-      .map((topic) => topic.id);
     let filteredMoments: MomentType[];
 
     if (enabledTopicsIds.length > 0) {
@@ -63,42 +65,65 @@ export default function Feed() {
     }
 
     setMoments(filteredMoments);
+  }, [cache.moments, enabledTopicsIds]);
+
+  // 활성화된 주제 목록이 바뀔 시
+  useEffect(() => {
     more.current = true;
-  }, [cache.moments, topics]);
+  }, [enabledTopicsIds]);
+
+  // 모멘트 더 로드
+  async function handleLoadMore() {
+    if (loading || !more.current) return;
+
+    setLoading(true);
+    const before =
+      moments.length === 0 ? undefined : moments[moments.length - 1].id;
+    const response = await API.moment.getMoments({
+      topicIds: topics
+        .filter((topic) => topic.enabled)
+        .map((topic) => topic.id),
+      before,
+    });
+    setLoading(false);
+
+    const { code, message, result } = response.data;
+
+    if (code === "success" && result !== undefined) {
+      const { moments: moreMoments } = result;
+
+      cache.addMoments(moreMoments);
+      if (moreMoments.length < 10) {
+        more.current = false;
+      }
+    }
+  }
 
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
     navigate("/write");
   }
 
-  // 모멘트 더 로드
-  async function handleLoadMore(before: number, signal?: AbortSignal) {
-    if (!more.current || loading) return;
-
-    try {
-      setLoading(true);
-      const response = await API.moment.getMoments(
-        {
-          topicIds: topics
-            .filter((topic) => topic.enabled)
-            .map((topic) => topic.id),
-          before: before,
-        },
-        signal
-      );
-      setLoading(false);
-
-      const { code, message, result } = response.data;
+  // 새 모멘트 업데이트 시
+  async function handleNewMoment({
+    momentId,
+    topicIds,
+  }: {
+    momentId: number;
+    topicIds: number[];
+  }) {
+    if (
+      topicIds.length === 0 ||
+      enabledTopicsIds.length === 0 ||
+      enabledTopicsIds.some((id) => topicIds.includes(id))
+    ) {
+      const response = await API.moment.getMomentById({ momentId });
+      const { code, result } = response.data;
 
       if (code === "success" && result !== undefined) {
-        const { moments: moreMoments } = result;
-
-        cache.addMoments(moreMoments);
-        if (moreMoments.length < 10) more.current = false;
+        const newMoment = result.moment;
+        cache.addMoments([newMoment]);
       }
-    } catch (e) {
-      if (e instanceof Error && e.name === "CanceledError") return;
-      throw e;
     }
   }
 
@@ -114,7 +139,7 @@ export default function Feed() {
       <MomentList
         moments={moments}
         onLoadMore={handleLoadMore}
-        my={postedMomentId}
+        loading={loading}
       />
 
       {/* 글 쓰기 버튼 */}
