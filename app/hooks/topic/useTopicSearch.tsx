@@ -86,7 +86,11 @@ export default function useTopicSearch(
       }
 
       setLoading(true);
-      await Promise.any([searchByString(), searchByMeaning()]);
+      try {
+        await Promise.any([searchByString(), searchByMeaning()]);
+      } catch (e) {
+        if (!(e instanceof Error && e.name === "AggregateError")) throw e;
+      }
       setLoading(false);
     }, 200);
   }
