@@ -10,7 +10,10 @@ export default defineConfig({
     svgr({ svgrOptions: { icon: true } }),
   ],
   server: {
-    host: "0.0.0.0"
+    host: "127.0.0.1",
+    allowedHosts: ["momenty.kr"],
+    port: 7070,
+    strictPort: true,
   },
   publicDir: "app/public",
 });
