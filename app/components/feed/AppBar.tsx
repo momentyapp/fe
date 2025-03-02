@@ -12,7 +12,6 @@ import logout from "~/utils/logout";
 
 import ProfileModal from "./ProfileModal";
 
-
 const StyledHeader = styled.header`
   display: flex;
   padding: 0px 20px;
@@ -85,9 +84,7 @@ export default function AppBar() {
           onClick={() => setModalOpen(true)}
         >
           {photo ? (
-            <Photo
-              src={`https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/file/profile/${photo}`}
-            />
+            <Photo src={`${import.meta.env.VITE_HOST}/file/profile/${photo}`} />
           ) : (
             <MdAccountCircle size="36" color={theme?.grey1} />
           )}

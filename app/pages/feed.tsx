@@ -70,20 +70,21 @@ export default function Feed() {
   // 활성화된 주제 목록이 바뀔 시
   useEffect(() => {
     more.current = true;
+    handleLoadMore(null);
   }, [enabledTopicsIds]);
 
   // 모멘트 더 로드
-  async function handleLoadMore() {
+  async function handleLoadMore(before?: number | null) {
     if (loading || !more.current) return;
 
     setLoading(true);
-    const before =
+    const lastMomentId =
       moments.length === 0 ? undefined : moments[moments.length - 1].id;
     const response = await API.moment.getMoments({
       topicIds: topics
         .filter((topic) => topic.enabled)
         .map((topic) => topic.id),
-      before,
+      before: before === undefined ? lastMomentId : before ?? undefined,
     });
     setLoading(false);
 

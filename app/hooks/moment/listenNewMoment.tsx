@@ -16,5 +16,5 @@ export default function listenNewMoment(
     return () => {
       socket.off("new_moment");
     };
-  }, []);
+  }, [callback]);
 }

@@ -112,7 +112,7 @@ export default function ProfileModal({
             <StyledPressable backgroundColor={theme?.bg2}>
               {photo ? (
                 <Photo
-                  src={`https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/file/profile/${photo}`}
+                  src={`${import.meta.env.VITE_HOST}/file/profile/${photo}`}
                 />
               ) : (
                 <MdAccountCircle size="72" color={theme?.grey1} />

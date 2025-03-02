@@ -79,7 +79,9 @@ export default function Top({ moment, onDetail }: TopProps) {
       <Left>
         {moment.author?.photo ? (
           <Photo
-            src={`https://solid-computing-machine-45v95qwrpqx3qx99-8081.app.github.dev/file/moment/${moment.author.photo}`}
+            src={`${import.meta.env.VITE_HOST}/file/moment/${
+              moment.author.photo
+            }`}
           />
         ) : (
           <MdAccountCircle size="36" color={theme?.grey1} />
