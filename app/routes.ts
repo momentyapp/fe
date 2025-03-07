@@ -10,4 +10,5 @@ export default [
     index("./routes/feed.tsx"),
     route("/write", "./routes/write.tsx"),
   ]),
+  route("/welcome", "./routes/welcome.tsx")
 ] satisfies RouteConfig;

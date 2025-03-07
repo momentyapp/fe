@@ -46,7 +46,7 @@ export default function NeedLoginModal({
   const theme = useContext(ThemeContext);
 
   function handleLogin() {
-    navigate("/login");
+    navigate("/welcome");
   }
 
   return (
