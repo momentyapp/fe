@@ -13,14 +13,14 @@ const Wrapper = styled.button<{ $background: string }>`
   &:not(:disabled):focus-visible {
     transform: scale(1.05);
     filter: brightness(
-      ${(props) => (isDarkColor(props.$background) ? "125%" : "75%")}
+      ${(props) => (isDarkColor(props.$background) ? "120%" : "80%")}
     );
   }
 
   &:not(:disabled):active {
     transform: scale(0.95);
     filter: brightness(
-      ${(props) => (isDarkColor(props.$background) ? "150%" : "50%")}
+      ${(props) => (isDarkColor(props.$background) ? "140%" : "60%")}
     );
   }
 `;

@@ -1,17 +1,21 @@
-import { useState } from "react";
-import { styled } from "styled-components";
+import { useContext, useState } from "react";
+import { styled, ThemeContext } from "styled-components";
 
-const Wrapper = styled.div`
+import isDarkColor from "~/utils/isDarkColor";
+
+const Wrapper = styled.div<{ $background: string }>`
   display: flex;
   padding: 10px;
   align-items: center;
   gap: 10px;
   border-radius: 10px;
-  background: ${(props) => props.theme.bg3};
-  transition: background 0.1s;
+  background: ${(props) => props.$background};
+  transition: background 0.1s, filter 0.1s;
 
-  &:focus-within {
-    background: ${(props) => props.theme.bg1};
+  &:not(:disabled):focus-within {
+    filter: brightness(
+      ${(props) => (isDarkColor(props.$background) ? "120%" : "80%")}
+    );
   }
 `;
 
@@ -35,19 +39,23 @@ const StyledInput = styled.input`
   }
 `;
 
-interface TextInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
+interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode | ((focus: boolean) => React.ReactNode);
   iconPosition?: "left" | "right";
+  backgroundColor?: string;
 }
 
 export default function TextInput({
   icon,
   iconPosition = "left",
+  backgroundColor,
+  type = "text",
   onFocus,
   onBlur,
   ...props
 }: TextInputProps) {
+  const theme = useContext(ThemeContext);
+
   const [focus, setFocus] = useState(false);
 
   function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
@@ -63,13 +71,13 @@ export default function TextInput({
   const iconNode = typeof icon === "function" ? icon(focus) : icon;
 
   return (
-    <Wrapper>
+    <Wrapper $background={backgroundColor ?? theme?.bg3 ?? "transparent"}>
       {iconPosition === "left" && iconNode}
       <StyledInput
         {...props}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        type="text"
+        type={type}
       />
       {iconPosition === "right" && iconNode}
     </Wrapper>

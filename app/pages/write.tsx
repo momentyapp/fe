@@ -1,4 +1,4 @@
-import Top from "~/components/write/Top";
+import Top from "~/components/common/Top";
 import Body from "~/components/write/Body";
 import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
@@ -30,7 +30,7 @@ export default function Write() {
   return (
     <>
       {/* 상단 바 */}
-      <Top onPost={() => setConfirmModalOpen(true)} />
+      <Top onBack={() => setConfirmModalOpen(true)} />
 
       {/* 본문 */}
       <Body

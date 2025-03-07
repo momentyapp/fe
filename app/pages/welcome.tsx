@@ -60,6 +60,10 @@ export default function Welcome() {
     navigate("/");
   }
 
+  function handleLogin() {
+    navigate("/login");
+  }
+
   return (
     <>
       <Top>
@@ -70,7 +74,7 @@ export default function Welcome() {
       </Top>
 
       <Bottom>
-        <AnchorWrapper backgroundColor={theme?.bg1}>
+        <AnchorWrapper onClick={handleLogin} backgroundColor={theme?.bg1}>
           <Anchor color={theme?.grey2} size="16px">
             이미 계정이 있어요.
           </Anchor>
