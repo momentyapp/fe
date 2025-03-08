@@ -11,5 +11,9 @@ export default [
     route("/write", "./routes/write.tsx"),
   ]),
   route("/welcome", "./routes/welcome.tsx"),
-  route("/login", "./routes/login.tsx")
+  route("/login", "./routes/login.tsx"),
+  route("/signup", "./pages/signup/index.tsx", [
+    index("./pages/signup/form.tsx"),
+    route("/signup/term", "./pages/signup/term.tsx"),
+  ]),
 ] satisfies RouteConfig;

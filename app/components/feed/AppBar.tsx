@@ -8,7 +8,6 @@ import Pressable from "~/components/common/Pressable";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
 import SessionContext from "~/contexts/session";
 import Logo from "~/assets/svg/logo.svg?react";
-import logout from "~/utils/logout";
 
 import ProfileModal from "./ProfileModal";
 
@@ -54,15 +53,12 @@ export default function AppBar() {
   const photo = user?.photo;
 
   function handleLogout() {
-    logout();
+    session.logout();
+    navigate(0);
   }
 
   function handleDelete() {
-    // TODO: 회원 탈퇴 요청
-    session.setUser();
-    session.setAccessToken();
-    session.setRefreshToken();
-    navigate(0);
+    // TODO: 회원탈퇴 API 호출
   }
 
   return (

@@ -18,7 +18,7 @@ interface Token {
 }
 
 export default async function refreshToken({ refreshToken }: Props) {
-  const result = await axios.post<Response>("/auth/refreshToken", {
+  const result = await axios.post<Response>("/auth/refresh", {
     refreshToken,
   });
   return result;

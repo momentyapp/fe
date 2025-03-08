@@ -64,6 +64,10 @@ export default function Welcome() {
     navigate("/login");
   }
 
+  function handleSignUp() {
+    navigate("/signup");
+  }
+
   return (
     <>
       <Top>
@@ -82,6 +86,7 @@ export default function Welcome() {
 
         <ButtonList>
           <StyledButton
+            onClick={handleSignUp}
             backgroundColor={theme?.primary3}
             icon={<MdPersonAdd size="24" color={theme?.bg1} />}
           >

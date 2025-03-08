@@ -42,6 +42,7 @@ const InputList = styled.form`
 
 const StyledTextInput = styled(TextInput)`
   width: 100%;
+  padding: 7px 0;
 `;
 
 const Bottom = styled.div`
@@ -90,9 +91,7 @@ export default function Login() {
     const { code, result, message } = response.data;
 
     if (code === "success" && result !== undefined) {
-      session.setUser(result.user);
-      session.setAccessToken(result.accessToken);
-      session.setRefreshToken(result.refreshToken);
+      session.login(result.user, result.accessToken, result.refreshToken);
       navigate("/");
     } else {
       setErrorMessage(message);
@@ -107,30 +106,31 @@ export default function Login() {
       <Body>
         <LogoWrapper>
           <Logo width="72" height="40" />
-          <InputList onSubmit={handleSubmit} id="login_form">
-            <StyledTextInput
-              minLength={2}
-              maxLength={20}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              name="username"
-              autoComplete="username"
-              icon={<MdAlternateEmail size="24" color={theme?.grey2} />}
-              placeholder="사용자 이름"
-            />
-            <StyledTextInput
-              minLength={8}
-              maxLength={20}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              name="password"
-              autoComplete="current-password"
-              icon={<MdPassword size="24" color={theme?.grey2} />}
-              placeholder="비밀번호"
-              type="password"
-            />
-          </InputList>
         </LogoWrapper>
+
+        <InputList onSubmit={handleSubmit} id="login_form">
+          <StyledTextInput
+            minLength={2}
+            maxLength={20}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            name="username"
+            autoComplete="username"
+            icon={<MdAlternateEmail size="24" color={theme?.grey2} />}
+            placeholder="사용자 이름"
+          />
+          <StyledTextInput
+            minLength={8}
+            maxLength={20}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            autoComplete="current-password"
+            icon={<MdPassword size="24" color={theme?.grey2} />}
+            placeholder="비밀번호"
+            type="password"
+          />
+        </InputList>
       </Body>
 
       <Bottom>
