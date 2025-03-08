@@ -70,7 +70,7 @@ export default function useWriteState() {
         topicIds: topics.map((topic) => topic.id),
         expiresIn: config.expiresIn,
       },
-      config.anonymous ? session.accessToken?.token : undefined
+      !config.anonymous ? session.accessToken?.token : undefined
     );
 
     setPosting(false);
