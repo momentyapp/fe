@@ -92,7 +92,7 @@ export default function ProfileModal({
   const theme = useContext(ThemeContext);
   const session = useContext(SessionContext);
 
-  const photo = session?.session?.user?.photo;
+  const photo = session?.user?.photo;
 
   return (
     <ReactModal

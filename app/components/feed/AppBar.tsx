@@ -50,7 +50,7 @@ export default function AppBar() {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const user = session?.session?.user;
+  const user = session?.user;
   const photo = user?.photo;
 
   function handleLogout() {
@@ -59,7 +59,9 @@ export default function AppBar() {
 
   function handleDelete() {
     // TODO: 회원 탈퇴 요청
-    session.setSession(undefined);
+    session.setUser();
+    session.setAccessToken();
+    session.setRefreshToken();
     navigate(0);
   }
 

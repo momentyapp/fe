@@ -14,6 +14,7 @@ import Slide from "~/components/common/Slide";
 import SessionContext from "~/contexts/session";
 
 import Info from "./Info";
+
 import type { Moment } from "common";
 
 const Content = styled.div`
@@ -124,8 +125,8 @@ export default function DetailModal({
                 부적절한 모멘트 신고
               </Typography>
             </Action>
-            {session.session !== undefined &&
-              session.session.user?.id === moment?.author?.id && (
+            {session.user !== undefined &&
+              session.user?.id === moment?.author?.id && (
                 <Action
                   backgroundColor={theme?.bg2}
                   onClick={onDelete}

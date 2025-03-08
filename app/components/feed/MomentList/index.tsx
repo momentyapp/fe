@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 
 import useMomentListState from "~/hooks/moment/useMomentListState";
@@ -52,7 +52,7 @@ export default function MomentList({
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
-  } = useMomentListState(onLoadMore, session.session);
+  } = useMomentListState(onLoadMore, session);
 
   return (
     <Wrapper>

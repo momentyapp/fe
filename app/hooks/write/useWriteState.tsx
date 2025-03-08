@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import API from "~/apis";
@@ -18,7 +18,7 @@ export default function useWriteState() {
   const [generatedTopics, setGeneratedTopics] = useState<GeneratedTopic[]>([]);
   const [config, setConfig] = useState<MomentConfig>({
     expiresIn: 24,
-    anonymous: session.session === undefined,
+    anonymous: session.user === undefined,
   });
   const [photos, setPhotos] = useState<PhotoFile[]>([]);
   const [posting, setPosting] = useState(false);
@@ -70,7 +70,7 @@ export default function useWriteState() {
         topicIds: topics.map((topic) => topic.id),
         expiresIn: config.expiresIn,
       },
-      config.anonymous ? session.session?.accessToken.token : undefined
+      config.anonymous ? session.accessToken?.token : undefined
     );
 
     setPosting(false);

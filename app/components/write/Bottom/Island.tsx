@@ -47,7 +47,7 @@ export default function Island({ config, setConfig, onPost }: IslandProps) {
   const [expireModalOpen, setExpireModalOpen] = useState(false);
 
   function setAnonymous(anonymous: boolean) {
-    if (session.session === undefined) {
+    if (session.user === undefined) {
       setAnonymousModalOpen(true);
       return;
     }

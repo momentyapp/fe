@@ -14,6 +14,9 @@ import generateTopics from "./topic/generateTopics";
 
 import signup from "./user/signup";
 
+import login from "./auth/login";
+import refreshToken from "./auth/refreshToken";
+
 export const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_HOST}/api`,
 });
@@ -41,5 +44,10 @@ export default class API {
 
   static user = {
     signup,
+  };
+
+  static auth = {
+    login,
+    refreshToken,
   };
 }

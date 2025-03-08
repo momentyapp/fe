@@ -2,7 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 
 import API from "~/apis";
 
-import type { Moment, Session } from "common";
+import type { Moment } from "common";
+import type { Session } from "~/contexts/session";
 
 export default function useMomentListState(
   onLoadMore: () => void,
@@ -13,6 +14,8 @@ export default function useMomentListState(
   );
   const [emojiModalMoment, setEmojiModalMoment] = useState<Moment | null>(null);
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
+
+  const accessToken = useMemo(() => session?.accessToken?.token, [session]);
 
   const observer = useMemo(
     () =>
@@ -38,25 +41,22 @@ export default function useMomentListState(
 
   // 반응 추가 함수
   function handleAddReaction(momentId: number, emoji: string) {
-    if (session === undefined) {
+    if (accessToken === undefined) {
       setNeedLoginModalOpen(true);
       return;
     }
 
-    API.moment.reactMoment({ momentId, emoji }, session.accessToken.token);
+    API.moment.reactMoment({ momentId, emoji }, accessToken);
   }
 
   // 반응 제거 함수
   function handleRemoveReaction(momentId: number) {
-    if (session === undefined) {
+    if (accessToken === undefined) {
       setNeedLoginModalOpen(true);
       return;
     }
 
-    API.moment.reactMoment(
-      { momentId, emoji: null },
-      session.accessToken.token
-    );
+    API.moment.reactMoment({ momentId, emoji: null }, accessToken);
   }
 
   // 이모지 선택 함수
