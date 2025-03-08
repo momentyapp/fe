@@ -82,7 +82,13 @@ export default function ErrorModal({
         >
           <Actions>
             <Action
-              backgroundColor={loading ? theme?.grey3 : theme?.grey2}
+              backgroundColor={
+                loading
+                  ? theme?.grey3
+                  : onRetry
+                  ? theme?.grey2
+                  : theme?.primary3
+              }
               onClick={onRequestClose}
               disabled={loading}
             >

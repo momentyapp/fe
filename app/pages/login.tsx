@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { styled, ThemeContext } from "styled-components";
 import { MdAlternateEmail, MdLogin, MdPassword } from "react-icons/md";
@@ -10,6 +10,11 @@ import Pressable from "~/components/common/Pressable";
 import Button from "~/components/common/Button";
 import Top from "~/components/common/Top";
 import TextInput from "~/components/common/TextInput";
+import ErrorModal from "~/components/common/ErrorModal";
+
+import SessionContext from "~/contexts/session";
+
+import API from "~/apis";
 
 const Body = styled.div`
   display: flex;
@@ -67,13 +72,33 @@ const Anchor = styled(Typography)`
 
 export default function Login() {
   const theme = useContext(ThemeContext);
+  const session = useContext(SessionContext);
   const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
 
   function handleSignUp() {
     navigate("/signup");
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {}
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const response = await API.auth.login({ username, password });
+    const { code, result, message } = response.data;
+
+    if (code === "success" && result !== undefined) {
+      session.setUser(result.user);
+      session.setAccessToken(result.accessToken);
+      session.setRefreshToken(result.refreshToken);
+      navigate("/");
+    } else {
+      setErrorMessage(message);
+      setErrorModalOpen(true);
+    }
+  }
 
   return (
     <>
@@ -82,12 +107,24 @@ export default function Login() {
       <Body>
         <LogoWrapper>
           <Logo width="72" height="40" />
-          <InputList onSubmit={handleSubmit}>
+          <InputList onSubmit={handleSubmit} id="login_form">
             <StyledTextInput
+              minLength={2}
+              maxLength={20}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              name="username"
+              autoComplete="username"
               icon={<MdAlternateEmail size="24" color={theme?.grey2} />}
               placeholder="사용자 이름"
             />
             <StyledTextInput
+              minLength={8}
+              maxLength={20}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              autoComplete="current-password"
               icon={<MdPassword size="24" color={theme?.grey2} />}
               placeholder="비밀번호"
               type="password"
@@ -104,6 +141,8 @@ export default function Login() {
         </AnchorWrapper>
 
         <StyledButton
+          type="submit"
+          form="login_form"
           backgroundColor={theme?.primary3}
           icon={<MdLogin size="24" color={theme?.bg1} />}
         >
@@ -112,6 +151,12 @@ export default function Login() {
           </Typography>
         </StyledButton>
       </Bottom>
+
+      <ErrorModal
+        message={errorMessage}
+        isOpen={errorModalOpen}
+        onRequestClose={() => setErrorModalOpen(false)}
+      />
     </>
   );
 }
