@@ -1,10 +1,9 @@
-import Top from "~/components/common/Top";
+import Top from "~/components/write/Top";
 import Body from "~/components/write/Body";
 import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
 import useWriteState from "~/hooks/write/useWriteState";
 import ErrorModal from "~/components/common/ErrorModal";
-import { useEffect } from "react";
 
 export default function Write() {
   const {
@@ -30,7 +29,7 @@ export default function Write() {
   return (
     <>
       {/* 상단 바 */}
-      <Top onBack={() => setConfirmModalOpen(true)} />
+      <Top onPost={() => setConfirmModalOpen(true)} />
 
       {/* 본문 */}
       <Body
