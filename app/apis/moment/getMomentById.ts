@@ -9,11 +9,20 @@ type Response = ApiResponse<{
   moment: Moment;
 }>;
 
-export default async function getMomentById({ momentId }: Props) {
+export default async function getMomentById(
+  { momentId }: Props,
+  accessToken?: string
+) {
   const result = await axios.get<Response>("/moment/getById", {
     params: {
       momentId,
     },
+    headers:
+      accessToken !== undefined
+        ? {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        : undefined,
   });
   return result;
 }

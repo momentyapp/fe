@@ -13,6 +13,7 @@ type Response = ApiResponse<{
 
 export default async function getMoments(
   { topicIds, before }: Props,
+  accessToken?: string,
   signal?: AbortSignal
 ) {
   const result = await axios.post<Response>(
@@ -23,6 +24,12 @@ export default async function getMoments(
     },
     {
       signal,
+      headers:
+        accessToken !== undefined
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : undefined,
     }
   );
   return result;

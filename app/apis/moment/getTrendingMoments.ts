@@ -10,11 +10,20 @@ type Response = ApiResponse<{
   moments: Moment[];
 }>;
 
-export default async function getTrendingMoments({ start }: Props) {
+export default async function getTrendingMoments(
+  { start }: Props,
+  accessToken?: string
+) {
   const result = await axios.get<Response>("/moment/trend", {
     params: {
       start,
     },
+    headers:
+      accessToken !== undefined
+        ? {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        : undefined,
   });
   return result;
 }

@@ -10,6 +10,7 @@ import Pressable from "~/components/common/Pressable";
 
 import listenNewMoment from "~/hooks/moment/listenNewMoment";
 
+import SessionContext from "~/contexts/session";
 import CacheContext from "~/contexts/cache";
 import API from "~/apis";
 
@@ -30,6 +31,7 @@ export default function Feed() {
   const navigate = useNavigate();
 
   const theme = useContext(ThemeContext);
+  const session = useContext(SessionContext);
   const cache = useContext(CacheContext);
   listenNewMoment(handleNewMoment);
 
@@ -80,12 +82,15 @@ export default function Feed() {
     setLoading(true);
     const lastMomentId =
       moments.length === 0 ? undefined : moments[moments.length - 1].id;
-    const response = await API.moment.getMoments({
-      topicIds: topics
-        .filter((topic) => topic.enabled)
-        .map((topic) => topic.id),
-      before: before === undefined ? lastMomentId : before ?? undefined,
-    });
+    const response = await API.moment.getMoments(
+      {
+        topicIds: topics
+          .filter((topic) => topic.enabled)
+          .map((topic) => topic.id),
+        before: before === undefined ? lastMomentId : before ?? undefined,
+      },
+      session.accessToken?.token
+    );
     setLoading(false);
 
     const { code, message, result } = response.data;
@@ -118,7 +123,10 @@ export default function Feed() {
       enabledTopicsIds.length === 0 ||
       enabledTopicsIds.some((id) => topicIds.includes(id))
     ) {
-      const response = await API.moment.getMomentById({ momentId });
+      const response = await API.moment.getMomentById(
+        { momentId },
+        session.accessToken?.token
+      );
       const { code, result } = response.data;
 
       if (code === "success" && result !== undefined) {
