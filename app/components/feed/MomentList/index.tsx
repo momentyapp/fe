@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { styled, ThemeContext } from "styled-components";
 
 import useMomentListState from "~/hooks/moment/useMomentListState";

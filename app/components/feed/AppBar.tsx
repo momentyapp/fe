@@ -54,7 +54,8 @@ export default function AppBar() {
 
   function handleLogout() {
     session.logout();
-    navigate(0);
+    navigate("/welcome");
+    setModalOpen(false);
   }
 
   function handleDelete() {

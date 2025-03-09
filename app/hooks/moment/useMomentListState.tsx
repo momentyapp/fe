@@ -1,6 +1,8 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 
 import API from "~/apis";
+
+import CacheContext from "~/contexts/cache";
 
 import type { Moment } from "common";
 import type { Session } from "~/contexts/session";
@@ -9,6 +11,8 @@ export default function useMomentListState(
   onLoadMore: () => void,
   session?: Session
 ) {
+  const cache = useContext(CacheContext);
+
   const [detailModalMoment, setDetailModalMoment] = useState<Moment | null>(
     null
   );
@@ -40,23 +44,49 @@ export default function useMomentListState(
   );
 
   // 반응 추가 함수
-  function handleAddReaction(momentId: number, emoji: string) {
+  async function handleAddReaction(momentId: number, emoji: string) {
     if (accessToken === undefined) {
       setNeedLoginModalOpen(true);
       return;
     }
 
-    API.moment.reactMoment({ momentId, emoji }, accessToken);
+    const response = await API.moment.reactMoment(
+      { momentId, emoji },
+      accessToken
+    );
+    const { code, result, message } = response.data;
+
+    if (code === "success" && result !== undefined) {
+      const moments = [...cache.moments];
+      const index = moments.findIndex((moment) => moment.id === momentId);
+      if (index === -1) return;
+      moments[index].reactions = result.reactions;
+      moments[index].myEmoji = emoji;
+      cache.setMoments(moments);
+    }
   }
 
   // 반응 제거 함수
-  function handleRemoveReaction(momentId: number) {
+  async function handleRemoveReaction(momentId: number) {
     if (accessToken === undefined) {
       setNeedLoginModalOpen(true);
       return;
     }
 
-    API.moment.reactMoment({ momentId, emoji: null }, accessToken);
+    const response = await API.moment.reactMoment(
+      { momentId, emoji: null },
+      accessToken
+    );
+    const { code, result, message } = response.data;
+
+    if (code === "success" && result !== undefined) {
+      const moments = [...cache.moments];
+      const index = moments.findIndex((moment) => moment.id === momentId);
+      if (index === -1) return;
+      moments[index].reactions = result.reactions;
+      moments[index].myEmoji = undefined;
+      cache.setMoments(moments);
+    }
   }
 
   // 이모지 선택 함수
