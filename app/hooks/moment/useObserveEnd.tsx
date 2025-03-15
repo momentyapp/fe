@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 
-export default function useInfiniteMoments(onLoadMore: () => void) {
+export default function useObserveEnd(onLoadMore: () => void) {
   const observer = useMemo(
     () =>
       new IntersectionObserver(
@@ -27,7 +27,5 @@ export default function useInfiniteMoments(onLoadMore: () => void) {
     [observer]
   );
 
-  return {
-    observeEnd,
-  };
+  return observeEnd;
 }

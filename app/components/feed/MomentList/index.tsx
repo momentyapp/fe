@@ -3,13 +3,16 @@ import { styled, ThemeContext } from "styled-components";
 
 import useReactMoment from "~/hooks/moment/useReactMoment";
 import useMomentInfoState from "~/hooks/moment/useMomentInfoState";
-import useInfiniteMoments from "~/hooks/moment/useInfiniteMoments";
+import useObserveEnd from "~/hooks/moment/useObserveEnd";
 
 import CircularProgress from "~/components/common/CircularProgress";
+import NeedLoginModal from "~/components/common/NeedLoginModal";
+
 import SessionContext from "~/contexts/session";
 
+import EmojiPickerModal from "./EmojiPickerModal";
+import InfoModal from "./InfoModal";
 import Moment from "./Moment";
-import Modals from "./Modals";
 
 import type { Moment as MomentType } from "common";
 
@@ -66,7 +69,7 @@ export default function MomentList({
     handleMomentInfoClose,
   } = useMomentInfoState();
 
-  const { observeEnd } = useInfiniteMoments(onLoadMore);
+  const observeEnd = useObserveEnd(onLoadMore);
 
   return (
     <Wrapper>
@@ -82,19 +85,37 @@ export default function MomentList({
         />
       ))}
 
+      {/* 모멘트 목록 끝 */}
       <End ref={observeEnd}>
         {loading && <CircularProgress size={36} color={theme?.grey2} />}
       </End>
 
-      <Modals
-        momentInfoModalOpen={momentInfoModalOpen}
-        momentInfo={momentInfo}
-        onMomentInfoClose={handleMomentInfoClose}
-        emojiModalMoment={emojiModalMoment}
-        setEmojiModalMoment={setEmojiModalMoment}
-        needLoginModalOpen={needLoginModalOpen}
-        setNeedLoginModalOpen={setNeedLoginModalOpen}
-        handleSelectEmoji={handleSelectEmoji}
+      {/* 로그인 필요 모달 */}
+      <NeedLoginModal
+        isOpen={needLoginModalOpen}
+        onRequestClose={() => setNeedLoginModalOpen(false)}
+        message="모멘트에 반응을 남기려면 로그인해야 합니다."
+      />
+
+      {/* 모멘트 상세 모달 */}
+      {momentInfo !== null && (
+        <InfoModal
+          moment={momentInfo}
+          isOpen={momentInfoModalOpen}
+          onRequestClose={handleMomentInfoClose}
+          onReport={() => {}}
+          onDelete={() => {}}
+        />
+      )}
+
+      {/* 이모지 피커 모달 */}
+      <EmojiPickerModal
+        isOpen={emojiModalMoment !== null}
+        onRequestClose={() => setEmojiModalMoment(null)}
+        myEmoji={emojiModalMoment?.myEmoji}
+        onSelect={(emoji) =>
+          emojiModalMoment && handleSelectEmoji(emojiModalMoment, emoji)
+        }
       />
     </Wrapper>
   );

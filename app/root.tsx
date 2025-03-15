@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { ThemeProvider, type DefaultTheme } from "styled-components";
 import ReactModal from "react-modal";
+import "react-photo-view/dist/react-photo-view.css";
 
 import PreferenceContext, { PreferenceProvider } from "~/contexts/preference";
 import { SessionProvider } from "~/contexts/session";

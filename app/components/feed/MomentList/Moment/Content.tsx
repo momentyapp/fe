@@ -1,7 +1,9 @@
 import { useContext } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
 import Typography from "~/components/common/Typography";
+import Pressable from "~/components/common/Pressable";
 
 import type { Moment } from "common";
 
@@ -29,6 +31,13 @@ const PhotoContainer = styled.div`
   gap: 10px;
   overflow-x: auto;
   width: 100%;
+`;
+
+const PhotoWrapper = styled(Pressable)`
+  height: 100%;
+  border-radius: 10px;
+  padding: 0;
+  overflow: hidden;
 `;
 
 const StyledImg = styled.img`
@@ -65,6 +74,7 @@ interface ContentProps {
 
 export default function Content({ moment }: ContentProps) {
   const theme = useContext(ThemeContext);
+
   return (
     <Wrapper>
       {/* 본문 */}
@@ -74,14 +84,25 @@ export default function Content({ moment }: ContentProps) {
 
       {/* 사진 */}
       {moment.body.photos && moment.body.photos.length > 0 && (
-        <PhotoContainer>
-          {moment.body.photos.map((photo, index) => (
-            <StyledImg
-              key={index}
-              src={`${import.meta.env.VITE_HOST}/file/moment/${photo}`}
-            />
-          ))}
-        </PhotoContainer>
+        <PhotoProvider
+          speed={() => 300}
+          easing={() => "cubic-bezier(0.175, 0.885, 0.32, 1.275)"}
+        >
+          <PhotoContainer>
+            {moment.body.photos.map((photo, index) => (
+              <PhotoView
+                key={photo}
+                src={`${import.meta.env.VITE_HOST}/file/moment/${photo}`}
+              >
+                <PhotoWrapper>
+                  <StyledImg
+                    src={`${import.meta.env.VITE_HOST}/file/moment/${photo}`}
+                  />
+                </PhotoWrapper>
+              </PhotoView>
+            ))}
+          </PhotoContainer>
+        </PhotoProvider>
       )}
 
       {/* 주제 */}

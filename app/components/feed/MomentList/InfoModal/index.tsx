@@ -49,20 +49,20 @@ const Action = styled(Button)`
   justify-content: flex-start;
 `;
 
-interface DetailModalProps extends Omit<ReactModal.Props, "style"> {
+interface InfoModalProps extends Omit<ReactModal.Props, "style"> {
   moment?: Moment;
   onReport: () => void;
   onDelete: () => void;
 }
 
-export default function DetailModal({
+export default function InfoModal({
   moment,
   onReport,
   onDelete,
   onRequestClose,
   isOpen,
   ...props
-}: DetailModalProps) {
+}: InfoModalProps) {
   const theme = useContext(ThemeContext);
   const session = useContext(SessionContext);
 
