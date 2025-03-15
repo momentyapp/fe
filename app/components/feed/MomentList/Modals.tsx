@@ -6,8 +6,10 @@ import EmojiPickerModal from "./EmojiPickerModal";
 import type { Moment } from "common";
 
 interface ModalsProps {
-  detailModalMoment: Moment | null;
-  setDetailModalMoment: React.Dispatch<React.SetStateAction<Moment | null>>;
+  momentInfoModalOpen: boolean;
+  momentInfo: Moment | null;
+  onMomentInfoClose: () => void;
+
   emojiModalMoment: Moment | null;
   setEmojiModalMoment: React.Dispatch<React.SetStateAction<Moment | null>>;
   needLoginModalOpen: boolean;
@@ -16,8 +18,10 @@ interface ModalsProps {
 }
 
 export default function Modals({
-  detailModalMoment,
-  setDetailModalMoment,
+  momentInfoModalOpen,
+  momentInfo,
+  onMomentInfoClose,
+
   emojiModalMoment,
   setEmojiModalMoment,
   needLoginModalOpen,
@@ -34,13 +38,15 @@ export default function Modals({
       />
 
       {/* 모멘트 상세 모달 */}
-      <DetailModal
-        moment={detailModalMoment ?? undefined}
-        isOpen={detailModalMoment !== null}
-        onRequestClose={() => setDetailModalMoment(null)}
-        onReport={() => {}}
-        onDelete={() => {}}
-      />
+      {momentInfo !== null && (
+        <DetailModal
+          moment={momentInfo}
+          isOpen={momentInfoModalOpen}
+          onRequestClose={() => onMomentInfoClose()}
+          onReport={() => {}}
+          onDelete={() => {}}
+        />
+      )}
 
       {/* 이모지 피커 모달 */}
       <EmojiPickerModal

@@ -1,7 +1,10 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { styled, ThemeContext } from "styled-components";
 
-import useMomentListState from "~/hooks/moment/useMomentListState";
+import useReactMoment from "~/hooks/moment/useReactMoment";
+import useMomentInfoState from "~/hooks/moment/useMomentInfoState";
+import useInfiniteMoments from "~/hooks/moment/useInfiniteMoments";
+
 import CircularProgress from "~/components/common/CircularProgress";
 import SessionContext from "~/contexts/session";
 
@@ -41,10 +44,12 @@ export default function MomentList({
   const session = useContext(SessionContext);
   const theme = useContext(ThemeContext);
 
+  const accessToken = useMemo(
+    () => session?.accessToken?.token ?? null,
+    [session]
+  );
+
   const {
-    endRef,
-    detailModalMoment,
-    setDetailModalMoment,
     emojiModalMoment,
     setEmojiModalMoment,
     needLoginModalOpen,
@@ -52,7 +57,16 @@ export default function MomentList({
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
-  } = useMomentListState(onLoadMore, session);
+  } = useReactMoment(accessToken);
+
+  const {
+    momentInfoModalOpen,
+    momentInfo,
+    handleMomentInfoOpen,
+    handleMomentInfoClose,
+  } = useMomentInfoState();
+
+  const { observeEnd } = useInfiniteMoments(onLoadMore);
 
   return (
     <Wrapper>
@@ -60,7 +74,7 @@ export default function MomentList({
         <Moment
           key={moment.id}
           moment={moment}
-          onDetail={setDetailModalMoment}
+          onInfo={handleMomentInfoOpen}
           onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
           onEmojiModalOpen={() => setEmojiModalMoment(moment)}
@@ -68,13 +82,14 @@ export default function MomentList({
         />
       ))}
 
-      <End ref={endRef}>
+      <End ref={observeEnd}>
         {loading && <CircularProgress size={36} color={theme?.grey2} />}
       </End>
 
       <Modals
-        detailModalMoment={detailModalMoment}
-        setDetailModalMoment={setDetailModalMoment}
+        momentInfoModalOpen={momentInfoModalOpen}
+        momentInfo={momentInfo}
+        onMomentInfoClose={handleMomentInfoClose}
         emojiModalMoment={emojiModalMoment}
         setEmojiModalMoment={setEmojiModalMoment}
         needLoginModalOpen={needLoginModalOpen}

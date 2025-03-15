@@ -1,51 +1,21 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 
 import API from "~/apis";
-
 import CacheContext from "~/contexts/cache";
 
 import type { Moment } from "common";
-import type { Session } from "~/contexts/session";
 
-export default function useMomentListState(
-  onLoadMore: () => void,
-  session?: Session
-) {
+export default function useReactMoment(accessToken: string | null) {
   const cache = useContext(CacheContext);
 
-  const [detailModalMoment, setDetailModalMoment] = useState<Moment | null>(
-    null
-  );
   const [emojiModalMoment, setEmojiModalMoment] = useState<Moment | null>(null);
+
+  // 로그인 필요 모달
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
-
-  const accessToken = useMemo(() => session?.accessToken?.token, [session]);
-
-  const observer = useMemo(
-    () =>
-      new IntersectionObserver(
-        (entries) => {
-          if (entries[entries.length - 1].isIntersecting) onLoadMore();
-        },
-        { threshold: 0.01 }
-      ),
-    [onLoadMore]
-  );
-
-  const moreTrggierRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node !== null) {
-        observer.observe(node);
-      } else {
-        observer.disconnect();
-      }
-    },
-    [observer]
-  );
 
   // 반응 추가 함수
   async function handleAddReaction(momentId: number, emoji: string) {
-    if (accessToken === undefined) {
+    if (accessToken === null) {
       setNeedLoginModalOpen(true);
       return;
     }
@@ -68,7 +38,7 @@ export default function useMomentListState(
 
   // 반응 제거 함수
   async function handleRemoveReaction(momentId: number) {
-    if (accessToken === undefined) {
+    if (accessToken === null) {
       setNeedLoginModalOpen(true);
       return;
     }
@@ -97,13 +67,12 @@ export default function useMomentListState(
   }
 
   return {
-    endRef: moreTrggierRef,
-    detailModalMoment,
-    setDetailModalMoment,
     emojiModalMoment,
     setEmojiModalMoment,
+
     needLoginModalOpen,
     setNeedLoginModalOpen,
+
     handleAddReaction,
     handleRemoveReaction,
     handleSelectEmoji,
