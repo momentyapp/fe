@@ -8,11 +8,12 @@ interface Props {
 type Response = ApiResponse<{
   count: number;
   topics: {
-    id: number;
+    id?: number;
     name: string;
-    trending: boolean;
+    trending?: boolean;
     score: number;
-    usage: number;
+    usage?: number;
+    known: boolean;
   }[];
 }>;
 

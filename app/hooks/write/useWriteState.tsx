@@ -35,7 +35,7 @@ export default function useWriteState() {
 
     if (lastTimeout.current !== null) clearTimeout(lastTimeout.current);
 
-    // 1000ms 이후
+    // 500ms 이후
     lastTimeout.current = setTimeout(async () => {
       if (value.length < 10 || value.length > 1000) {
         setGeneratedTopics([]);
@@ -56,7 +56,7 @@ export default function useWriteState() {
           )
         );
       }
-    }, 1000);
+    }, 500);
   }
 
   // 최종 게시하는 함수

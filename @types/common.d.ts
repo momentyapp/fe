@@ -15,10 +15,11 @@ declare module "common" {
 
   export interface GeneratedTopic {
     name: string;
-    id: number;
+    id?: number;
     usage?: number;
     trending?: boolean;
     score: number;
+    known: boolean;
   }
 
   export interface Moment {

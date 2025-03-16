@@ -1,12 +1,13 @@
 import { createRef, useContext, useEffect, useState, type Ref } from "react";
 import { styled, ThemeContext } from "styled-components";
-import { MdAdd } from "react-icons/md";
 
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Emoji from "~/components/common/Emoji";
+import CircularProgress from "~/components/common/CircularProgress";
 
 import type { TransitionStatus } from "react-transition-group";
+import { MdClose } from "react-icons/md";
 
 const Wrapper = styled.div<{
   $in: boolean;
@@ -46,6 +47,7 @@ const StyledTypography = styled(Typography)`
 interface GeneratedTopicProps {
   topic: string;
   onClick: () => void;
+  loading?: boolean;
   transitionStatus?: TransitionStatus;
   ref: Ref<HTMLDivElement>;
 }
@@ -53,6 +55,7 @@ interface GeneratedTopicProps {
 export default function GeneratedTopic({
   topic,
   onClick,
+  loading = false,
   ref,
   transitionStatus = "entered",
 }: GeneratedTopicProps) {
@@ -81,11 +84,18 @@ export default function GeneratedTopic({
       $width={width}
     >
       <StyledButton
-        backgroundColor={theme?.bg1}
-        icon={<MdAdd size="20" color={theme?.grey1} />}
+        backgroundColor={loading ? theme?.bg3 : theme?.bg1}
+        icon={
+          loading ? (
+            <CircularProgress size={20} color={theme?.grey1} />
+          ) : (
+            <MdClose size="20" color={theme?.grey1} />
+          )
+        }
         iconPosition="right"
         onClick={onClick}
         ref={contentRef}
+        disabled={loading}
       >
         <StyledTypography color={theme?.grey1} size="16px">
           <Emoji>✨</Emoji>
