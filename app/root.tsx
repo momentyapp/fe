@@ -1,10 +1,9 @@
-import { useContext, useState, useEffect } from "react";
+import {  useState, useEffect } from "react";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { ThemeProvider, type DefaultTheme } from "styled-components";
 import ReactModal from "react-modal";
 import "react-photo-view/dist/react-photo-view.css";
 
-import PreferenceContext, { PreferenceProvider } from "~/contexts/preference";
 import { CacheProvider } from "~/contexts/cache";
 
 import GlobalStyle from "~/styles/global";
@@ -43,23 +42,7 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const preference = useContext(PreferenceContext);
-  const [theme, setTheme] = useState<DefaultTheme>(
-    preference.theme === "dark" ? palette.dark : palette.light
-  );
-
-  // 테마가 디바이스 설정에 따라 변경되도록 설정
-  useEffect(() => {
-    if (preference.theme !== "device") return;
-
-    const match = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const eventListener = (e: MediaQueryListEvent) =>
-      setTheme(e.matches ? palette.dark : palette.light);
-    match.addEventListener("change", eventListener);
-
-    return () => match.removeEventListener("change", eventListener);
-  }, [preference.theme]);
+  const [theme, setTheme] = useState<DefaultTheme>(palette.dark);
 
   // 모달 기본 설정
   useEffect(() => {
@@ -81,12 +64,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider theme={theme}>
-          <PreferenceProvider>
-            <CacheProvider>
-              <GlobalStyle />
-              <main>{children}</main>
-            </CacheProvider>
-          </PreferenceProvider>
+          <CacheProvider>
+            <GlobalStyle />
+            <main>{children}</main>
+          </CacheProvider>
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
