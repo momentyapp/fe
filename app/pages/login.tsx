@@ -12,7 +12,7 @@ import Top from "~/components/common/Top";
 import TextInput from "~/components/common/TextInput";
 import ErrorModal from "~/components/common/ErrorModal";
 
-import SessionContext from "~/contexts/session";
+import useSession from "~/contexts/useSession";
 
 import API from "~/apis";
 
@@ -73,7 +73,7 @@ const Anchor = styled(Typography)`
 
 export default function Login() {
   const theme = useContext(ThemeContext);
-  const session = useContext(SessionContext);
+  const session = useSession();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");

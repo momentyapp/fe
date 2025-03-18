@@ -5,7 +5,6 @@ import ReactModal from "react-modal";
 import "react-photo-view/dist/react-photo-view.css";
 
 import PreferenceContext, { PreferenceProvider } from "~/contexts/preference";
-import { SessionProvider } from "~/contexts/session";
 import { CacheProvider } from "~/contexts/cache";
 
 import GlobalStyle from "~/styles/global";
@@ -83,12 +82,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <ThemeProvider theme={theme}>
           <PreferenceProvider>
-            <SessionProvider>
-              <CacheProvider>
-                <GlobalStyle />
-                <main>{children}</main>
-              </CacheProvider>
-            </SessionProvider>
+            <CacheProvider>
+              <GlobalStyle />
+              <main>{children}</main>
+            </CacheProvider>
           </PreferenceProvider>
         </ThemeProvider>
         <ScrollRestoration />

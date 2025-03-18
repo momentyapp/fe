@@ -2,7 +2,7 @@ import Top from "~/components/write/Top";
 import Body from "~/components/write/Body";
 import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";
-import useWriteState from "~/hooks/write/useWriteState";
+import useWriteState from "~/hooks/useWriteState";
 import ErrorModal from "~/components/common/ErrorModal";
 
 export default function Write() {

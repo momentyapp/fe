@@ -8,10 +8,11 @@ import TopicToggleList from "~/components/feed/TopicToggleList";
 import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
 
-import listenNewMoment from "~/hooks/moment/listenNewMoment";
+import listenNewMoment from "~/hooks/listenNewMoment";
 
-import SessionContext from "~/contexts/session";
+import useSession from "~/contexts/useSession";
 import CacheContext from "~/contexts/cache";
+
 import API from "~/apis";
 
 import type { Moment as MomentType, Topic } from "common";
@@ -31,7 +32,7 @@ export default function Feed() {
   const navigate = useNavigate();
 
   const theme = useContext(ThemeContext);
-  const session = useContext(SessionContext);
+  const session = useSession();
   const cache = useContext(CacheContext);
   listenNewMoment(handleNewMoment);
 

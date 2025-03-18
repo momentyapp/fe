@@ -6,7 +6,7 @@ import { MdAccountCircle, MdMenu } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
-import SessionContext from "~/contexts/session";
+import useSession from "~/contexts/useSession";
 import Logo from "~/assets/svg/logo.svg?react";
 
 import ProfileModal from "./ProfileModal";
@@ -44,7 +44,7 @@ const Photo = styled.img`
 
 export default function AppBar() {
   const theme = useContext(ThemeContext);
-  const session = useContext(SessionContext);
+  const session = useSession();
   const navigate = useNavigate();
 
   const [modalOpen, setModalOpen] = useState(false);

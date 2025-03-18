@@ -1,13 +1,13 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import API from "~/apis";
-import SessionContext from "~/contexts/session";
+import useSession from "~/contexts/useSession";
 
 import type { Topic, GeneratedTopic, MomentConfig, PhotoFile } from "common";
 
 export default function useWriteState() {
-  const session = useContext(SessionContext);
+  const session = useSession();
   const navigate = useNavigate();
 
   const lastTimeout = useRef<NodeJS.Timeout>(null);

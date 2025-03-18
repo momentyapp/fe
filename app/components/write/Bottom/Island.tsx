@@ -6,7 +6,8 @@ import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
 import Pressable from "~/components/common/Pressable";
-import SessionContext from "~/contexts/session";
+
+import useSession from "~/contexts/useSession";
 
 import ExpireModal from "./ExpireModal";
 import ConfigList from "./ConfigList";
@@ -41,7 +42,7 @@ interface IslandProps {
 
 export default function Island({ config, setConfig, onPost }: IslandProps) {
   const theme = useContext(ThemeContext);
-  const session = useContext(SessionContext);
+  const session = useSession();
 
   const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
   const [expireModalOpen, setExpireModalOpen] = useState(false);

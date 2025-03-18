@@ -3,7 +3,7 @@ import { styled, ThemeContext } from "styled-components";
 import { MdAddAPhoto } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
-import usePhotoHandler from "~/hooks/write/usePhotoHandler";
+import usePhotoHandler from "~/hooks/usePhotoHandler";
 
 import Photo from "./Photo";
 
@@ -34,10 +34,7 @@ interface PhotoListProps {
   onPhotosChange: React.Dispatch<React.SetStateAction<PhotoFile[]>>;
 }
 
-export default function PhotoList({
-  photos,
-  onPhotosChange,
-}: PhotoListProps) {
+export default function PhotoList({ photos, onPhotosChange }: PhotoListProps) {
   const theme = useContext(ThemeContext);
 
   const { handleAddPhoto, handleDeletePhoto } = usePhotoHandler(onPhotosChange);

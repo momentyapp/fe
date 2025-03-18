@@ -7,7 +7,7 @@ import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
 import CacheContext from "~/contexts/cache";
-import useTopicSearch from "~/hooks/topic/useTopicSearch";
+import useTopicSearch from "~/hooks/useTopicSearch";
 
 import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";

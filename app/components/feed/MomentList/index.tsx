@@ -1,14 +1,14 @@
 import { useContext, useMemo } from "react";
 import { styled, ThemeContext } from "styled-components";
 
-import useReactMoment from "~/hooks/moment/useReactMoment";
-import useMomentInfoState from "~/hooks/moment/useMomentInfoState";
-import useObserveEnd from "~/hooks/moment/useObserveEnd";
+import useReactMoment from "~/hooks/useReactMoment";
+import useMomentInfoState from "~/hooks/useMomentInfoState";
+import useObserveEnd from "~/hooks/useObserveEnd";
 
 import CircularProgress from "~/components/common/CircularProgress";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
 
-import SessionContext from "~/contexts/session";
+import useSession from "~/contexts/useSession";
 
 import EmojiPickerModal from "./EmojiPickerModal";
 import InfoModal from "./InfoModal";
@@ -44,7 +44,7 @@ export default function MomentList({
   loading,
   my,
 }: MomentListProps) {
-  const session = useContext(SessionContext);
+  const session = useSession();
   const theme = useContext(ThemeContext);
 
   const accessToken = useMemo(

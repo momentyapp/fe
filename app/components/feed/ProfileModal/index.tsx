@@ -12,9 +12,11 @@ import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
 import Pressable from "~/components/common/Pressable";
-import SessionContext from "~/contexts/session";
+
+import useSession from "~/contexts/useSession";
 
 import Info from "./Info";
+
 import type { User } from "common";
 
 const Avatar = styled.div`
@@ -90,7 +92,7 @@ export default function ProfileModal({
   ...props
 }: ProfileModalProps) {
   const theme = useContext(ThemeContext);
-  const session = useContext(SessionContext);
+  const session = useSession();
 
   const photo = session?.user?.photo;
 

@@ -1,13 +1,7 @@
 import { useContext, useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { styled, ThemeContext } from "styled-components";
-import {
-  MdAlternateEmail,
-  MdArrowForward,
-  MdCheck,
-  MdLogin,
-  MdPassword,
-} from "react-icons/md";
+import { MdArrowForward, MdCheck } from "react-icons/md";
 
 import Logo from "~/assets/svg/logo.svg?react";
 
@@ -15,10 +9,9 @@ import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
 import Button from "~/components/common/Button";
 import Top from "~/components/common/Top";
-import TextInput from "~/components/common/TextInput";
 import ErrorModal from "~/components/common/ErrorModal";
 
-import SessionContext from "~/contexts/session";
+import useSession from "~/contexts/useSession";
 
 import API from "~/apis";
 
@@ -77,7 +70,7 @@ export interface SignupContext {
 
 export default function Signup() {
   const theme = useContext(ThemeContext);
-  const session = useContext(SessionContext);
+  const session = useSession();
   const location = useLocation();
   const navigate = useNavigate();
 
