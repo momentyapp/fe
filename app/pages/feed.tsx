@@ -11,7 +11,8 @@ import Pressable from "~/components/common/Pressable";
 import listenNewMoment from "~/hooks/listenNewMoment";
 
 import useSession from "~/contexts/useSession";
-import CacheContext from "~/contexts/cache";
+import useMomentStore from "~/contexts/useMomentStore";
+import useTopicStore from "~/contexts/useTopicStore";
 
 import API from "~/apis";
 
@@ -33,7 +34,8 @@ export default function Feed() {
 
   const theme = useContext(ThemeContext);
   const session = useSession();
-  const cache = useContext(CacheContext);
+  const momentStore = useMomentStore();
+  const topicStore = useTopicStore();
   listenNewMoment(handleNewMoment);
 
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -49,14 +51,14 @@ export default function Feed() {
 
   // 캐시에서 실시간 트렌드 주제 가져오기
   useEffect(() => {
-    const trendingTopics = cache.trendingTopics;
+    const trendingTopics = topicStore.trendingTopics;
     if (trendingTopics.length === 0) return;
     setTopics(trendingTopics.map((topic) => ({ ...topic, enabled: false })));
-  }, [cache.trendingTopics]);
+  }, [topicStore.trendingTopics]);
 
   // 캐시에서 모멘트 가져오기
   useEffect(() => {
-    const cachedMoments = cache.moments;
+    const cachedMoments = momentStore.moments;
     let filteredMoments: MomentType[];
 
     if (enabledTopicsIds.length > 0) {
@@ -68,7 +70,7 @@ export default function Feed() {
     }
 
     setMoments(filteredMoments);
-  }, [cache.moments, enabledTopicsIds]);
+  }, [momentStore.moments, enabledTopicsIds]);
 
   // 활성화된 주제 목록이 바뀔 시
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function Feed() {
     if (code === "success" && result !== undefined) {
       const { moments: moreMoments } = result;
 
-      cache.addMoments(moreMoments);
+      momentStore.add(moreMoments);
       if (moreMoments.length < 10) {
         more.current = false;
       }
@@ -132,7 +134,7 @@ export default function Feed() {
 
       if (code === "success" && result !== undefined) {
         const newMoment = result.moment;
-        cache.addMoments([newMoment]);
+        momentStore.add([newMoment]);
       }
     }
   }

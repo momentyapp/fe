@@ -1,10 +1,8 @@
-import {  useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { ThemeProvider, type DefaultTheme } from "styled-components";
 import ReactModal from "react-modal";
 import "react-photo-view/dist/react-photo-view.css";
-
-import { CacheProvider } from "~/contexts/cache";
 
 import GlobalStyle from "~/styles/global";
 import palette from "~/styles/palette";
@@ -64,10 +62,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider theme={theme}>
-          <CacheProvider>
-            <GlobalStyle />
-            <main>{children}</main>
-          </CacheProvider>
+          <GlobalStyle />
+          <main>{children}</main>
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />

@@ -4,6 +4,7 @@ import { Outlet } from "react-router";
 import ReactModal from "react-modal";
 
 import useSessionRestore from "~/hooks/useSessionRestore";
+import useTrendingTopics from "~/hooks/useTrendingTopics";
 
 export default function App() {
   const theme = useContext(ThemeContext);
@@ -22,6 +23,9 @@ export default function App() {
 
   // 세션 복원
   useSessionRestore();
+
+  // 실시간 트렌드 주제 가져오기
+  useTrendingTopics();
 
   return <Outlet />;
 }

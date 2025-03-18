@@ -13,15 +13,14 @@ export default function useSessionRestore() {
   const session = useSession();
 
   useEffect(() => {
-    (async () => {
-      const restoredSession = await restoreSession();
+    restoreSession().then((restoredSession) => {
       if (restoredSession === null) return;
       session.login(
         restoredSession.user,
         restoredSession.accessToken,
         restoredSession.refreshToken
       );
-    })();
+    });
   }, []);
 }
 

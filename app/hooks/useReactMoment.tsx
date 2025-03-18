@@ -1,17 +1,15 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import API from "~/apis";
-import CacheContext from "~/contexts/cache";
+import useMomentStore from "~/contexts/useMomentStore";
 
 import type { Moment } from "common";
 
 export default function useReactMoment(accessToken: string | null) {
-  const cache = useContext(CacheContext);
+  const momentStore = useMomentStore();
 
-  const [emojiModalMoment, setEmojiModalMoment] = useState<Moment | null>(null);
-
-  // 로그인 필요 모달
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
+  const [emojiModalMoment, setEmojiModalMoment] = useState<Moment | null>(null);
 
   // 반응 추가 함수
   async function handleAddReaction(momentId: number, emoji: string) {
@@ -27,12 +25,10 @@ export default function useReactMoment(accessToken: string | null) {
     const { code, result, message } = response.data;
 
     if (code === "success" && result !== undefined) {
-      const moments = [...cache.moments];
-      const index = moments.findIndex((moment) => moment.id === momentId);
-      if (index === -1) return;
-      moments[index].reactions = result.reactions;
-      moments[index].myEmoji = emoji;
-      cache.setMoments(moments);
+      momentStore.modify(momentId, {
+        reactions: result.reactions,
+        myEmoji: emoji,
+      });
     }
   }
 
@@ -50,12 +46,10 @@ export default function useReactMoment(accessToken: string | null) {
     const { code, result, message } = response.data;
 
     if (code === "success" && result !== undefined) {
-      const moments = [...cache.moments];
-      const index = moments.findIndex((moment) => moment.id === momentId);
-      if (index === -1) return;
-      moments[index].reactions = result.reactions;
-      moments[index].myEmoji = undefined;
-      cache.setMoments(moments);
+      momentStore.modify(momentId, {
+        reactions: result.reactions,
+        myEmoji: undefined,
+      });
     }
   }
 
