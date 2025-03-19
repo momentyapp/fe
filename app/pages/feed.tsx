@@ -8,7 +8,7 @@ import TopicToggleList from "~/components/feed/TopicToggleList";
 import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
 
-import listenNewMoment from "~/hooks/listenNewMoment";
+import useHandleMomentUpdate from "~/hooks/useHandleMomentUpdate";
 
 import useSession from "~/contexts/useSession";
 import useMomentStore from "~/contexts/useMomentStore";
@@ -36,7 +36,6 @@ export default function Feed() {
   const session = useSession();
   const momentStore = useMomentStore();
   const topicStore = useTopicStore();
-  listenNewMoment(handleNewMoment);
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [moments, setMoments] = useState<MomentType[]>([]);
@@ -48,6 +47,25 @@ export default function Feed() {
     () => topics.filter((topic) => topic.enabled).map((topic) => topic.id),
     [topics]
   );
+
+  // 새 모멘트가 추가될 때
+  useHandleMomentUpdate(async ({ momentId, topicIds }) => {
+    if (
+      topicIds.length === 0 ||
+      enabledTopicsIds.length === 0
+    ) {
+      const response = await API.moment.getMomentById(
+        { momentId },
+        session.accessToken?.token
+      );
+      const { code, result } = response.data;
+
+      if (code === "success" && result !== undefined) {
+        const newMoment = result.moment;
+        momentStore.add([newMoment]);
+      }
+    }
+  });
 
   // 캐시에서 실시간 트렌드 주제 가져오기
   useEffect(() => {
@@ -111,32 +129,6 @@ export default function Feed() {
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
     navigate("/write");
-  }
-
-  // 새 모멘트 업데이트 시
-  async function handleNewMoment({
-    momentId,
-    topicIds,
-  }: {
-    momentId: number;
-    topicIds: number[];
-  }) {
-    if (
-      topicIds.length === 0 ||
-      enabledTopicsIds.length === 0 ||
-      enabledTopicsIds.some((id) => topicIds.includes(id))
-    ) {
-      const response = await API.moment.getMomentById(
-        { momentId },
-        session.accessToken?.token
-      );
-      const { code, result } = response.data;
-
-      if (code === "success" && result !== undefined) {
-        const newMoment = result.moment;
-        momentStore.add([newMoment]);
-      }
-    }
   }
 
   return (
