@@ -55,39 +55,9 @@ export default function useTopicSearch(
         }
       }
 
-      // 의미 검색
-      async function searchByMeaning() {
-        const generatedTopics = await API.topic.generateTopics(
-          {
-            text: replaced,
-          },
-          abortController.current.signal
-        );
-        const { code, message, result } = generatedTopics.data;
-
-        if (code === "success" && result !== undefined) {
-          setTopics((prev) => [
-            ...prev,
-            ...result.topics
-              .filter(
-                (topic) => !prev.some((prevTopic) => prevTopic.id === topic.id)
-              )
-              .map((topic) => ({
-                id: topic.id,
-                name: topic.name,
-                trending: topic.trending,
-                count: topic.usage,
-                enabled: addedTopics.some(
-                  (addedTopic) => addedTopic.id === topic.id
-                ),
-              })),
-          ]);
-        }
-      }
-
       setLoading(true);
       try {
-        await Promise.any([searchByString(), searchByMeaning()]);
+        await searchByString();
       } catch (e) {
         if (!(e instanceof Error && e.name === "AggregateError")) throw e;
       }
