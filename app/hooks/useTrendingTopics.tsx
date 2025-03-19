@@ -10,12 +10,15 @@ export default function useTrendingTopics() {
   const topicStore = useTopicStore();
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const callback = () => {
       loadTrendingTopics().then((trendingTopics) => {
         if (trendingTopics === null) return;
         topicStore.setTrending(trendingTopics);
       });
-    }, 1000 * 60 * 5);
+    };
+
+    const interval = setInterval(callback, 1000 * 60 * 5);
+    callback();
 
     return () => clearInterval(interval);
   }, []);
