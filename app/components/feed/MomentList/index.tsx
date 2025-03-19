@@ -3,7 +3,7 @@ import { styled, ThemeContext } from "styled-components";
 
 import useReactMoment from "~/hooks/useReactMoment";
 import useMomentInfoState from "~/hooks/useMomentInfoState";
-import useObserveEnd from "~/hooks/useObserveEnd";
+import useOnVisible from "~/hooks/useOnVisible";
 
 import CircularProgress from "~/components/common/CircularProgress";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
@@ -69,7 +69,7 @@ export default function MomentList({
     handleMomentInfoClose,
   } = useMomentInfoState();
 
-  const observeEnd = useObserveEnd(onLoadMore);
+  const observeEnd = useOnVisible(onLoadMore);
 
   return (
     <Wrapper>

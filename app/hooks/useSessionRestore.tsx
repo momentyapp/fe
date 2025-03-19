@@ -7,7 +7,7 @@ import API from "~/apis";
 import type { Token } from "common";
 
 /**
- * @description 세션 복원 후 로그인 처리를 하는 훅
+ * 세션 복원 후 로그인 처리를 하는 훅
  */
 export default function useSessionRestore() {
   const session = useSession();
