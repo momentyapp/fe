@@ -17,28 +17,42 @@ const useMomentStore = create<MomentStore>((set) => ({
   moments: [],
 
   // 모멘트 추가
-  add: (moments) =>
+  add: (newMoments) =>
+    // newMoments는 id로 내림차순 정렬되어 있다고 가정
+    // prevMoments는 id로 내림차순 정렬되어 있다고 가정
     set((prev) => {
       const prevMoments = prev.moments;
-      const newMoments = [];
-      let a = 0,
-        b = 0;
+      const result: Moment[] = [];
+      let a = 0;
+      let b = 0;
 
-      while (a < prevMoments.length - 1 && b < moments.length - 1) {
-        if (prevMoments[a].id === moments[b].id) {
+      while (a < prevMoments.length || b < newMoments.length) {
+        const prevMoment = prevMoments[a];
+        const newMoment = newMoments[b];
+
+        if (a < prevMoments.length && b < newMoments.length) {
+          if (prevMoment.id > newMoment.id) {
+            result.push(prevMoment);
+            a++;
+          } else if (prevMoment.id < newMoment.id) {
+            result.push(newMoment);
+            b++;
+          } else {
+            result.push(newMoment);
+            a++;
+            b++;
+          }
+        } else if (a < prevMoments.length) {
+          result.push(prevMoment);
           a++;
-          b++;
-        } else if (prevMoments[a].id < moments[b].id) {
-          newMoments.push(prevMoments[a]);
-          a++;
-        } else {
-          newMoments.push(moments[b]);
+        } else if (b < newMoments.length) {
+          result.push(newMoment);
           b++;
         }
       }
 
       return {
-        moments: newMoments,
+        moments: result,
       };
     }),
 

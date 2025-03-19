@@ -50,10 +50,7 @@ export default function Feed() {
 
   // 새 모멘트가 추가될 때
   useHandleMomentUpdate(async ({ momentId, topicIds }) => {
-    if (
-      topicIds.length === 0 ||
-      enabledTopicsIds.length === 0
-    ) {
+    if (topicIds.length === 0 || enabledTopicsIds.length === 0) {
       const response = await API.moment.getMomentById(
         { momentId },
         session.accessToken?.token
