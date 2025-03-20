@@ -1,4 +1,10 @@
+import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider, type DefaultTheme } from "styled-components";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
+
+import palette from "~/styles/palette";
+
 import App from "./app";
 
 import type { Route } from "./+types/root";
@@ -31,7 +37,11 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+const queryClient = new QueryClient();
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<DefaultTheme>(palette.dark);
+
   return (
     <html lang="ko">
       <head>
@@ -41,7 +51,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <main>{children}</main>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <main>{children}</main>
+          </ThemeProvider>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
