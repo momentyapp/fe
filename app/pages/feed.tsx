@@ -8,11 +8,10 @@ import TopicToggleList from "~/components/feed/TopicToggleList";
 import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
 
-import useHandleMomentUpdate from "~/hooks/useHandleMomentUpdate";
-
 import useSession from "~/contexts/useSession";
 import useMomentStore from "~/contexts/useMomentStore";
-import useTopicStore from "~/contexts/useTopicStore";
+
+import useTrendingTopics from "~/hooks/useTrendingTopics";
 
 import API from "~/apis";
 
@@ -31,11 +30,10 @@ const FloatingButton = styled(Pressable)`
 
 export default function Feed() {
   const navigate = useNavigate();
-
   const theme = useContext(ThemeContext);
   const session = useSession();
   const momentStore = useMomentStore();
-  const topicStore = useTopicStore();
+  const trendingTopics = useTrendingTopics();
 
   const [topics, setTopics] = useState<Topic[]>([]);
   const [moments, setMoments] = useState<MomentType[]>([]);
@@ -48,28 +46,13 @@ export default function Feed() {
     [topics]
   );
 
-  // 새 모멘트가 추가될 때
-  useHandleMomentUpdate(async ({ momentId, topicIds }) => {
-    if (topicIds.length === 0 || enabledTopicsIds.length === 0) {
-      const response = await API.moment.getMomentById(
-        { momentId },
-        session.accessToken?.token
-      );
-      const { code, result } = response.data;
-
-      if (code === "success" && result !== undefined) {
-        const newMoment = result.moment;
-        momentStore.add([newMoment]);
-      }
-    }
-  });
-
-  // 캐시에서 실시간 트렌드 주제 가져오기
+  // 활성화된 주제가 없으면 트렌드 주제 가져오기
   useEffect(() => {
-    const trendingTopics = topicStore.trendingTopics;
+    if (trendingTopics === undefined) return;
     if (trendingTopics.length === 0) return;
+    if (enabledTopicsIds.length > 0) return;
     setTopics(trendingTopics.map((topic) => ({ ...topic, enabled: false })));
-  }, [topicStore.trendingTopics]);
+  }, [trendingTopics]);
 
   // 캐시에서 모멘트 가져오기
   useEffect(() => {

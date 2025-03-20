@@ -1,15 +1,14 @@
 import { useContext } from "react";
-import ReactModal from "react-modal";
 import { styled, ThemeContext } from "styled-components";
 import { MdCheck } from "react-icons/md";
+import ReactModal from "react-modal";
 
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
 
-import useTopicStore from "~/contexts/useTopicStore";
-
 import useTopicSearch from "~/hooks/useTopicSearch";
+import useTrendingTopics from "~/hooks/useTrendingTopics";
 
 import SearchInput from "./SearchInput";
 import SearchResults from "./SearchResults";
@@ -42,7 +41,6 @@ export default function TopicModal({
   ...props
 }: TopicModalProps) {
   const theme = useContext(ThemeContext);
-  const topicStore = useTopicStore();
 
   const {
     searchValue,
@@ -51,6 +49,8 @@ export default function TopicModal({
     loading,
     handleCreate,
   } = useTopicSearch(addedTopics, setAddedTopics);
+
+  const trendingTopics = useTrendingTopics();
 
   return (
     <ReactModal
@@ -68,7 +68,9 @@ export default function TopicModal({
           <SearchInput value={searchValue} onChange={handleChangeSearchValue} />
           <SearchResults
             topics={
-              searchValue.length === 0 ? topicStore.trendingTopics : topics
+              trendingTopics !== undefined && searchValue.length === 0
+                ? trendingTopics
+                : topics
             }
             addedTopics={addedTopics}
             setAddedTopics={setAddedTopics}

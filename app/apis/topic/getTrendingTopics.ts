@@ -1,7 +1,7 @@
 import { axiosInstance as axios } from "~/apis";
 import type { ApiResponse } from "common";
 
-type Response = ApiResponse<{
+export type GetTrendingTopicsResponse = ApiResponse<{
   count: number;
   topics: {
     id: number;
@@ -12,7 +12,7 @@ type Response = ApiResponse<{
 }>;
 
 export default async function getTrendingTopics(signal?: AbortSignal) {
-  const result = await axios.get<Response>("/topic/trend", {
+  const result = await axios.get<GetTrendingTopicsResponse>("/topic/trend", {
     signal,
   });
   return result;

@@ -65,4 +65,6 @@ declare module "common" {
     accessToken: Token;
     refreshToken: Token;
   }
+
+  export type Result<T> = T["result"]
 }
