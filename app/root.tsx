@@ -1,12 +1,4 @@
-import { useState, useEffect } from "react";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
-import { ThemeProvider, type DefaultTheme } from "styled-components";
-import ReactModal from "react-modal";
-import "react-photo-view/dist/react-photo-view.css";
-
-import GlobalStyle from "~/styles/global";
-import palette from "~/styles/palette";
-
 import App from "./app";
 
 import type { Route } from "./+types/root";
@@ -40,18 +32,6 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<DefaultTheme>(palette.dark);
-
-  // 모달 기본 설정
-  useEffect(() => {
-    ReactModal.setAppElement("main");
-    ReactModal.defaultStyles = {
-      content: {
-        background: theme.bg2,
-      },
-    };
-  }, [theme]);
-
   return (
     <html lang="ko">
       <head>
@@ -61,10 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <main>{children}</main>
-        </ThemeProvider>
+        <main>{children}</main>
         <ScrollRestoration />
         <Scripts />
       </body>
