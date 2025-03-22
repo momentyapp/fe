@@ -1,18 +1,25 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { io } from "socket.io-client";
 
 import useMomentStore from "~/contexts/useMomentStore";
+
 import select from "~/utils/selectAPIResult";
+import mergeDescendingUnique from "~/utils/mergeDescendingUnique";
 
 import API from "~/apis";
 
 import type { Moment } from "common";
+
+const socket = io(`${import.meta.env.VITE_HOST}`, {
+  path: "/socket",
+  transports: ["websocket"],
+});
 
 export default function useMoments(
   topicIds: number[] = [],
   accessToken?: string
 ) {
   const momentStore = useMomentStore();
-
   const [isLoading, setIsLoading] = useState(false);
 
   // 활성화된 주제 id 목록을 key로 사용
@@ -20,6 +27,32 @@ export default function useMoments(
     () => Array.from(new Set(topicIds)).sort().join("-"),
     [topicIds]
   );
+
+  // 소켓 연결
+  useEffect(() => {
+    socket.connect();
+
+    // 새로운 모멘트 수신
+    socket.on("new_moment", (moment: Moment) => {
+      momentStore.add([moment]);
+
+      setTable((prev) => ({
+        ...prev,
+        [key]: mergeDescendingUnique(prev[key] ?? [], [moment.id]),
+      }));
+    });
+
+    return () => {
+      socket.off("new_moment");
+      socket.disconnect();
+    };
+  }, [key]);
+
+  // 주제 id 목록이 변경될 때
+  useEffect(() => {
+    socket.emit("set_topic", topicIds);
+    fetch();
+  }, [topicIds]);
 
   // 활성화된 주제 id 목록과 모멘트 id 목록 매핑
   const [table, setTable] = useState<Record<string, number[]>>({});
@@ -56,9 +89,8 @@ export default function useMoments(
       .then((response) => select(response).moments);
     setIsLoading(false);
 
-    if (newMoments.length === 0) {
+    if (newMoments.length < 10) {
       completed.current.add(key);
-      return;
     }
 
     const newIds = newMoments.map((moment) => moment.id);
@@ -75,43 +107,7 @@ export default function useMoments(
       completed.current.delete(key);
       setTable((prev) => ({ ...prev, [key]: newIds }));
     } else {
-      const ids: number[] = [];
-      let i = 0;
-      let j = 0;
-
-      while (i < prevIds.length || j < newIds.length) {
-        const prevId = i < prevIds.length ? prevIds[i] : undefined;
-        const newId = j < newIds.length ? newIds[j] : undefined;
-
-        let currentId: number | undefined;
-
-        if (prevId !== undefined && (newId === undefined || prevId > newId)) {
-          currentId = prevId;
-          i++;
-        } else if (
-          newId !== undefined &&
-          (prevId === undefined || newId > prevId)
-        ) {
-          currentId = newId;
-          j++;
-        } else if (
-          prevId !== undefined &&
-          newId !== undefined &&
-          prevId === newId
-        ) {
-          currentId = prevId;
-          i++;
-          j++;
-        }
-
-        if (
-          currentId !== undefined &&
-          (ids.length === 0 || ids[ids.length - 1] !== currentId)
-        ) {
-          ids.push(currentId);
-        }
-      }
-
+      const ids = mergeDescendingUnique(prevIds, newIds);
       setTable((prev) => ({ ...prev, [key]: ids }));
     }
   }
