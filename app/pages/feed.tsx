@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -9,13 +9,11 @@ import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
 
 import useSession from "~/contexts/useSession";
-import useMomentStore from "~/contexts/useMomentStore";
 
 import useTrendingTopics from "~/hooks/useTrendingTopics";
+import useMoments from "~/hooks/useMoments";
 
-import API from "~/apis";
-
-import type { Moment as MomentType, Topic } from "common";
+import type { Topic } from "common";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -32,18 +30,18 @@ export default function Feed() {
   const navigate = useNavigate();
   const theme = useContext(ThemeContext);
   const session = useSession();
-  const momentStore = useMomentStore();
   const trendingTopics = useTrendingTopics();
 
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [moments, setMoments] = useState<MomentType[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const more = useRef(true);
 
   const enabledTopicsIds = useMemo(
     () => topics.filter((topic) => topic.enabled).map((topic) => topic.id),
     [topics]
+  );
+
+  const { moments, isLoading, loadMore } = useMoments(
+    enabledTopicsIds,
+    session.accessToken?.token
   );
 
   // 활성화된 주제가 없으면 트렌드 주제 가져오기
@@ -53,58 +51,6 @@ export default function Feed() {
     if (enabledTopicsIds.length > 0) return;
     setTopics(trendingTopics.map((topic) => ({ ...topic, enabled: false })));
   }, [trendingTopics]);
-
-  // 캐시에서 모멘트 가져오기
-  useEffect(() => {
-    const cachedMoments = momentStore.moments;
-    let filteredMoments: MomentType[];
-
-    if (enabledTopicsIds.length > 0) {
-      filteredMoments = cachedMoments.filter((moment) =>
-        moment.topics.some((topic) => enabledTopicsIds.includes(topic.id))
-      );
-    } else {
-      filteredMoments = cachedMoments;
-    }
-
-    setMoments(filteredMoments);
-  }, [momentStore.moments, enabledTopicsIds]);
-
-  // 활성화된 주제 목록이 바뀔 시
-  useEffect(() => {
-    more.current = true;
-    handleLoadMore(null);
-  }, [enabledTopicsIds]);
-
-  // 모멘트 더 로드
-  async function handleLoadMore(before?: number | null) {
-    if (loading || !more.current) return;
-
-    setLoading(true);
-    const lastMomentId =
-      moments.length === 0 ? undefined : moments[moments.length - 1].id;
-    const response = await API.moment.getMoments(
-      {
-        topicIds: topics
-          .filter((topic) => topic.enabled)
-          .map((topic) => topic.id),
-        before: before === undefined ? lastMomentId : before ?? undefined,
-      },
-      session.accessToken?.token
-    );
-    setLoading(false);
-
-    const { code, message, result } = response.data;
-
-    if (code === "success" && result !== undefined) {
-      const { moments: moreMoments } = result;
-
-      momentStore.add(moreMoments);
-      if (moreMoments.length < 10) {
-        more.current = false;
-      }
-    }
-  }
 
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
@@ -120,11 +66,7 @@ export default function Feed() {
       <TopicToggleList topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
-      <MomentList
-        moments={moments}
-        onLoadMore={handleLoadMore}
-        loading={loading}
-      />
+      <MomentList moments={moments} onLoadMore={loadMore} loading={isLoading} />
 
       {/* 글 쓰기 버튼 */}
       <FloatingButton backgroundColor={theme?.primary3} onClick={handleWrite}>
