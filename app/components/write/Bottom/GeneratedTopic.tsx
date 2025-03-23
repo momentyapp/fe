@@ -7,7 +7,7 @@ import Emoji from "~/components/common/Emoji";
 import CircularProgress from "~/components/common/CircularProgress";
 
 import type { TransitionStatus } from "react-transition-group";
-import { MdClose } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 
 const Wrapper = styled.div<{
   $in: boolean;
@@ -89,7 +89,7 @@ export default function GeneratedTopic({
           loading ? (
             <CircularProgress size={20} color={theme?.grey1} />
           ) : (
-            <MdClose size="20" color={theme?.grey1} />
+            <MdAdd size="20" color={theme?.grey1} />
           )
         }
         iconPosition="right"

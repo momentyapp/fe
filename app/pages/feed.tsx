@@ -10,10 +10,10 @@ import Pressable from "~/components/common/Pressable";
 
 import useSession from "~/contexts/useSession";
 
-import useTrendingTopics from "~/hooks/useTrendingTopics";
 import useMoments from "~/hooks/useMoments";
 
 import type { Topic } from "common";
+import useEnabledTopicsStore from "~/contexts/useEnabledTopicsStore";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -30,22 +30,13 @@ export default function Feed() {
   const navigate = useNavigate();
   const theme = useContext(ThemeContext);
   const session = useSession();
-  const trendingTopics = useTrendingTopics();
 
-  const [topics, setTopics] = useState<Topic[]>([]);
-
+  const { enabledTopics: topics, setEnabledTopics: setTopics } =
+    useEnabledTopicsStore();
   const topicIds = useMemo(() => topics.map((topic) => topic.id), [topics]);
 
   const { moments, isLoading, loadMore, observeMoment, unobserveMoment } =
     useMoments(topicIds, session.accessToken?.token);
-
-  // 활성화된 주제가 없으면 트렌드 주제 가져오기
-  useEffect(() => {
-    if (trendingTopics === undefined) return;
-    if (trendingTopics.length === 0) return;
-    if (topicIds.length > 0) return;
-    setTopics(trendingTopics);
-  }, [trendingTopics]);
 
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
