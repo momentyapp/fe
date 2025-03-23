@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import React, { createRef, useContext, useMemo } from "react";
+import { Transition, TransitionGroup } from "react-transition-group";
 import { styled, ThemeContext } from "styled-components";
-
 import { MdAddReaction } from "react-icons/md";
 
-import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
-import Emoji from "~/components/common/Emoji";
+
+import Reaction from "./Reaction";
 
 import type { Moment } from "common";
 
@@ -24,14 +24,18 @@ const ReactionContainer = styled.div`
   gap: 10px;
 `;
 
+const InsideReactionList = styled(TransitionGroup)`
+  display: flex;
+`;
+
 const AddReaction = styled(Pressable)<{ $myEmoji?: boolean }>`
   display: flex;
   padding: 7px 12px;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  border: ${(props) => (props.$myEmoji ? "1px" : "0px")} solid
-    ${(props) => props.theme?.primary4};
+  box-shadow: 0 0 0 ${(props) => (props.$myEmoji ? "1px" : "0px")}
+    ${(props) => props.theme?.primary4} inset;
   border-radius: 10px;
 `;
 
@@ -57,6 +61,15 @@ export default function Bottom({
     else onAddReaction(emoji);
   }
 
+  // 반응 개수만큼 ref 생성
+  const reactionRefs = useMemo(
+    () =>
+      Object.keys(moment.reactions).reduce<
+        Record<string, React.Ref<HTMLDivElement>>
+      >((acc, emoji) => ({ ...acc, [emoji]: createRef<HTMLDivElement>() }), {}),
+    [moment.reactions]
+  );
+
   return (
     <>
       <Wrapper ref={ref}>
@@ -65,26 +78,26 @@ export default function Bottom({
             <MdAddReaction size="20px" color={theme?.grey1} />
           </AddReaction>
 
-          {Object.keys(moment.reactions).map((emoji) => (
-            <AddReaction
-              $myEmoji={moment.myEmoji === emoji}
-              key={emoji}
-              backgroundColor={
-                moment.myEmoji === emoji ? theme?.primary5 : theme?.bg2
-              }
-              onClick={() => handleReactionClick(emoji)}
-            >
-              <Emoji size="16px">{emoji}</Emoji>
-              <Typography
-                color={
-                  moment.myEmoji === emoji ? theme?.primary1 : theme?.grey1
-                }
-                size="16px"
+          <InsideReactionList>
+            {Object.keys(moment.reactions).map((emoji, index) => (
+              <Transition
+                key={emoji}
+                timeout={500}
+                nodeRef={reactionRefs[emoji]}
               >
-                {moment.reactions[emoji].toLocaleString()}
-              </Typography>
-            </AddReaction>
-          ))}
+                {(state) => (
+                  <Reaction
+                    emoji={emoji}
+                    count={moment.reactions[emoji]}
+                    myEmoji={moment.myEmoji === emoji}
+                    onClick={() => handleReactionClick(emoji)}
+                    ref={reactionRefs[emoji]}
+                    transitionStatus={state}
+                  />
+                )}
+              </Transition>
+            ))}
+          </InsideReactionList>
         </ReactionContainer>
       </Wrapper>
     </>
