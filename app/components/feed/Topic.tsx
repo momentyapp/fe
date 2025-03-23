@@ -1,53 +1,59 @@
 import { createRef, useContext, useEffect, useState, type Ref } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { MdClose } from "react-icons/md";
 
-import Pressable, { type PressableProps } from "~/components/common/Pressable";
+import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 
 import type { TransitionStatus } from "react-transition-group";
 
-const StyledPressable = styled(Pressable)<{
+const Wrapper = styled.div<{
   $in: boolean;
   $width: number;
 }>`
-  display: flex;
-  height: 36px;
-  justify-content: center;
-  padding: 0;
-  align-items: center;
-  border-radius: 10px;
   margin-right: ${(props) => (props.$in ? 10 : 0)}px;
-  width: ${(props) => (props.$in ? props.$width + 30 : 0)}px;
+  width: ${(props) => (props.$in ? props.$width + 20 : 0)}px;
   opacity: ${(props) => (props.$in ? 1 : 0)};
   transition: margin-right 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
     width 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1), filter 0.2s,
-    transform 0.1s ease-in-out;
+    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
   overflow: hidden;
-`;
-
-const Content = styled.div`
-  display: flex;
-  align-items: center;
-  height: 100%;
+  padding: 0;
   flex-shrink: 0;
+  border-radius: 10px;
 `;
 
-interface TopicToggleProps extends PressableProps {
+const StyledButton = styled(Button)`
+  height: 36px;
+  padding: 0px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  border-radius: 10px;
+`;
+
+const StyledTypography = styled(Typography)`
+  word-break: break-all;
+  white-space: nowrap;
+`;
+
+interface TopicProps {
   topic: string;
+  onClick: () => void;
   transitionStatus?: TransitionStatus;
-  ref: Ref<HTMLButtonElement>;
+  ref: Ref<HTMLDivElement>;
 }
 
-export default function TopicToggle({
+export default function Topic({
   topic,
+  onClick,
   ref,
   transitionStatus = "entered",
-  ...props
-}: TopicToggleProps) {
+}: TopicProps) {
   const theme = useContext(ThemeContext);
+  const contentRef = createRef<HTMLButtonElement>();
   const [width, setWidth] = useState(0);
-  const contentRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
     if (contentRef.current === null) return;
@@ -61,21 +67,25 @@ export default function TopicToggle({
   }, [contentRef]);
 
   return (
-    <StyledPressable
-      backgroundColor={theme?.bg2}
+    <Wrapper
       ref={ref}
       $in={
         width > 0 &&
         (transitionStatus === "entered" || transitionStatus === "entering")
       }
       $width={width}
-      {...props}
     >
-      <Content ref={contentRef}>
-        <Typography color={theme?.grey1} size="16px">
+      <StyledButton
+        backgroundColor={theme?.bg2}
+        icon={<MdClose size="14" color={theme?.grey2} />}
+        iconPosition="right"
+        onClick={onClick}
+        ref={contentRef}
+      >
+        <StyledTypography color={theme?.grey1} size="16px">
           {topic}
-        </Typography>
-      </Content>
-    </StyledPressable>
+        </StyledTypography>
+      </StyledButton>
+    </Wrapper>
   );
 }

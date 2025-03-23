@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
   overflow-x: hidden;
 `;
@@ -51,7 +51,7 @@ const TopicContainer = styled.div`
   gap: 10px;
   box-sizing: border-box;
   overflow-x: auto;
-  padding: 0px 30px;
+  padding: 5px 30px;
   width: 100%;
   border-radius: 10px;
 `;
@@ -59,13 +59,12 @@ const TopicContainer = styled.div`
 const Topic = styled.div`
   flex-shrink: 0;
   display: flex;
-  height: 36px;
-  padding: 0px 10px;
+  padding: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  background: ${(props) => props.theme.bg1};
+  border: 1px solid ${(props) => props.theme.bg2};
 `;
 
 interface ContentProps {
@@ -107,9 +106,9 @@ export default function Content({ moment }: ContentProps) {
 
       {/* 주제 */}
       <TopicContainer>
-        {moment.topics.map((topic, index) => (
+        {moment.topics.map((topic) => (
           <Topic key={topic.id}>
-            <Typography color={theme?.grey1} size="14px">
+            <Typography color={theme?.grey2} size="14px">
               {topic.name}
             </Typography>
           </Topic>

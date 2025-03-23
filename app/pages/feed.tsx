@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
 
 import AppBar from "~/components/feed/AppBar";
-import TopicToggleList from "~/components/feed/TopicToggleList";
+import TopicList from "~/components/feed/TopicList";
 import MomentList from "~/components/feed/MomentList";
 import Pressable from "~/components/common/Pressable";
 
@@ -58,7 +58,7 @@ export default function Feed() {
       <AppBar />
 
       {/* 주제 목록 */}
-      <TopicToggleList topics={topics} setTopics={setTopics} />
+      <TopicList topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
       <MomentList

@@ -7,7 +7,6 @@ import Top from "./Top";
 import Bottom from "./Bottom";
 
 import type { Moment } from "common";
-import useOnVisible from "~/hooks/useOnVisible";
 
 const Wrapper = styled.div<{
   $highlight?: boolean;
@@ -16,13 +15,13 @@ const Wrapper = styled.div<{
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-radius: 15px;
   transition: margin-bottom 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
     height 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
     opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1), box-shadow 0.2s;
   overflow: hidden;
   box-shadow: ${(props) =>
     props.$highlight ? `0px 0px 10px ${props.theme.primary3}` : "none"};
+  border-bottom: 1px solid ${(props) => props.theme.bg2};
 `;
 
 const MomentContent = styled.div`
@@ -32,9 +31,8 @@ const MomentContent = styled.div`
   padding: 20px 0px;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  border-radius: 15px;
-  background: ${(props) => props.theme.bg2};
+  gap: 15px;
+  background: ${(props) => props.theme.bg1};
 `;
 
 interface MomentProps {

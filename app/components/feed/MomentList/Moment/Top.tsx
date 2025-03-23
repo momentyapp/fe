@@ -20,21 +20,21 @@ const Wrapper = styled.div`
 `;
 
 const Photo = styled.img`
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
 `;
 
 const Left = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 10px;
   align-items: center;
 `;
 
 const Info = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
 `;
 
 const Right = styled.div`
@@ -84,21 +84,21 @@ export default function Top({ moment, onDetail }: TopProps) {
             }`}
           />
         ) : (
-          <MdAccountCircle size="36" color={theme?.grey1} />
+          <MdAccountCircle size="32" color={theme?.grey1} />
         )}
         <Info>
-          <Typography color={theme?.grey1} size="18px" weight="700">
+          <Typography color={theme?.grey1} size="16px" weight="700">
             {moment.author?.username ?? "익명"}
           </Typography>
           <Dot size="3px" color={theme?.grey1} />
-          <Typography color={theme?.grey1} size="16px">
+          <Typography color={theme?.grey1} size="14px">
             {relativeTime}
           </Typography>
         </Info>
       </Left>
 
       <Right>
-        <StyledPressable onClick={onDetail} backgroundColor={theme?.bg2}>
+        <StyledPressable onClick={onDetail} backgroundColor={theme?.bg1}>
           <MdMoreVert size="24" color={theme?.grey1} />
         </StyledPressable>
       </Right>

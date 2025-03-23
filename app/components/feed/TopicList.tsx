@@ -7,9 +7,9 @@ import { MdTune } from "react-icons/md";
 import Pressable from "~/components/common/Pressable";
 import TopicModal from "~/components/common/TopicModal";
 
-import TopicToggle from "./TopicToggle";
+import Topic from "./Topic";
 
-import type { Topic } from "common";
+import type { Topic as TopicType } from "common";
 
 const Wrapper = styled.div`
   display: flex;
@@ -44,19 +44,16 @@ const AddTopic = styled(Pressable)`
   margin-right: 10px;
 `;
 
-interface TopicWithRef extends Topic {
-  ref: Ref<HTMLButtonElement>;
+interface TopicWithRef extends TopicType {
+  ref: Ref<HTMLDivElement>;
 }
 
-interface TopicFilterProps {
-  topics: Topic[];
-  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
+interface TopicListProps {
+  topics: TopicType[];
+  setTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
 }
 
-export default function TopicToggleList({
-  topics,
-  setTopics,
-}: TopicFilterProps) {
+export default function TopicList({ topics, setTopics }: TopicListProps) {
   const theme = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [topicsWithRefs, setTopicsWithRefs] = useState<TopicWithRef[]>([]);
@@ -66,7 +63,7 @@ export default function TopicToggleList({
     setTopicsWithRefs(
       topics.map((topic) => ({
         ...topic,
-        ref: createRef<HTMLButtonElement>(),
+        ref: createRef<HTMLDivElement>(),
       }))
     );
   }, [topics]);
@@ -87,7 +84,7 @@ export default function TopicToggleList({
         {topicsWithRefs.map((topic) => (
           <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
             {(state) => (
-              <TopicToggle
+              <Topic
                 ref={topic.ref}
                 topic={topic.name}
                 onClick={() => removeTopic(topic.id)}

@@ -6,7 +6,6 @@ import { MdAddReaction } from "react-icons/md";
 import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
 import Emoji from "~/components/common/Emoji";
-import Slide from "~/components/common/Slide";
 
 import type { Moment } from "common";
 
@@ -27,13 +26,12 @@ const ReactionContainer = styled.div`
 
 const AddReaction = styled(Pressable)<{ $myEmoji?: boolean }>`
   display: flex;
-  height: 38px;
-  padding: 0px 10px;
+  padding: 7px 12px;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  border: ${(props) => (props.$myEmoji ? "2px" : "0px")} solid
-    ${(props) => props.theme?.grey3};
+  border: ${(props) => (props.$myEmoji ? "1px" : "0px")} solid
+    ${(props) => props.theme?.primary4};
   border-radius: 10px;
 `;
 
@@ -67,33 +65,25 @@ export default function Bottom({
             <MdAddReaction size="20px" color={theme?.grey1} />
           </AddReaction>
 
-          {Object.keys(moment.reactions).map((emoji, index) => (
-            <Slide
-              visible
+          {Object.keys(moment.reactions).map((emoji) => (
+            <AddReaction
+              $myEmoji={moment.myEmoji === emoji}
               key={emoji}
-              delay={index * 50}
-              initinalTransition={false}
-              direction="right"
-              distance="5px"
+              backgroundColor={
+                moment.myEmoji === emoji ? theme?.primary5 : theme?.bg2
+              }
+              onClick={() => handleReactionClick(emoji)}
             >
-              <AddReaction
-                key={emoji}
-                backgroundColor={
-                  moment.myEmoji === emoji ? theme?.primary5 : theme?.bg1
+              <Emoji size="16px">{emoji}</Emoji>
+              <Typography
+                color={
+                  moment.myEmoji === emoji ? theme?.primary1 : theme?.grey1
                 }
-                onClick={() => handleReactionClick(emoji)}
+                size="16px"
               >
-                <Emoji size="18px">{emoji}</Emoji>
-                <Typography
-                  color={
-                    moment.myEmoji === emoji ? theme?.primary1 : theme?.grey1
-                  }
-                  size="16px"
-                >
-                  {moment.reactions[emoji].toLocaleString()}
-                </Typography>
-              </AddReaction>
-            </Slide>
+                {moment.reactions[emoji].toLocaleString()}
+              </Typography>
+            </AddReaction>
           ))}
         </ReactionContainer>
       </Wrapper>

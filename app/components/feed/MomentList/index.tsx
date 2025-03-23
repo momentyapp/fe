@@ -18,9 +18,7 @@ import type { Moment as MomentType } from "common";
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 10px;
   flex-direction: column;
-  gap: 10px;
 `;
 
 const End = styled.div`
