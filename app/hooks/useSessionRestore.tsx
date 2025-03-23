@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Cookies } from "react-cookie";
 
 import useSession from "~/contexts/useSession";
@@ -11,9 +11,12 @@ import type { Token } from "common";
  */
 export default function useSessionRestore() {
   const session = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     restoreSession().then((restoredSession) => {
+      setIsLoading(false);
       if (restoredSession === null) return;
       session.login(
         restoredSession.user,
@@ -22,6 +25,8 @@ export default function useSessionRestore() {
       );
     });
   }, []);
+
+  return { isLoading };
 }
 
 async function restoreSession() {

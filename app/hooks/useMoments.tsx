@@ -21,6 +21,7 @@ export default function useMoments(
 ) {
   const momentStore = useMomentStore();
   const observingMoments = useRef<Set<number>>(new Set());
+  const [unseenMoments, setUnseenMoments] = useState<number[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,6 +38,7 @@ export default function useMoments(
     // 새로운 모멘트 수신
     socket.on("new_moment", (moment: Moment) => {
       momentStore.add([moment]);
+      setUnseenMoments((prev) => [...prev, moment.id]);
 
       setTable((prev) => ({
         ...prev,
@@ -59,6 +61,7 @@ export default function useMoments(
   // 주제 id 목록이 변경될 때
   useEffect(() => {
     socket.emit("set_topic", topicIds);
+    setUnseenMoments([]);
     fetch();
   }, [topicIds]);
 
@@ -129,15 +132,23 @@ export default function useMoments(
     }
   }
 
-  // 모멘트 관찰 시작
-  async function observeMoment(momentId: number) {
+  // 모멘트가 뷰포트에 들어올 때
+  async function handleMomentVisible(momentId: number) {
     observingMoments.current.add(momentId);
+    setUnseenMoments((prev) => prev.filter((id) => id !== momentId));
   }
 
-  // 모멘트 관찰 종료
-  async function unobserveMoment(momentId: number) {
+  // 모멘트가 뷰포트에서 나갈 때
+  async function handleMomentInvisible(momentId: number) {
     observingMoments.current.delete(momentId);
   }
 
-  return { moments, isLoading, loadMore, observeMoment, unobserveMoment };
+  return {
+    moments,
+    isLoading,
+    unseenMoments,
+    loadMore,
+    handleMomentVisible,
+    handleMomentInvisible,
+  };
 }

@@ -25,7 +25,7 @@ export default function App() {
   }, [theme]);
 
   // 세션 복원
-  useSessionRestore();
+  const { isLoading } = useSessionRestore();
 
   // 실시간 트렌드 주제 가져오기
   useTrendingTopics();
@@ -33,7 +33,7 @@ export default function App() {
   return (
     <>
       <GlobalStyle />
-      <Outlet />
+      {!isLoading && <Outlet />}
     </>
   );
 }

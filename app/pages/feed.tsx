@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -12,8 +12,8 @@ import useSession from "~/contexts/useSession";
 
 import useMoments from "~/hooks/useMoments";
 
-import type { Topic } from "common";
 import useEnabledTopicsStore from "~/contexts/useEnabledTopicsStore";
+import Unseen from "~/components/feed/Unseen";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -26,6 +26,10 @@ const FloatingButton = styled(Pressable)`
   align-items: center;
 `;
 
+const Body = styled.div`
+  position: relative;
+`;
+
 export default function Feed() {
   const navigate = useNavigate();
   const theme = useContext(ThemeContext);
@@ -35,8 +39,14 @@ export default function Feed() {
     useEnabledTopicsStore();
   const topicIds = useMemo(() => topics.map((topic) => topic.id), [topics]);
 
-  const { moments, isLoading, loadMore, observeMoment, unobserveMoment } =
-    useMoments(topicIds, session.accessToken?.token);
+  const {
+    moments,
+    isLoading,
+    unseenMoments,
+    loadMore,
+    handleMomentVisible,
+    handleMomentInvisible,
+  } = useMoments(topicIds, session.accessToken?.token);
 
   // 글 쓰기 버튼 클릭 시
   function handleWrite() {
@@ -51,14 +61,19 @@ export default function Feed() {
       {/* 주제 목록 */}
       <TopicList topics={topics} setTopics={setTopics} />
 
-      {/* 모멘트 */}
-      <MomentList
-        moments={moments}
-        onLoadMore={loadMore}
-        loading={isLoading}
-        onMomentVisible={observeMoment}
-        onMomentInvisible={unobserveMoment}
-      />
+      <Body>
+        {/* 새로운 모멘트 알림 */}
+        <Unseen count={unseenMoments.length} />
+
+        {/* 모멘트 */}
+        <MomentList
+          moments={moments}
+          onLoadMore={loadMore}
+          loading={isLoading}
+          onMomentVisible={handleMomentVisible}
+          onMomentInvisible={handleMomentInvisible}
+        />
+      </Body>
 
       {/* 글 쓰기 버튼 */}
       <FloatingButton backgroundColor={theme?.primary3} onClick={handleWrite}>
