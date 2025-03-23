@@ -10,7 +10,6 @@ declare module "common" {
     id: number;
     usage?: number;
     trending?: boolean;
-    enabled?: boolean;
   }
 
   export interface GeneratedTopic {

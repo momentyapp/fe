@@ -21,7 +21,7 @@ const StyledPressable = styled(Pressable)<{
   opacity: ${(props) => (props.$in ? 1 : 0)};
   transition: margin-right 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
     width 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1), background 0.2s, filter 0.2s,
+    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1), filter 0.2s,
     transform 0.1s ease-in-out;
   overflow: hidden;
 `;
@@ -33,20 +33,14 @@ const Content = styled.div`
   flex-shrink: 0;
 `;
 
-const StyledTypography = styled(Typography)`
-  transition: color 0.2s;
-`;
-
 interface TopicToggleProps extends PressableProps {
   topic: string;
-  enabled?: boolean;
   transitionStatus?: TransitionStatus;
   ref: Ref<HTMLButtonElement>;
 }
 
 export default function TopicToggle({
   topic,
-  enabled = false,
   ref,
   transitionStatus = "entered",
   ...props
@@ -68,7 +62,7 @@ export default function TopicToggle({
 
   return (
     <StyledPressable
-      backgroundColor={enabled ? theme?.primary3 : theme?.bg2}
+      backgroundColor={theme?.bg2}
       ref={ref}
       $in={
         width > 0 &&
@@ -78,12 +72,9 @@ export default function TopicToggle({
       {...props}
     >
       <Content ref={contentRef}>
-        <StyledTypography
-          color={enabled ? theme?.bg1 : theme?.grey1}
-          size="16px"
-        >
+        <Typography color={theme?.grey1} size="16px">
           {topic}
-        </StyledTypography>
+        </Typography>
       </Content>
     </StyledPressable>
   );

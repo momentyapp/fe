@@ -71,31 +71,16 @@ export default function TopicToggleList({
     );
   }, [topics]);
 
-  // 주제 활성화를 전환하는 함수
-  function switchTopic(id: number) {
-    setTopics((prevTopics) => {
-      return prevTopics.map((topic) => {
-        if (topic.id === id) {
-          return { ...topic, enabled: !topic.enabled };
-        }
-        return topic;
-      });
-    });
-  }
-
-  // 모달 열기 함수
-  function handleOpenModal() {
-    setModalOpen(true);
-  }
-
-  // 모달 닫기 함수
-  function handleCloseModal() {
-    setModalOpen(false);
+  // 주제 제거
+  function removeTopic(topicId: number) {
+    setTopics((prevTopics) =>
+      prevTopics.filter((topic) => topic.id !== topicId)
+    );
   }
 
   return (
     <Wrapper>
-      <AddTopic backgroundColor={theme?.bg2} onClick={handleOpenModal}>
+      <AddTopic backgroundColor={theme?.bg2} onClick={() => setModalOpen(true)}>
         <MdTune size="20" color={theme?.grey1} />
       </AddTopic>
       <InsideTopicToggleList>
@@ -105,8 +90,7 @@ export default function TopicToggleList({
               <TopicToggle
                 ref={topic.ref}
                 topic={topic.name}
-                enabled={topic.enabled}
-                onClick={() => switchTopic(topic.id)}
+                onClick={() => removeTopic(topic.id)}
                 transitionStatus={state}
                 key={topic.id}
               />
@@ -119,7 +103,7 @@ export default function TopicToggleList({
       <TopicModal
         addedTopics={topics}
         setAddedTopics={setTopics}
-        onRequestClose={handleCloseModal}
+        onRequestClose={() => setModalOpen(false)}
         isOpen={modalOpen}
       />
     </Wrapper>

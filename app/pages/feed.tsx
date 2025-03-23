@@ -34,20 +34,17 @@ export default function Feed() {
 
   const [topics, setTopics] = useState<Topic[]>([]);
 
-  const enabledTopicsIds = useMemo(
-    () => topics.filter((topic) => topic.enabled).map((topic) => topic.id),
-    [topics]
-  );
+  const topicIds = useMemo(() => topics.map((topic) => topic.id), [topics]);
 
   const { moments, isLoading, loadMore, observeMoment, unobserveMoment } =
-    useMoments(enabledTopicsIds, session.accessToken?.token);
+    useMoments(topicIds, session.accessToken?.token);
 
   // 활성화된 주제가 없으면 트렌드 주제 가져오기
   useEffect(() => {
     if (trendingTopics === undefined) return;
     if (trendingTopics.length === 0) return;
-    if (enabledTopicsIds.length > 0) return;
-    setTopics(trendingTopics.map((topic) => ({ ...topic, enabled: false })));
+    if (topicIds.length > 0) return;
+    setTopics(trendingTopics);
   }, [trendingTopics]);
 
   // 글 쓰기 버튼 클릭 시
