@@ -7,6 +7,7 @@ import Top from "./Top";
 import Bottom from "./Bottom";
 
 import type { Moment } from "common";
+import useOnVisible from "~/hooks/useOnVisible";
 
 const Wrapper = styled.div<{
   $highlight?: boolean;
@@ -42,10 +43,13 @@ interface MomentProps {
   trending?: boolean;
   highlight?: boolean;
   ref?: React.Ref<HTMLDivElement>;
+  id?: string;
   onInfo: (moment: Moment) => void;
   onAddReaction: (emoji: string) => void;
   onRemoveReaction: () => void;
   onEmojiModalOpen: () => void;
+  onVisible?: () => void;
+  onInvisible?: () => void;
 }
 
 export default function Moment({
@@ -54,6 +58,7 @@ export default function Moment({
   trending,
   highlight = false,
   ref,
+  id,
   onInfo,
   onAddReaction,
   onRemoveReaction,
@@ -61,7 +66,7 @@ export default function Moment({
 }: MomentProps) {
   return (
     <Wrapper $highlight={highlight}>
-      <MomentContent ref={ref}>
+      <MomentContent ref={ref} id={id}>
         {my && <My />}
         {trending && <Trending />}
 

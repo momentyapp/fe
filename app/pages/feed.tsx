@@ -39,10 +39,8 @@ export default function Feed() {
     [topics]
   );
 
-  const { moments, isLoading, loadMore } = useMoments(
-    enabledTopicsIds,
-    session.accessToken?.token
-  );
+  const { moments, isLoading, loadMore, observeMoment, unobserveMoment } =
+    useMoments(enabledTopicsIds, session.accessToken?.token);
 
   // 활성화된 주제가 없으면 트렌드 주제 가져오기
   useEffect(() => {
@@ -66,7 +64,13 @@ export default function Feed() {
       <TopicToggleList topics={topics} setTopics={setTopics} />
 
       {/* 모멘트 */}
-      <MomentList moments={moments} onLoadMore={loadMore} loading={isLoading} />
+      <MomentList
+        moments={moments}
+        onLoadMore={loadMore}
+        loading={isLoading}
+        onMomentVisible={observeMoment}
+        onMomentInvisible={unobserveMoment}
+      />
 
       {/* 글 쓰기 버튼 */}
       <FloatingButton backgroundColor={theme?.primary3} onClick={handleWrite}>

@@ -35,14 +35,16 @@ interface MomentListProps {
   moments: MomentType[];
   onLoadMore: () => void;
   loading: boolean;
-  my?: number;
+  onMomentVisible?: (momentId: number) => void;
+  onMomentInvisible?: (momentId: number) => void;
 }
 
 export default function MomentList({
   moments,
   onLoadMore,
   loading,
-  my,
+  onMomentVisible,
+  onMomentInvisible,
 }: MomentListProps) {
   const session = useSession();
   const theme = useContext(ThemeContext);
@@ -51,6 +53,18 @@ export default function MomentList({
     () => session?.accessToken?.token ?? null,
     [session]
   );
+
+  const observe = useOnVisible(onVisible, onInvisible);
+
+  function onVisible(entry: IntersectionObserverEntry) {
+    const momentId = parseInt(entry.target.id.split("moment-")[1]);
+    onMomentVisible?.(momentId);
+  }
+
+  function onInvisible(entry: IntersectionObserverEntry) {
+    const momentId = parseInt(entry.target.id.split("moment-")[1]);
+    onMomentInvisible?.(momentId);
+  }
 
   const {
     emojiModalMoment,
@@ -69,7 +83,7 @@ export default function MomentList({
     handleMomentInfoClose,
   } = useMomentInfoState();
 
-  const observeEnd = useOnVisible(onLoadMore);
+  const endRef = useOnVisible(onLoadMore);
 
   return (
     <Wrapper>
@@ -81,12 +95,15 @@ export default function MomentList({
           onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
           onRemoveReaction={() => handleRemoveReaction(moment.id)}
           onEmojiModalOpen={() => setEmojiModalMoment(moment)}
-          my={moment.id === my}
+          onVisible={() => onMomentVisible?.(moment.id)}
+          onInvisible={() => onMomentInvisible?.(moment.id)}
+          ref={observe}
+          id={`moment-${moment.id}`}
         />
       ))}
 
       {/* 모멘트 목록 끝 */}
-      <End ref={observeEnd}>
+      <End ref={endRef}>
         {loading && <CircularProgress size={36} color={theme?.grey2} />}
       </End>
 

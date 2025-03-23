@@ -42,6 +42,7 @@ interface BottomProps {
   onAddReaction: (emoji: string) => void;
   onRemoveReaction: () => void;
   onEmojiModalOpen: () => void;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export default function Bottom({
@@ -49,6 +50,7 @@ export default function Bottom({
   onAddReaction,
   onRemoveReaction,
   onEmojiModalOpen,
+  ref,
 }: BottomProps) {
   const theme = useContext(ThemeContext);
 
@@ -59,7 +61,7 @@ export default function Bottom({
 
   return (
     <>
-      <Wrapper>
+      <Wrapper ref={ref}>
         <ReactionContainer>
           <AddReaction backgroundColor={theme?.bg1} onClick={onEmojiModalOpen}>
             <MdAddReaction size="20px" color={theme?.grey1} />

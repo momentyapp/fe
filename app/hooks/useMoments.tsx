@@ -20,6 +20,8 @@ export default function useMoments(
   accessToken?: string
 ) {
   const momentStore = useMomentStore();
+  const observingMoments = useRef<Set<number>>(new Set());
+
   const [isLoading, setIsLoading] = useState(false);
 
   // 활성화된 주제 id 목록을 key로 사용
@@ -42,8 +44,14 @@ export default function useMoments(
       }));
     });
 
+    // 모멘트 수정 수신
+    socket.on("modify_moment", (momentId: number, moment: Partial<Moment>) => {
+      momentStore.modify(momentId, moment);
+    });
+
     return () => {
       socket.off("new_moment");
+      socket.off("modify_moment");
       socket.disconnect();
     };
   }, [key]);
@@ -53,6 +61,15 @@ export default function useMoments(
     socket.emit("set_topic", topicIds);
     fetch();
   }, [topicIds]);
+
+  // 주기적으로 모멘트 id 목록 전송
+  useEffect(() => {
+    const interval = setInterval(() => {
+      socket.emit("set_moment", Array.from(observingMoments.current));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // 활성화된 주제 id 목록과 모멘트 id 목록 매핑
   const [table, setTable] = useState<Record<string, number[]>>({});
@@ -112,5 +129,15 @@ export default function useMoments(
     }
   }
 
-  return { moments, isLoading, loadMore };
+  // 모멘트 관찰 시작
+  async function observeMoment(momentId: number) {
+    observingMoments.current.add(momentId);
+  }
+
+  // 모멘트 관찰 종료
+  async function unobserveMoment(momentId: number) {
+    observingMoments.current.delete(momentId);
+  }
+
+  return { moments, isLoading, loadMore, observeMoment, unobserveMoment };
 }
