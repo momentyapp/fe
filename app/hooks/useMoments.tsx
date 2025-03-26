@@ -15,13 +15,19 @@ const socket = io(`${import.meta.env.VITE_HOST}`, {
   transports: ["websocket"],
 });
 
-export default function useMoments(
-  topicIds: number[] = [],
-  accessToken?: string
-) {
+interface UseMomentsProps {
+  topicIds?: number[];
+  accessToken?: string;
+  onNewMoment?: (moment: Moment) => void;
+}
+
+export default function useMoments({
+  topicIds = [],
+  accessToken,
+  onNewMoment,
+}: UseMomentsProps = {}) {
   const momentStore = useMomentStore();
   const observingMoments = useRef<Set<number>>(new Set());
-  const [unseenMoments, setUnseenMoments] = useState<number[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,7 +44,7 @@ export default function useMoments(
     // 새로운 모멘트 수신
     socket.on("new_moment", (moment: Moment) => {
       momentStore.add([moment]);
-      setUnseenMoments((prev) => [...prev, moment.id]);
+      onNewMoment?.(moment);
 
       setTable((prev) => ({
         ...prev,
@@ -61,7 +67,6 @@ export default function useMoments(
   // 주제 id 목록이 변경될 때
   useEffect(() => {
     socket.emit("set_topic", topicIds);
-    setUnseenMoments([]);
     fetch();
   }, [topicIds]);
 
@@ -133,22 +138,20 @@ export default function useMoments(
   }
 
   // 모멘트가 뷰포트에 들어올 때
-  async function handleMomentVisible(momentId: number) {
+  async function observeMoment(momentId: number) {
     observingMoments.current.add(momentId);
-    setUnseenMoments((prev) => prev.filter((id) => id !== momentId));
   }
 
   // 모멘트가 뷰포트에서 나갈 때
-  async function handleMomentInvisible(momentId: number) {
+  async function unobserveMoment(momentId: number) {
     observingMoments.current.delete(momentId);
   }
 
   return {
     moments,
     isLoading,
-    unseenMoments,
     loadMore,
-    handleMomentVisible,
-    handleMomentInvisible,
+    observeMoment,
+    unobserveMoment,
   };
 }

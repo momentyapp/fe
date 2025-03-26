@@ -25,11 +25,11 @@ const Wrapper = styled.div<{ $in: boolean }>`
 `;
 
 interface UnseenProps {
-  count: number;
+  open: boolean;
   onClick?: () => void;
 }
 
-export default function Unseen({ count, onClick }: UnseenProps) {
+export default function Unseen({ open, onClick }: UnseenProps) {
   const theme = useContext(ThemeContext);
 
   function scrollToTop() {
@@ -37,17 +37,15 @@ export default function Unseen({ count, onClick }: UnseenProps) {
   }
 
   return (
-    <Wrapper $in={count > 0}>
+    <Wrapper $in={open}>
       <StyledButton
-        $in={count > 0}
+        $in={open}
         onClick={onClick ?? scrollToTop}
         icon={<MdArrowUpward size="20" color={theme?.bg1} />}
         backgroundColor={theme?.primary3}
       >
         <Typography color={theme?.bg1} size="14px">
-          {count > 0
-            ? `${count.toLocaleString()}개의 새 모멘트`
-            : "모멘트를 모두 확인함"}
+          {open ? `새 모멘트 보러 가기` : "새 모멘트를 확인함"}
         </Typography>
       </StyledButton>
     </Wrapper>
