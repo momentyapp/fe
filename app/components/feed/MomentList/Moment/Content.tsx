@@ -1,11 +1,14 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 
 import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
 
-import type { Moment } from "common";
+import useEnabledTopicsStore from "~/contexts/useEnabledTopicsStore";
+
+import type { Moment, Topic } from "common";
+import Button from "~/components/common/Button";
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,7 +28,7 @@ const StyledTypography = styled(Typography)`
 const PhotoContainer = styled.div`
   display: flex;
   height: 160px;
-  padding: 0 30px;
+  padding: 10px 30px;
   box-sizing: border-box;
   align-items: center;
   gap: 10px;
@@ -56,7 +59,7 @@ const TopicContainer = styled.div`
   border-radius: 10px;
 `;
 
-const Topic = styled.div`
+const Topic = styled(Button)<{ $enabled: boolean }>`
   flex-shrink: 0;
   display: flex;
   padding: 10px;
@@ -64,7 +67,10 @@ const Topic = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  border: 1px solid ${(props) => props.theme.bg2};
+  border: 1px solid
+    ${(props) => (props.$enabled ? props.theme.primary4 : props.theme.grey3)};
+  transition: background-color 0.2s, border 0.2s, background 0.2s, filter 0.2s,
+    transform 0.1s ease-in-out;
 `;
 
 interface ContentProps {
@@ -73,6 +79,21 @@ interface ContentProps {
 
 export default function Content({ moment }: ContentProps) {
   const theme = useContext(ThemeContext);
+  const { enabledTopics, setEnabledTopics } = useEnabledTopicsStore();
+
+  const enabledTopicIds = useMemo(
+    () => new Set(enabledTopics.map((topic) => topic.id)),
+    [enabledTopics]
+  );
+
+  // 주제 클릭 시
+  function handleTopicClick(topic: Topic) {
+    setEnabledTopics((prevTopics) => {
+      if (prevTopics.some((prevTopic) => prevTopic.id === topic.id))
+        return prevTopics.filter((prevTopic) => prevTopic.id !== topic.id);
+      else return [topic, ...prevTopics];
+    });
+  }
 
   return (
     <Wrapper>
@@ -83,10 +104,7 @@ export default function Content({ moment }: ContentProps) {
 
       {/* 사진 */}
       {moment.body.photos && moment.body.photos.length > 0 && (
-        <PhotoProvider
-          speed={() => 300}
-          easing={() => "cubic-bezier(0.175, 0.885, 0.32, 1.275)"}
-        >
+        <PhotoProvider speed={() => 300}>
           <PhotoContainer>
             {moment.body.photos.map((photo, index) => (
               <PhotoView
@@ -107,8 +125,20 @@ export default function Content({ moment }: ContentProps) {
       {/* 주제 */}
       <TopicContainer>
         {moment.topics.map((topic) => (
-          <Topic key={topic.id}>
-            <Typography color={theme?.grey2} size="14px">
+          <Topic
+            key={topic.id}
+            onClick={() => handleTopicClick(topic)}
+            backgroundColor={
+              enabledTopicIds.has(topic.id) ? theme?.primary4 : theme?.bg3
+            }
+            $enabled={enabledTopicIds.has(topic.id)}
+          >
+            <Typography
+              color={
+                enabledTopicIds.has(topic.id) ? theme?.primary1 : theme?.grey2
+              }
+              size="14px"
+            >
               {topic.name}
             </Typography>
           </Topic>
