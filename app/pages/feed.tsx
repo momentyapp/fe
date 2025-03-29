@@ -51,7 +51,7 @@ export default function Feed() {
 
   // 새 모멘트가 게시됐을 때
   function handleNewMoment(moment: Moment) {
-    if (newMomentId === null) setNewMomentId(moment.id);
+    if (newMomentId === null && window.scrollY > 0) setNewMomentId(moment.id);
   }
 
   // 모멘트가 화면에 보일 때

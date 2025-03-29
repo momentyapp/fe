@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 
 import useReactMoment from "~/hooks/useReactMoment";
@@ -52,7 +52,9 @@ export default function MomentList({
     [session]
   );
 
-  const observe = useOnVisible(onVisible, onInvisible);
+  const observe = useOnVisible(onVisible, onInvisible, {
+    threshold: 0.5,
+  });
 
   function onVisible(entry: IntersectionObserverEntry) {
     const momentId = parseInt(entry.target.id.split("moment-")[1]);
@@ -74,12 +76,17 @@ export default function MomentList({
     handleSelectEmoji,
   } = useReactMoment(accessToken);
 
-  const {
-    momentInfoModalOpen,
-    momentInfo,
-    handleMomentInfoOpen,
-    handleMomentInfoClose,
-  } = useMomentInfoState();
+  const [momentInfoModalOpen, setMomentInfoModalOpen] = useState(false);
+  const [momentInfo, setMomentInfo] = useState<MomentType | null>(null);
+
+  function handleMomentInfoOpen(moment: MomentType) {
+    setMomentInfo(moment);
+    setMomentInfoModalOpen(true);
+  }
+
+  function handleMomentInfoClose() {
+    setMomentInfoModalOpen(false);
+  }
 
   const endRef = useOnVisible(onLoadMore);
 
@@ -90,11 +97,9 @@ export default function MomentList({
           key={moment.id}
           moment={moment}
           onInfo={handleMomentInfoOpen}
-          onAddReaction={(emoji) => handleAddReaction(moment.id, emoji)}
-          onRemoveReaction={() => handleRemoveReaction(moment.id)}
-          onEmojiModalOpen={() => setEmojiModalMoment(moment)}
-          onVisible={() => onMomentVisible?.(moment.id)}
-          onInvisible={() => onMomentInvisible?.(moment.id)}
+          onAddReaction={handleAddReaction}
+          onRemoveReaction={handleRemoveReaction}
+          onEmojiModalOpen={setEmojiModalMoment}
           ref={observe}
           id={`moment-${moment.id}`}
         />

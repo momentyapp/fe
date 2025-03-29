@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 /**
  * 노드가 화면에 보일 때 콜백 함수를 호출하는 훅
@@ -12,23 +12,28 @@ export default function useOnVisible(
   onInvisible?: (entry: IntersectionObserverEntry) => void,
   options: IntersectionObserverInit = { threshold: 0 }
 ) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) onVisible?.(entry);
-      else onInvisible?.(entry);
-    });
-  }, options);
+  const observer = useMemo(
+    () =>
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) onVisible?.(entry);
+          else onInvisible?.(entry);
+        });
+      }, options),
+    [onVisible, onInvisible, options]
+  );
 
   useEffect(() => {
     return () => observer.disconnect();
   }, [observer]);
 
-  const observe = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node !== null) {
-        observer.observe(node);
-      }
-    },
+  const observe = useMemo(
+    () =>
+      function (node: HTMLDivElement | null) {
+        if (node !== null) {
+          observer.observe(node);
+        }
+      },
     [observer]
   );
 

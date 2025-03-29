@@ -20,8 +20,8 @@ export default function My() {
 
   return (
     <Wrapper>
-      <MdStar size="24" color={theme?.primary2} />
-      <Typography color={theme?.primary2} size="16px">
+      <MdStar size="18" color={theme?.primary3} />
+      <Typography color={theme?.primary3} size="14px">
         내가 게시한 모멘트
       </Typography>
     </Wrapper>

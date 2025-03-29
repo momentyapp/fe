@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { styled } from "styled-components";
 
 import My from "./My";
@@ -7,6 +8,7 @@ import Top from "./Top";
 import Bottom from "./Bottom";
 
 import type { Moment } from "common";
+import useSession from "~/contexts/useSession";
 
 const Wrapper = styled.div<{
   $highlight?: boolean;
@@ -37,22 +39,18 @@ const MomentContent = styled.div`
 
 interface MomentProps {
   moment: Moment;
-  my?: boolean;
   trending?: boolean;
   highlight?: boolean;
   ref?: React.Ref<HTMLDivElement>;
   id?: string;
   onInfo: (moment: Moment) => void;
-  onAddReaction: (emoji: string) => void;
-  onRemoveReaction: () => void;
-  onEmojiModalOpen: () => void;
-  onVisible?: () => void;
-  onInvisible?: () => void;
+  onAddReaction: (momentId: number, emoji: string) => void;
+  onRemoveReaction: (momentId: number) => void;
+  onEmojiModalOpen: (moment: Moment) => void;
 }
 
-export default function Moment({
+function Moment({
   moment,
-  my,
   trending,
   highlight = false,
   ref,
@@ -62,6 +60,16 @@ export default function Moment({
   onRemoveReaction,
   onEmojiModalOpen,
 }: MomentProps) {
+  const session = useSession();
+
+  const my = useMemo(
+    () =>
+      moment.author !== undefined &&
+      session.user !== null &&
+      moment.author?.id === session.user?.id,
+    [moment, session]
+  );
+
   return (
     <Wrapper $highlight={highlight}>
       <MomentContent ref={ref} id={id}>
@@ -72,11 +80,13 @@ export default function Moment({
         <Content moment={moment} />
         <Bottom
           moment={moment}
-          onAddReaction={onAddReaction}
-          onRemoveReaction={onRemoveReaction}
-          onEmojiModalOpen={onEmojiModalOpen}
+          onAddReaction={(emoji) => onAddReaction(moment.id, emoji)}
+          onRemoveReaction={() => onRemoveReaction(moment.id)}
+          onEmojiModalOpen={() => onEmojiModalOpen(moment)}
         />
       </MomentContent>
     </Wrapper>
   );
 }
+
+export default memo(Moment);
