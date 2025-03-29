@@ -34,7 +34,7 @@ const useSession = create<Session>((set) => ({
   login: (user, accessToken, refreshToken) => {
     set({ user, accessToken, refreshToken });
 
-    cookies.set("refreshToken", refreshToken, { path: "/" });
+    cookies.set("refreshToken", refreshToken, { path: "/", expires: new Date(refreshToken.expiresAt) });
   },
 
   logout: () => {

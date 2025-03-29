@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -48,6 +48,11 @@ export default function Feed() {
       accessToken: session.accessToken?.token,
       onNewMoment: handleNewMoment,
     });
+
+  // 주제가 바뀌었을 때
+  useEffect(() => {
+    setNewMomentId(null);
+  }, [topics]);
 
   // 새 모멘트가 게시됐을 때
   function handleNewMoment(moment: Moment) {

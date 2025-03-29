@@ -46,7 +46,7 @@ export default function useTopicSearch(
               id: topic.id,
               name: topic.name,
               trending: topic.trending,
-              count: topic.usage,
+              usage: topic.usage,
               enabled: addedTopics.some(
                 (addedTopic) => addedTopic.id === topic.id
               ),
