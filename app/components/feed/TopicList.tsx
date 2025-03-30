@@ -1,6 +1,6 @@
-import { createRef, useContext, useEffect, useState, type Ref } from "react";
+import { useContext, useEffect, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
-import { Transition, TransitionGroup } from "react-transition-group";
+import { AnimatePresence } from "motion/react";
 
 import { MdTune } from "react-icons/md";
 
@@ -24,29 +24,15 @@ const Wrapper = styled.div`
   z-index: 1;
 `;
 
-const InsideTopicToggleList = styled(TransitionGroup)`
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-
-  > * {
-    flex-shrink: 0;
-  }
-`;
-
 const AddTopic = styled(Pressable)`
   display: flex;
   height: 36px;
   padding: 0 15px;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
-  margin-right: 10px;
+  border-radius: 15px;
+  margin-right: 15px;
 `;
-
-interface TopicWithRef extends TopicType {
-  ref: Ref<HTMLDivElement>;
-}
 
 interface TopicListProps {
   topics: TopicType[];
@@ -56,17 +42,7 @@ interface TopicListProps {
 export default function TopicList({ topics, setTopics }: TopicListProps) {
   const theme = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
-  const [topicsWithRefs, setTopicsWithRefs] = useState<TopicWithRef[]>([]);
-
-  // topics 변경 감지
-  useEffect(() => {
-    setTopicsWithRefs(
-      topics.map((topic) => ({
-        ...topic,
-        ref: createRef<HTMLDivElement>(),
-      }))
-    );
-  }, [topics]);
+  const [topicModified, setTopicModified] = useState(false);
 
   // 주제 제거
   function removeTopic(topicId: number) {
@@ -75,26 +51,26 @@ export default function TopicList({ topics, setTopics }: TopicListProps) {
     );
   }
 
+  // 주제 변경 시
+  useEffect(() => {
+    setTopicModified(true);
+  }, [topics]);
+
   return (
     <Wrapper>
       <AddTopic backgroundColor={theme?.bg2} onClick={() => setModalOpen(true)}>
         <MdTune size="20" color={theme?.grey1} />
       </AddTopic>
-      <InsideTopicToggleList>
-        {topicsWithRefs.map((topic) => (
-          <Transition key={topic.id} timeout={500} nodeRef={topic.ref}>
-            {(state) => (
-              <Topic
-                ref={topic.ref}
-                topic={topic.name}
-                onClick={() => removeTopic(topic.id)}
-                transitionStatus={state}
-                key={topic.id}
-              />
-            )}
-          </Transition>
+
+      <AnimatePresence initial={topicModified}>
+        {topics.map((topic) => (
+          <Topic
+            topic={topic.name}
+            key={topic.id}
+            onClick={() => removeTopic(topic.id)}
+          />
         ))}
-      </InsideTopicToggleList>
+      </AnimatePresence>
 
       {/* 주제 모달 */}
       <TopicModal
