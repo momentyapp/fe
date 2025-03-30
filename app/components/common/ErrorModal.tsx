@@ -65,7 +65,6 @@ export default function ErrorModal({
         <Slide
           visible={isOpen}
           delay={50}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <StyledDiv>
             <Typography size="18px" color={theme?.grey1}>
@@ -78,7 +77,6 @@ export default function ErrorModal({
         <Slide
           visible={isOpen}
           delay={100}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <Actions>
             <Action

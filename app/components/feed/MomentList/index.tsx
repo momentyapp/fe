@@ -1,8 +1,8 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { AnimatePresence } from "motion/react";
 
 import useReactMoment from "~/hooks/useReactMoment";
-import useMomentInfoState from "~/hooks/useMomentInfoState";
 import useOnVisible from "~/hooks/useOnVisible";
 
 import CircularProgress from "~/components/common/CircularProgress";
@@ -92,18 +92,20 @@ export default function MomentList({
 
   return (
     <Wrapper>
-      {moments.map((moment) => (
-        <Moment
-          key={moment.id}
-          moment={moment}
-          onInfo={handleMomentInfoOpen}
-          onAddReaction={handleAddReaction}
-          onRemoveReaction={handleRemoveReaction}
-          onEmojiModalOpen={setEmojiModalMoment}
-          ref={observe}
-          id={`moment-${moment.id}`}
-        />
-      ))}
+      <AnimatePresence>
+        {moments.map((moment) => (
+          <Moment
+            key={moment.id}
+            moment={moment}
+            onInfo={handleMomentInfoOpen}
+            onAddReaction={handleAddReaction}
+            onRemoveReaction={handleRemoveReaction}
+            onEmojiModalOpen={setEmojiModalMoment}
+            ref={observe}
+            id={`moment-${moment.id}`}
+          />
+        ))}
+      </AnimatePresence>
 
       {/* 모멘트 목록 끝 */}
       <End ref={endRef}>

@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 import { styled } from "styled-components";
+import { motion } from "motion/react";
 
 import My from "./My";
 import Trending from "./Trending";
@@ -10,23 +11,7 @@ import Bottom from "./Bottom";
 import type { Moment } from "common";
 import useSession from "~/contexts/useSession";
 
-const Wrapper = styled.div<{
-  $highlight?: boolean;
-}>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  transition: margin-bottom 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    height 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1), box-shadow 0.2s;
-  overflow: hidden;
-  box-shadow: ${(props) =>
-    props.$highlight ? `0px 0px 10px ${props.theme.primary3}` : "none"};
-  border-bottom: 1px solid ${(props) => props.theme.bg2};
-`;
-
-const MomentContent = styled.div`
+const Wrapper = styled.div`
   flex-shrink: 0;
   display: flex;
   width: 100%;
@@ -35,6 +20,7 @@ const MomentContent = styled.div`
   align-items: center;
   gap: 15px;
   background: ${(props) => props.theme.bg1};
+  border-bottom: 1px solid ${(props) => props.theme.bg2};
 `;
 
 interface MomentProps {
@@ -52,7 +38,6 @@ interface MomentProps {
 function Moment({
   moment,
   trending,
-  highlight = false,
   ref,
   id,
   onInfo,
@@ -71,8 +56,12 @@ function Moment({
   );
 
   return (
-    <Wrapper $highlight={highlight}>
-      <MomentContent ref={ref} id={id}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Wrapper ref={ref} id={id}>
         {my && <My />}
         {trending && <Trending />}
 
@@ -84,8 +73,8 @@ function Moment({
           onRemoveReaction={() => onRemoveReaction(moment.id)}
           onEmojiModalOpen={() => onEmojiModalOpen(moment)}
         />
-      </MomentContent>
-    </Wrapper>
+      </Wrapper>
+    </motion.div>
   );
 }
 
