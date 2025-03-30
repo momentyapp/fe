@@ -8,7 +8,7 @@ import Content from "./Content";
 import Top from "./Top";
 import Bottom from "./Bottom";
 
-import type { Moment } from "common";
+import type { Moment, Topic } from "common";
 import useSession from "~/contexts/useSession";
 
 const Wrapper = styled.div`
@@ -33,6 +33,7 @@ interface MomentProps {
   onAddReaction: (momentId: number, emoji: string) => void;
   onRemoveReaction: (momentId: number) => void;
   onEmojiModalOpen: (moment: Moment) => void;
+  onTopicClick?: (topic: Topic) => void;
 }
 
 function Moment({
@@ -44,6 +45,7 @@ function Moment({
   onAddReaction,
   onRemoveReaction,
   onEmojiModalOpen,
+  onTopicClick,
 }: MomentProps) {
   const session = useSession();
 
@@ -66,7 +68,7 @@ function Moment({
         {trending && <Trending />}
 
         <Top moment={moment} onDetail={() => onInfo(moment)} />
-        <Content moment={moment} />
+        <Content moment={moment} onTopicClick={onTopicClick} />
         <Bottom
           moment={moment}
           onAddReaction={(emoji) => onAddReaction(moment.id, emoji)}

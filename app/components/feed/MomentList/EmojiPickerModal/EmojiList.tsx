@@ -42,7 +42,7 @@ export default function EmojiList({ onSelect, myEmoji }: EmojiListProps) {
           animate={{ opacity: 1 }}
           transition={{
             duration: 0.3,
-            delay: ((index % 5) + Math.floor(index / 5)) * 30,
+            delay: ((index % 5) + Math.floor(index / 5)) * 0.03,
           }}
         >
           <EmojiButton

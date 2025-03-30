@@ -66,7 +66,7 @@ const Topic = styled(Button)<{ $enabled: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 15px;
   border: 1px solid
     ${(props) => (props.$enabled ? props.theme.primary4 : props.theme.grey3)};
   transition: background-color 0.2s, border 0.2s, background 0.2s, filter 0.2s,
@@ -75,9 +75,10 @@ const Topic = styled(Button)<{ $enabled: boolean }>`
 
 interface ContentProps {
   moment: Moment;
+  onTopicClick?: (topic: Topic) => void;
 }
 
-export default function Content({ moment }: ContentProps) {
+export default function Content({ moment, onTopicClick }: ContentProps) {
   const theme = useContext(ThemeContext);
   const { enabledTopics, setEnabledTopics } = useEnabledTopicsStore();
 
@@ -88,6 +89,7 @@ export default function Content({ moment }: ContentProps) {
 
   // 주제 클릭 시
   function handleTopicClick(topic: Topic) {
+    onTopicClick?.(topic);
     setEnabledTopics((prevTopics) => {
       if (prevTopics.some((prevTopic) => prevTopic.id === topic.id))
         return prevTopics.filter((prevTopic) => prevTopic.id !== topic.id);

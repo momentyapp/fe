@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { AnimatePresence } from "motion/react";
 
@@ -33,6 +33,7 @@ interface MomentListProps {
   moments: MomentType[];
   onLoadMore: () => void;
   loading: boolean;
+  setAnchor?: (momentId: number) => void;
   onMomentVisible?: (momentId: number) => void;
   onMomentInvisible?: (momentId: number) => void;
 }
@@ -41,6 +42,7 @@ export default function MomentList({
   moments,
   onLoadMore,
   loading,
+  setAnchor,
   onMomentVisible,
   onMomentInvisible,
 }: MomentListProps) {
@@ -101,6 +103,7 @@ export default function MomentList({
             onAddReaction={handleAddReaction}
             onRemoveReaction={handleRemoveReaction}
             onEmojiModalOpen={setEmojiModalMoment}
+            onTopicClick={() => setAnchor?.(moment.id)}
             ref={observe}
             id={`moment-${moment.id}`}
           />

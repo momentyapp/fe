@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -62,9 +62,7 @@ export default function Feed() {
   // 모멘트가 화면에 보일 때
   function handleMomentVisible(momentId: number) {
     observeMoment(momentId);
-    if (momentId === newMomentId) {
-      setNewMomentId(null);
-    }
+    if (momentId === newMomentId) setNewMomentId(null);
   }
 
   // 모멘트가 화면에서 사라질 때

@@ -74,7 +74,7 @@ export default function useMoments({
   useEffect(() => {
     const interval = setInterval(() => {
       socket.emit("set_moment", Array.from(observingMoments.current));
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -83,8 +83,11 @@ export default function useMoments({
   const [table, setTable] = useState<Record<string, number[]>>({});
   const completed = useRef<Set<string>>(new Set());
 
+  const latestsMoments = useRef<Moment[]>([]);
+
   // key에 해당하는 모멘트 목록
   const moments = useMemo(() => {
+    if (isLoading) return latestsMoments.current;
     if (!(key in table)) return [];
 
     const result: Moment[] = [];
@@ -93,8 +96,9 @@ export default function useMoments({
       if (moment !== undefined) result.push(moment);
     }
 
+    latestsMoments.current = result;
     return result;
-  }, [table, key, momentStore.moments]);
+  }, [table, key, momentStore.moments, isLoading]);
 
   // 더 불러오기
   async function loadMore() {
