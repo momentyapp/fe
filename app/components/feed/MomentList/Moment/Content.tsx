@@ -57,6 +57,7 @@ const TopicContainer = styled.div`
   padding: 5px 30px;
   width: 100%;
   border-radius: 10px;
+  scrollbar-width: none;
 `;
 
 const Topic = styled(Button)<{ $enabled: boolean }>`

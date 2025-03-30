@@ -21,6 +21,7 @@ const Wrapper = styled.div`
   top: 60px;
   background-color: ${(props) => props.theme?.bg1};
   z-index: 1;
+  scrollbar-width: none;
 `;
 
 const AddTopic = styled(Pressable)`
