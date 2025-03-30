@@ -1,6 +1,6 @@
-import React, { createRef, useContext, useMemo } from "react";
-import { Transition, TransitionGroup } from "react-transition-group";
+import React, { useContext, useEffect, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { AnimatePresence } from "motion/react";
 import { MdAddReaction } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
@@ -11,21 +11,10 @@ import type { Moment } from "common";
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
   width: 100%;
   overflow-x: auto;
-`;
-
-const ReactionContainer = styled.div`
-  display: flex;
-  padding: 0px 20px;
-  gap: 10px;
-`;
-
-const InsideReactionList = styled(TransitionGroup)`
-  display: flex;
+  padding: 5px 15px;
+  box-sizing: border-box;
 `;
 
 const AddReaction = styled(Pressable)<{ $myEmoji?: boolean }>`
@@ -37,6 +26,7 @@ const AddReaction = styled(Pressable)<{ $myEmoji?: boolean }>`
   box-shadow: 0 0 0 ${(props) => (props.$myEmoji ? "1px" : "0px")}
     ${(props) => props.theme?.primary4} inset;
   border-radius: 10px;
+  margin-right: 15px;
 `;
 
 interface BottomProps {
@@ -61,45 +51,26 @@ export default function Bottom({
     else onAddReaction(emoji);
   }
 
-  // 반응 개수만큼 ref 생성
-  const reactionRefs = useMemo(
-    () =>
-      Object.keys(moment.reactions).reduce<
-        Record<string, React.Ref<HTMLDivElement>>
-      >((acc, emoji) => ({ ...acc, [emoji]: createRef<HTMLDivElement>() }), {}),
-    [moment.reactions]
-  );
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => setInitialized(true), []);
 
   return (
-    <>
-      <Wrapper ref={ref}>
-        <ReactionContainer>
-          <AddReaction backgroundColor={theme?.bg1} onClick={onEmojiModalOpen}>
-            <MdAddReaction size="20px" color={theme?.grey1} />
-          </AddReaction>
+    <Wrapper ref={ref}>
+      <AddReaction backgroundColor={theme?.bg1} onClick={onEmojiModalOpen}>
+        <MdAddReaction size="20px" color={theme?.grey1} />
+      </AddReaction>
 
-          <InsideReactionList>
-            {Object.keys(moment.reactions).map((emoji, index) => (
-              <Transition
-                key={emoji}
-                timeout={500}
-                nodeRef={reactionRefs[emoji]}
-              >
-                {(state) => (
-                  <Reaction
-                    emoji={emoji}
-                    count={moment.reactions[emoji]}
-                    myEmoji={moment.myEmoji === emoji}
-                    onClick={() => handleReactionClick(emoji)}
-                    ref={reactionRefs[emoji]}
-                    transitionStatus={state}
-                  />
-                )}
-              </Transition>
-            ))}
-          </InsideReactionList>
-        </ReactionContainer>
-      </Wrapper>
-    </>
+      <AnimatePresence initial={initialized}>
+        {Object.keys(moment.reactions).map((emoji) => (
+          <Reaction
+            emoji={emoji}
+            count={moment.reactions[emoji]}
+            myEmoji={moment.myEmoji === emoji}
+            key={emoji}
+            onClick={() => handleReactionClick(emoji)}
+          />
+        ))}
+      </AnimatePresence>
+    </Wrapper>
   );
 }

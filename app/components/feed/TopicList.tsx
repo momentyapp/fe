@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { AnimatePresence } from "motion/react";
-
 import { MdTune } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
@@ -42,7 +41,6 @@ interface TopicListProps {
 export default function TopicList({ topics, setTopics }: TopicListProps) {
   const theme = useContext(ThemeContext);
   const [modalOpen, setModalOpen] = useState(false);
-  const [topicModified, setTopicModified] = useState(false);
 
   // 주제 제거
   function removeTopic(topicId: number) {
@@ -51,10 +49,8 @@ export default function TopicList({ topics, setTopics }: TopicListProps) {
     );
   }
 
-  // 주제 변경 시
-  useEffect(() => {
-    setTopicModified(true);
-  }, [topics]);
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => setInitialized(true), []);
 
   return (
     <Wrapper>
@@ -62,7 +58,7 @@ export default function TopicList({ topics, setTopics }: TopicListProps) {
         <MdTune size="20" color={theme?.grey1} />
       </AddTopic>
 
-      <AnimatePresence initial={topicModified}>
+      <AnimatePresence initial={initialized}>
         {topics.map((topic) => (
           <Topic
             topic={topic.name}

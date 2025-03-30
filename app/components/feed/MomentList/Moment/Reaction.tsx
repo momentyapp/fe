@@ -1,34 +1,24 @@
 import { createRef, useContext, useEffect, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { motion } from "motion/react";
 
 import Emoji from "~/components/common/Emoji";
 import Pressable from "~/components/common/Pressable";
 import Typography from "~/components/common/Typography";
 
-import type { TransitionStatus } from "react-transition-group";
-
-const Wrapper = styled.div<{
-  $in: boolean;
-  $width: number;
-}>`
-  margin-right: ${(props) => (props.$in ? 10 : 0)}px;
-  width: ${(props) => (props.$in ? props.$width + 24 : 0)}px;
-  opacity: ${(props) => (props.$in ? 1 : 0)};
-  transition: margin-right 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    width 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
+const Wrapper = styled.div`
   overflow: hidden;
   padding: 0;
   flex-shrink: 0;
 `;
 
-const StyledPressable = styled(Pressable)<{ $myEmoji?: boolean }>`
+const EmojiButton = styled(Pressable)<{ $isMy?: boolean }>`
   display: flex;
   padding: 7px 12px;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  box-shadow: 0 0 0 ${(props) => (props.$myEmoji ? "1px" : "0px")}
+  box-shadow: 0 0 0 ${(props) => (props.$isMy ? "1px" : "0px")}
     ${(props) => props.theme?.primary4} inset;
   border-radius: 10px;
 `;
@@ -38,7 +28,6 @@ interface ReactionProps {
   count: number;
   myEmoji: boolean;
   onClick?: () => void;
-  transitionStatus?: TransitionStatus;
   ref?: React.Ref<HTMLDivElement>;
 }
 
@@ -48,46 +37,45 @@ export default function Reaction({
   myEmoji,
   onClick,
   ref,
-  transitionStatus = "entered",
 }: ReactionProps) {
   const theme = useContext(ThemeContext);
-  const contentRef = createRef<HTMLButtonElement>();
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    if (contentRef.current === null) return;
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setWidth(entry.contentRect.width);
-      }
-    });
-    observer.observe(contentRef.current);
-    return () => observer.disconnect();
-  }, [contentRef]);
 
   return (
-    <Wrapper
+    <motion.div
       ref={ref}
-      $in={
-        width > 0 &&
-        (transitionStatus === "entered" || transitionStatus === "entering")
-      }
-      $width={width}
+      initial={{ width: 0, marginRight: 0 }}
+      animate={{ width: "auto", marginRight: "10px" }}
+      exit={{ width: 0, marginRight: 0 }}
+      transition={{
+        type: "spring",
+        duration: 0.7,
+      }}
+      style={{
+        borderRadius: "10px",
+        display: "flex",
+        justifyContent: "flex-start",
+        flexShrink: 0,
+      }}
     >
-      <StyledPressable
-        $myEmoji={myEmoji}
-        backgroundColor={myEmoji ? theme?.primary5 : theme?.bg2}
-        onClick={onClick}
-        ref={contentRef}
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.5, opacity: 0 }}
       >
-        <Emoji size="16px">{emoji}</Emoji>
-        <Typography
-          color={myEmoji ? theme?.primary1 : theme?.grey1}
-          size="16px"
+        <EmojiButton
+          $isMy={myEmoji}
+          backgroundColor={myEmoji ? theme?.primary5 : theme?.bg2}
+          onClick={onClick}
         >
-          {count.toLocaleString()}
-        </Typography>
-      </StyledPressable>
-    </Wrapper>
+          <Emoji size="16px">{emoji}</Emoji>
+          <Typography
+            color={myEmoji ? theme?.primary1 : theme?.grey1}
+            size="16px"
+          >
+            {count.toLocaleString()}
+          </Typography>
+        </EmojiButton>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -23,7 +23,7 @@ const TopicName = styled(Typography)`
 interface TopicProps {
   topic: string;
   onClick: () => void;
-  ref?: Ref<HTMLButtonElement>;
+  ref?: Ref<HTMLDivElement>;
 }
 
 export default function Topic({ topic, onClick, ref }: TopicProps) {
@@ -31,6 +31,7 @@ export default function Topic({ topic, onClick, ref }: TopicProps) {
 
   return (
     <motion.div
+      ref={ref}
       initial={{ width: 0, marginRight: 0 }}
       animate={{ width: "auto", marginRight: "7px" }}
       exit={{ width: 0, marginRight: 0 }}
@@ -55,7 +56,6 @@ export default function Topic({ topic, onClick, ref }: TopicProps) {
           icon={<MdClose size="14" color={theme?.grey2} />}
           iconPosition="right"
           onClick={onClick}
-          ref={ref}
         >
           <TopicName color={theme?.grey1} size="16px">
             {topic}
