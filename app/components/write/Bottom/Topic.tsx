@@ -1,29 +1,12 @@
-import { createRef, useContext, useEffect, useState, type Ref } from "react";
+import { useContext, type Ref } from "react";
 import { styled, ThemeContext } from "styled-components";
 import { MdClose } from "react-icons/md";
+import { motion } from "motion/react";
 
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 
-import type { TransitionStatus } from "react-transition-group";
-
-const Wrapper = styled.div<{
-  $in: boolean;
-  $width: number;
-}>`
-  margin-right: ${(props) => (props.$in ? 10 : 0)}px;
-  width: ${(props) => (props.$in ? props.$width + 20 : 0)}px;
-  opacity: ${(props) => (props.$in ? 1 : 0)};
-  transition: margin-right 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    width 0.5s cubic-bezier(0.17, 0.84, 0.44, 1),
-    opacity 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
-  overflow: hidden;
-  padding: 0;
-  flex-shrink: 0;
-  border-radius: 10px;
-`;
-
-const StyledButton = styled(Button)`
+const TopicButton = styled(Button)`
   height: 36px;
   padding: 0px 10px;
   justify-content: center;
@@ -33,7 +16,7 @@ const StyledButton = styled(Button)`
   border-radius: 10px;
 `;
 
-const StyledTypography = styled(Typography)`
+const TopicName = styled(Typography)`
   word-break: break-all;
   white-space: nowrap;
 `;
@@ -41,51 +24,45 @@ const StyledTypography = styled(Typography)`
 interface TopicProps {
   topic: string;
   onClick: () => void;
-  transitionStatus?: TransitionStatus;
-  ref: Ref<HTMLDivElement>;
+  ref?: Ref<HTMLDivElement>;
 }
 
-export default function Topic({
-  topic,
-  onClick,
-  ref,
-  transitionStatus = "entered",
-}: TopicProps) {
+export default function Topic({ topic, onClick, ref }: TopicProps) {
   const theme = useContext(ThemeContext);
-  const contentRef = createRef<HTMLButtonElement>();
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    if (contentRef.current === null) return;
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setWidth(entry.contentRect.width);
-      }
-    });
-    observer.observe(contentRef.current);
-    return () => observer.disconnect();
-  }, [contentRef]);
 
   return (
-    <Wrapper
+    <motion.div
       ref={ref}
-      $in={
-        width > 0 &&
-        (transitionStatus === "entered" || transitionStatus === "entering")
-      }
-      $width={width}
+      initial={{ width: 0, marginRight: 0 }}
+      animate={{ width: "auto", marginRight: "10px" }}
+      exit={{ width: 0, marginRight: 0 }}
+      transition={{
+        type: "spring",
+        duration: 0.7,
+      }}
+      style={{
+        borderRadius: "10px",
+        display: "flex",
+        justifyContent: "flex-start",
+        flexShrink: 0,
+      }}
     >
-      <StyledButton
-        backgroundColor={theme?.bg3}
-        icon={<MdClose size="20" color={theme?.grey1} />}
-        iconPosition="right"
-        onClick={onClick}
-        ref={contentRef}
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.5, opacity: 0 }}
       >
-        <StyledTypography color={theme?.grey1} size="16px">
-          {topic}
-        </StyledTypography>
-      </StyledButton>
-    </Wrapper>
+        <TopicButton
+          backgroundColor={theme?.bg3}
+          icon={<MdClose size="20" color={theme?.grey1} />}
+          iconPosition="right"
+          onClick={onClick}
+        >
+          <TopicName color={theme?.grey1} size="16px">
+            {topic}
+          </TopicName>
+        </TopicButton>
+      </motion.div>
+    </motion.div>
   );
 }

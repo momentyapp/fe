@@ -1,13 +1,7 @@
-import React, {
-  useState,
-  useContext,
-  createRef,
-  useMemo,
-  useEffect,
-} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { styled, ThemeContext } from "styled-components";
+import { AnimatePresence } from "motion/react";
 import { MdAdd } from "react-icons/md";
-import { Transition, TransitionGroup } from "react-transition-group";
 
 import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
@@ -29,11 +23,6 @@ const Wrapper = styled.div`
   width: 100%;
   overflow-x: auto;
   box-sizing: border-box;
-`;
-
-const InsideTopicList = styled(TransitionGroup)`
-  display: flex;
-  flex-direction: row;
 `;
 
 const StyledButton = styled(Button)`
@@ -66,15 +55,6 @@ export default function TopicList({
 
   const [modalOpen, setModalOpen] = useState(false);
   const [loadings, setLoadings] = useState<Record<string, boolean>>({});
-
-  // 주제 개수만큼 ref 생성
-  const topicRefs = useMemo(
-    () =>
-      Array.from({ length: topics.length + generatedTopics.length }, () =>
-        createRef<HTMLDivElement>()
-      ),
-    [topics.length + generatedTopics.length]
-  );
 
   // 주제가 생성되면 loadings 갱신
   useEffect(() => {
@@ -146,6 +126,9 @@ export default function TopicList({
     setTopics((prevTopics) => [...prevTopics, topicToAdd]);
   }
 
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => setInitialized(true), []);
+
   return (
     <Wrapper>
       <StyledButton
@@ -158,47 +141,33 @@ export default function TopicList({
           직접 추가
         </Typography>
       </StyledButton>
-      <InsideTopicList>
+      <AnimatePresence initial={initialized}>
         {/* 추가된 주제 */}
-        {topics.map((topic, index) => (
-          <Transition key={topic.id} timeout={500} nodeRef={topicRefs[index]}>
-            {(state) => (
-              <Topic
-                ref={topicRefs[index]}
-                topic={topic.name}
-                onClick={() => handleRemoveTopic(topic)}
-                transitionStatus={state}
-              />
-            )}
-          </Transition>
+        {topics.map((topic) => (
+          <Topic
+            key={topic.id}
+            topic={topic.name}
+            onClick={() => handleRemoveTopic(topic)}
+          />
         ))}
 
         {/* 생성된 주제 */}
-        {generatedTopics.map((topic, index) => (
-          <Transition
+        {generatedTopics.map((topic) => (
+          <GeneratedTopic
             key={topic.name}
-            timeout={500}
-            nodeRef={topicRefs[topics.length + index]}
-          >
-            {(state) => (
-              <GeneratedTopic
-                ref={topicRefs[topics.length + index]}
-                topic={topic.name}
-                onClick={() => handleAddGeneratedTopic(topic)}
-                transitionStatus={state}
-                loading={loadings[topic.name] ?? false}
-              />
-            )}
-          </Transition>
+            topic={topic.name}
+            onClick={() => handleAddGeneratedTopic(topic)}
+            loading={loadings[topic.name] ?? false}
+          />
         ))}
+      </AnimatePresence>
 
-        <TopicModal
-          addedTopics={topics}
-          setAddedTopics={setTopics}
-          isOpen={modalOpen}
-          onRequestClose={() => setModalOpen(false)}
-        />
-      </InsideTopicList>
+      <TopicModal
+        addedTopics={topics}
+        setAddedTopics={setTopics}
+        isOpen={modalOpen}
+        onRequestClose={() => setModalOpen(false)}
+      />
     </Wrapper>
   );
 }
