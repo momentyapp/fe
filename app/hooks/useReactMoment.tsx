@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 import API from "~/apis";
-import useMomentStore from "~/contexts/useMomentStore";
+import useMomentCacheStore from "~/contexts/useMomentCacheStore";
 
 import type { Moment } from "common";
 
 export default function useReactMoment(accessToken: string | null) {
-  const momentStore = useMomentStore();
+  const momentStore = useMomentCacheStore();
 
   const [needLoginModalOpen, setNeedLoginModalOpen] = useState(false);
   const [emojiModalMoment, setEmojiModalMoment] = useState<Moment | null>(null);

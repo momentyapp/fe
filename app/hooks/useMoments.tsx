@@ -1,36 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { useEffect, useMemo, useState } from "react";
 
-import useMomentStore from "~/contexts/useMomentStore";
-
-import select from "~/utils/selectAPIResult";
-import mergeDescendingUnique from "~/utils/mergeDescendingUnique";
-
-import API from "~/apis";
+import useMomentCacheStore from "~/contexts/useMomentCacheStore";
+import useMomentIdCacheStore from "~/contexts/useMomentIdCacheStore";
 
 import type { Moment } from "common";
 
-const socket = io(`${import.meta.env.VITE_HOST}`, {
-  path: "/socket",
-  transports: ["websocket"],
-});
+export default function useMoments(topicIds: number[]) {
+  const momentCacheMap = useMomentCacheStore((state) => state.momentCacheMap);
+  const momentIdCacheMap = useMomentIdCacheStore(
+    (state) => state.momentIdCacheMap
+  );
 
-interface UseMomentsProps {
-  topicIds?: number[];
-  accessToken?: string;
-  onNewMoment?: (moment: Moment) => void;
-}
-
-export default function useMoments({
-  topicIds = [],
-  accessToken,
-  onNewMoment,
-}: UseMomentsProps = {}) {
-  const momentStore = useMomentStore();
-  const observingMoments = useRef<Set<number>>(new Set());
-  const abortController = useRef<AbortController>(null);
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [moments, setMoments] = useState<Moment[]>([]);
+  const [count, setCount] = useState<number>(0);
 
   // 활성화된 주제 id 목록을 key로 사용
   const key = useMemo(
@@ -38,139 +20,38 @@ export default function useMoments({
     [topicIds]
   );
 
-  // 소켓 연결
+  // 전체 모멘트 ID 목록
+  const momentIds = useMemo(
+    () => momentIdCacheMap.get(key)?.momentIds,
+    [momentIdCacheMap, key]
+  );
+  const fullCount = useMemo(() => momentIds?.length ?? 0, [momentIds]);
+
+  // 전체 모멘트 개수가 달라질 때
   useEffect(() => {
-    socket.connect();
+    if (fullCount === 0) return;
+    setCount((prev) => Math.min(prev, fullCount));
+  }, [fullCount, setCount]);
 
-    // 새로운 모멘트 수신
-    socket.on("new_moment", (moment: Moment) => {
-      momentStore.add([moment]);
-      onNewMoment?.(moment);
-
-      setTable((prev) => ({
-        ...prev,
-        [key]: mergeDescendingUnique(prev[key] ?? [], [moment.id]),
-      }));
-    });
-
-    // 모멘트 수정 수신
-    socket.on("modify_moment", (momentId: number, moment: Partial<Moment>) => {
-      momentStore.modify(momentId, moment);
-    });
-
-    return () => {
-      socket.off("new_moment");
-      socket.off("modify_moment");
-      socket.disconnect();
-    };
-  }, [key]);
-
-  // 주제 id 목록이 변경될 때
+  // momentIds에 해당하는 모멘트 목록을 count만큼 가져오기
   useEffect(() => {
-    socket.emit("set_topic", topicIds);
-    fetch();
-  }, [topicIds]);
-
-  // 주기적으로 모멘트 id 목록 전송
-  useEffect(() => {
-    const interval = setInterval(() => {
-      socket.emit("set_moment", Array.from(observingMoments.current));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // 활성화된 주제 id 목록과 모멘트 id 목록 매핑
-  const [table, setTable] = useState<Record<string, number[]>>({});
-  const completed = useRef<Set<string>>(new Set());
-
-  const latestsMoments = useRef<Moment[]>([]);
-
-  // key에 해당하는 모멘트 목록
-  const moments = useMemo(() => {
-    if (isLoading) return latestsMoments.current;
-    if (!(key in table)) return [];
+    if (momentIds === undefined) return;
 
     const result: Moment[] = [];
-    for (const id of table[key]) {
-      const moment = momentStore.moments[id];
+    for (let i = 0; i < Math.min(count, momentIds.length); i++) {
+      const id = momentIds[i];
+      const moment = momentCacheMap.get(id);
       if (moment !== undefined) result.push(moment);
+      else return;
     }
 
-    latestsMoments.current = result;
-    return result;
-  }, [table, key, momentStore.moments, isLoading]);
+    setMoments(result);
+  }, [momentCacheMap, momentIds, count]);
 
-  // 더 불러오기
-  async function loadMore() {
-    if (isLoading) return;
-    if (completed.current.has(key)) return;
-    if (table[key] === undefined || table[key].length === 0) await fetch();
-    else await fetch(table[key].at(-1));
+  // count 늘리기
+  function showMoreMoments(count: number) {
+    setCount((prev) => Math.min(prev + count, momentIds?.length ?? 0));
   }
 
-  // 모멘트 목록 불러오기
-  async function fetch(before?: number) {
-    const prevIds = table[key] ?? [];
-
-    setIsLoading(true);
-    abortController.current?.abort();
-    abortController.current = new AbortController();
-
-    let newMoments: Moment[];
-    try {
-      newMoments = await API.moment
-        .getMoments(
-          { topicIds, before },
-          accessToken,
-          abortController.current.signal
-        )
-        .then((response) => select(response).moments);
-    } catch (e) {
-      if (!(e instanceof Error && e.name === "CanceledError")) throw e;
-      return;
-    } finally {
-      setIsLoading(false);
-    }
-
-    if (newMoments.length < 10) {
-      completed.current.add(key);
-    }
-
-    const newIds = newMoments.map((moment) => moment.id);
-
-    momentStore.add(newMoments);
-
-    // newIds의 마지막 id가 prevIds의 처음 id보다 클 때
-    // 기존 id 목록 제거
-    if (
-      prevIds.length > 0 &&
-      newIds.length > 0 &&
-      newIds[newIds.length - 1] > prevIds[0]
-    ) {
-      completed.current.delete(key);
-      setTable((prev) => ({ ...prev, [key]: newIds }));
-    } else {
-      const ids = mergeDescendingUnique(prevIds, newIds);
-      setTable((prev) => ({ ...prev, [key]: ids }));
-    }
-  }
-
-  // 모멘트가 뷰포트에 들어올 때
-  async function observeMoment(momentId: number) {
-    observingMoments.current.add(momentId);
-  }
-
-  // 모멘트가 뷰포트에서 나갈 때
-  async function unobserveMoment(momentId: number) {
-    observingMoments.current.delete(momentId);
-  }
-
-  return {
-    moments,
-    isLoading,
-    loadMore,
-    observeMoment,
-    unobserveMoment,
-  };
+  return { moments, count, fullCount, showMoreMoments };
 }

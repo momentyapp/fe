@@ -1,6 +1,6 @@
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { styled } from "styled-components";
-import { motion } from "motion/react";
+import { motion, useInView } from "motion/react";
 
 import My from "./My";
 import Trending from "./Trending";
@@ -8,8 +8,9 @@ import Content from "./Content";
 import Top from "./Top";
 import Bottom from "./Bottom";
 
-import type { Moment, Topic } from "common";
 import useSession from "~/contexts/useSession";
+
+import type { Moment, Topic } from "common";
 
 const Wrapper = styled.div`
   flex-shrink: 0;
@@ -27,27 +28,32 @@ interface MomentProps {
   moment: Moment;
   trending?: boolean;
   highlight?: boolean;
-  ref?: React.Ref<HTMLDivElement>;
   id?: string;
   onInfo: (moment: Moment) => void;
   onAddReaction: (momentId: number, emoji: string) => void;
   onRemoveReaction: (momentId: number) => void;
   onEmojiModalOpen: (moment: Moment) => void;
   onTopicClick?: (topic: Topic) => void;
+  onInView?: (momentId: number) => void;
+  onOutView?: (momentId: number) => void;
 }
 
 function Moment({
   moment,
   trending,
-  ref,
   id,
   onInfo,
   onAddReaction,
   onRemoveReaction,
   onEmojiModalOpen,
   onTopicClick,
+  onInView,
+  onOutView,
 }: MomentProps) {
+  const ref = useRef<HTMLDivElement>(null);
+
   const session = useSession();
+  const isInView = useInView(ref);
 
   const my = useMemo(
     () =>
@@ -56,6 +62,11 @@ function Moment({
       moment.author?.id === session.user?.id,
     [moment, session]
   );
+
+  useEffect(() => {
+    if (isInView) onInView?.(moment.id);
+    else onOutView?.(moment.id);
+  }, [isInView]);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

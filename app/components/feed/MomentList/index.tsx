@@ -31,18 +31,18 @@ const End = styled.div`
 
 interface MomentListProps {
   moments: MomentType[];
-  onLoadMore: () => void;
   loading: boolean;
   setAnchor?: (momentId: number) => void;
+  onScrollEnd: () => void;
   onMomentVisible?: (momentId: number) => void;
   onMomentInvisible?: (momentId: number) => void;
 }
 
 export default function MomentList({
   moments,
-  onLoadMore,
   loading,
   setAnchor,
+  onScrollEnd,
   onMomentVisible,
   onMomentInvisible,
 }: MomentListProps) {
@@ -53,20 +53,6 @@ export default function MomentList({
     () => session?.accessToken?.token ?? null,
     [session]
   );
-
-  const observe = useOnVisible(onVisible, onInvisible, {
-    threshold: 0.5,
-  });
-
-  function onVisible(entry: IntersectionObserverEntry) {
-    const momentId = parseInt(entry.target.id.split("moment-")[1]);
-    onMomentVisible?.(momentId);
-  }
-
-  function onInvisible(entry: IntersectionObserverEntry) {
-    const momentId = parseInt(entry.target.id.split("moment-")[1]);
-    onMomentInvisible?.(momentId);
-  }
 
   const {
     emojiModalMoment,
@@ -90,7 +76,7 @@ export default function MomentList({
     setMomentInfoModalOpen(false);
   }
 
-  const endRef = useOnVisible(onLoadMore);
+  const endRef = useOnVisible(onScrollEnd);
 
   return (
     <Wrapper>
@@ -104,7 +90,8 @@ export default function MomentList({
             onRemoveReaction={handleRemoveReaction}
             onEmojiModalOpen={setEmojiModalMoment}
             onTopicClick={() => setAnchor?.(moment.id)}
-            ref={observe}
+            onInView={onMomentVisible}
+            onOutView={onMomentInvisible}
             id={`moment-${moment.id}`}
           />
         ))}
