@@ -28,6 +28,7 @@ export default function useMoments({
 }: UseMomentsProps = {}) {
   const momentStore = useMomentStore();
   const observingMoments = useRef<Set<number>>(new Set());
+  const abortController = useRef<AbortController>(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -113,10 +114,24 @@ export default function useMoments({
     const prevIds = table[key] ?? [];
 
     setIsLoading(true);
-    const newMoments = await API.moment
-      .getMoments({ topicIds, before }, accessToken)
-      .then((response) => select(response).moments);
-    setIsLoading(false);
+    abortController.current?.abort();
+    abortController.current = new AbortController();
+
+    let newMoments: Moment[];
+    try {
+      newMoments = await API.moment
+        .getMoments(
+          { topicIds, before },
+          accessToken,
+          abortController.current.signal
+        )
+        .then((response) => select(response).moments);
+    } catch (e) {
+      if (!(e instanceof Error && e.name === "CanceledError")) throw e;
+      return;
+    } finally {
+      setIsLoading(false);
+    }
 
     if (newMoments.length < 10) {
       completed.current.add(key);

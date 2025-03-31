@@ -16,13 +16,15 @@ export default function useSessionRestore() {
   useEffect(() => {
     setIsLoading(true);
     restoreSession().then((restoredSession) => {
+      if (restoredSession !== null) {
+        session.login(
+          restoredSession.user,
+          restoredSession.accessToken,
+          restoredSession.refreshToken
+        );
+      }
+
       setIsLoading(false);
-      if (restoredSession === null) return;
-      session.login(
-        restoredSession.user,
-        restoredSession.accessToken,
-        restoredSession.refreshToken
-      );
     });
   }, []);
 
