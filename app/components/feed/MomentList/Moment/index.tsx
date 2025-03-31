@@ -29,6 +29,7 @@ interface MomentProps {
   trending?: boolean;
   highlight?: boolean;
   id?: string;
+  layout?: boolean;
   onInfo: (moment: Moment) => void;
   onAddReaction: (momentId: number, emoji: string) => void;
   onRemoveReaction: (momentId: number) => void;
@@ -42,6 +43,7 @@ function Moment({
   moment,
   trending,
   id,
+  layout = true,
   onInfo,
   onAddReaction,
   onRemoveReaction,
@@ -69,7 +71,12 @@ function Moment({
   }, [isInView]);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      layout={layout}
+    >
       <Wrapper ref={ref} id={id}>
         {my && <My />}
         {trending && <Trending />}

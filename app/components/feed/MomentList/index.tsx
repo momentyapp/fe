@@ -13,20 +13,13 @@ import useSession from "~/contexts/useSession";
 import EmojiPickerModal from "./EmojiPickerModal";
 import InfoModal from "./InfoModal";
 import Moment from "./Moment";
+import End from "./End";
 
 import type { Moment as MomentType } from "common";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const End = styled.div`
-  width: 100%;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 interface MomentListProps {
@@ -47,7 +40,6 @@ export default function MomentList({
   onMomentInvisible,
 }: MomentListProps) {
   const session = useSession();
-  const theme = useContext(ThemeContext);
 
   const accessToken = useMemo(
     () => session?.accessToken?.token ?? null,
@@ -76,8 +68,6 @@ export default function MomentList({
     setMomentInfoModalOpen(false);
   }
 
-  const endRef = useOnVisible(onScrollEnd);
-
   return (
     <Wrapper>
       <AnimatePresence>
@@ -85,6 +75,7 @@ export default function MomentList({
           <Moment
             key={moment.id}
             moment={moment}
+            layout={moments.length < 50}
             onInfo={handleMomentInfoOpen}
             onAddReaction={handleAddReaction}
             onRemoveReaction={handleRemoveReaction}
@@ -98,9 +89,7 @@ export default function MomentList({
       </AnimatePresence>
 
       {/* 모멘트 목록 끝 */}
-      <End ref={endRef}>
-        {loading && <CircularProgress size={36} color={theme?.grey2} />}
-      </End>
+      <End onTrigger={onScrollEnd} isLoading={loading} />
 
       {/* 로그인 필요 모달 */}
       <NeedLoginModal

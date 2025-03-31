@@ -71,10 +71,9 @@ export default function Feed() {
   }
 
   // 더 많은 모멘트 불러오기
-  function handleScrollEnd() {
-    console.log("fetch due to scroll end");
-    if (count < fullCount) showMoreMoments(10);
-    else loadMoreMoments();
+  async function handleScrollEnd() {
+    if (count >= fullCount) await loadMoreMoments();
+    showMoreMoments(10);
   }
 
   return (

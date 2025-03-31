@@ -50,7 +50,7 @@ export default function useMoments(topicIds: number[]) {
 
   // count 늘리기
   function showMoreMoments(count: number) {
-    setCount((prev) => Math.min(prev + count, momentIds?.length ?? 0));
+    setCount((prev) => prev + count);
   }
 
   return { moments, count, fullCount, showMoreMoments };
