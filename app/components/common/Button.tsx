@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 
 import Pressable, { type PressableProps } from "~/components/common/Pressable";
 
-const StyledPressable = styled(Pressable)`
+const Wrapper = styled(Pressable)`
   display: flex;
   flex-direction: row;
   padding: 15px 20px;
@@ -13,7 +13,7 @@ const StyledPressable = styled(Pressable)`
   gap: 10px;
 `;
 
-interface ButtonProps extends Omit<PressableProps, "children"> {
+interface ButtonProps extends PressableProps {
   icon?: React.ReactNode | ((focus: boolean) => React.ReactNode);
   iconPosition?: "left" | "right";
   align?: "left" | "center" | "right";
@@ -44,10 +44,10 @@ export default function Button({
   const iconNode = typeof icon === "function" ? icon(focus) : icon;
 
   return (
-    <StyledPressable {...props} onFocus={handleFocus} onBlur={handleBlur}>
+    <Wrapper {...props} onFocus={handleFocus} onBlur={handleBlur}>
       {iconPosition === "left" && iconNode}
       {children}
       {iconPosition === "right" && iconNode}
-    </StyledPressable>
+    </Wrapper>
   );
 }

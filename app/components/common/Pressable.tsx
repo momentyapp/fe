@@ -1,9 +1,7 @@
 import { motion } from "motion/react";
-import { useMemo } from "react";
 import { styled } from "styled-components";
 
-import getFocusColor from "~/utils/getFocusColor";
-import getTapColor from "~/utils/getTapColor";
+import useColorFeedback from "~/hooks/useColorFeedback";
 
 import type { HexColor } from "common";
 
@@ -22,35 +20,10 @@ export interface PressableProps
 
 export default function Pressable({
   children,
-  backgroundColor,
+  backgroundColor = "#00000000",
   ...props
 }: PressableProps) {
-  const { cleanHex, opacity } = useMemo(() => {
-    if (backgroundColor !== undefined) {
-      if (backgroundColor.length === 9) {
-        const cleanHex = backgroundColor.slice(0, 7);
-        const opacity = backgroundColor.slice(7, 9);
-        return { cleanHex, opacity };
-      }
-
-      if (backgroundColor.length === 7) {
-        return { cleanHex: backgroundColor, opacity: null };
-      }
-    }
-    return { cleanHex: null, opacity: null };
-  }, [backgroundColor]);
-
-  const { tapColor, focusColor } = useMemo(
-    () => ({
-      tapColor: cleanHex
-        ? `${getTapColor(cleanHex)}${opacity ? opacity : ""}`
-        : null,
-      focusColor: cleanHex
-        ? `${getFocusColor(cleanHex)}${opacity ? opacity : ""}`
-        : null,
-    }),
-    [cleanHex, opacity]
-  );
+  const { tapColor, focusColor } = useColorFeedback(backgroundColor);
 
   return (
     <MotionWrapper

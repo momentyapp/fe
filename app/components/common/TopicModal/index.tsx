@@ -50,9 +50,8 @@ export default function TopicModal({
             placeholder="검색어를 입력하세요."
             value={searchValue}
             onChange={handleChangeSearchValue}
-            icon={(focus) => (
-              <MdSearch size="24" color={focus ? theme?.grey1 : theme?.grey2} />
-            )}
+            backgroundColor={theme.bg3}
+            icon={<MdSearch size="24" color={theme.grey1} />}
           />
           <TopicContainer
             topics={

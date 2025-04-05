@@ -1,22 +1,13 @@
 import { styled } from "styled-components";
 
-const StyledP = styled.p<{
-  $size?: string;
-}>`
+const Wrapper = styled.p`
   margin: 0;
   padding: 0;
-  font-size: ${(props) => props.$size};
   font-family: "Tossface";
 `;
 
-interface EmojiProps extends React.HTMLAttributes<HTMLParagraphElement> {
-  size?: string;
-}
+interface EmojiProps extends React.HTMLAttributes<HTMLParagraphElement> {}
 
-export default function Emoji({ children, size, ...props }: EmojiProps) {
-  return (
-    <StyledP {...props} $size={size}>
-      {children}
-    </StyledP>
-  );
+export default function Emoji({ children, ...props }: EmojiProps) {
+  return <Wrapper {...props}>{children}</Wrapper>;
 }

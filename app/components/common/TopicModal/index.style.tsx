@@ -15,6 +15,7 @@ export const ContentContainer = styled.div`
 
 export const SearchInput = styled(TextInput)`
   width: 100%;
+  height: 45px;
 `;
 
 export const FullWidthButton = styled(Button)`
