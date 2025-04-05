@@ -1,50 +1,35 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useTheme } from "styled-components";
 
 import CircularProgress from "~/components/common/CircularProgress";
 
-import SearchResult from "./SearchResult";
+import Topic from "./Topic";
 import New from "./New";
 
-import type { Topic } from "common";
+import * as S from "./TopicContainer.style";
 
-const Wrapper = styled.div`
-  display: flex;
-  height: 250px;
-  padding: 10px 0px;
-  flex-direction: column;
-  overflow-y: auto;
-`;
+import type { Topic as TopicType } from "common";
 
-const FullWidth = styled.div`
-  width: 100%;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-interface SearchResultsProps {
-  topics: Topic[];
-  addedTopics: Topic[];
-  setAddedTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
+interface TopicContainerProps {
+  topics: TopicType[];
+  addedTopics: TopicType[];
+  setAddedTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
   searchValue: string;
-  loading?: boolean;
+  isLoading?: boolean;
   onCreate: (topic: string, topicId: number) => void;
 }
 
-export default function SearchResults({
+export default function TopicContainer({
   topics,
   addedTopics,
   setAddedTopics,
   searchValue,
-  loading = false,
+  isLoading = false,
   onCreate,
-}: SearchResultsProps) {
-  const theme = useContext(ThemeContext);
+}: TopicContainerProps) {
+  const theme = useTheme();
 
   // 주제 추가 함수
-  function handleAdd(newTopic: Topic) {
+  function handleAdd(newTopic: TopicType) {
     setAddedTopics((prevTopics) => [
       { ...newTopic, enabled: true },
       ...prevTopics,
@@ -52,27 +37,27 @@ export default function SearchResults({
   }
 
   // 주제 제거 함수
-  function handleRemove(targetTopic: Topic) {
+  function handleRemove(targetTopic: TopicType) {
     setAddedTopics((prevTopics) =>
       prevTopics.filter((topic) => topic.id !== targetTopic.id)
     );
   }
 
   return (
-    <Wrapper>
-      {!loading &&
+    <S.Wrapper>
+      {!isLoading &&
         searchValue !== "" &&
         topics.every(
           (topic) => topic.name.toLowerCase() !== searchValue.toLowerCase()
         ) && <New topic={searchValue} onCreate={onCreate} />}
 
-      {loading ? (
-        <FullWidth>
+      {isLoading ? (
+        <S.ProgressWrapper>
           <CircularProgress color={theme?.grey1} size={30} />
-        </FullWidth>
+        </S.ProgressWrapper>
       ) : (
-        topics.map((topic, index) => (
-          <SearchResult
+        topics.map((topic) => (
+          <Topic
             key={topic.id}
             topic={topic}
             added={addedTopics.some((addedTopic) => addedTopic.id === topic.id)}
@@ -81,6 +66,6 @@ export default function SearchResults({
           />
         ))
       )}
-    </Wrapper>
+    </S.Wrapper>
   );
 }

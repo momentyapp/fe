@@ -1,11 +1,9 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { styled, ThemeContext } from "styled-components";
-import { AnimatePresence, LayoutGroup } from "motion/react";
+import { useMemo, useState } from "react";
+import { styled } from "styled-components";
+import { AnimatePresence } from "motion/react";
 
 import useReactMoment from "~/hooks/useReactMoment";
-import useOnVisible from "~/hooks/useOnVisible";
 
-import CircularProgress from "~/components/common/CircularProgress";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
 
 import useSession from "~/contexts/useSession";

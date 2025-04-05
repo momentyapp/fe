@@ -2,24 +2,24 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
-    primary1: string;
-    primary2: string;
-    primary3: string;
-    primary4: string;
-    primary5: string;
+    primary1: HexColor;
+    primary2: HexColor;
+    primary3: HexColor;
+    primary4: HexColor;
+    primary5: HexColor;
 
-    grey1: string;
-    grey2: string;
-    grey3: string;
+    grey1: HexColor;
+    grey2: HexColor;
+    grey3: HexColor;
 
-    bg1: string;
-    bg2: string;
-    bg3: string;
+    bg1: HexColor;
+    bg2: HexColor;
+    bg3: HexColor;
 
-    red1: string;
-    red2: string;
-    red3: string;
+    red1: HexColor;
+    red2: HexColor;
+    red3: HexColor;
 
-    blue: string;
+    blue: HexColor;
   }
 }

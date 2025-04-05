@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
 
-import isDarkColor from "~/utils/isDarkColor";
+import isDarkColor from "~/utils/hexToHsl";
 
 const Wrapper = styled.div<{ $background: string }>`
   display: flex;

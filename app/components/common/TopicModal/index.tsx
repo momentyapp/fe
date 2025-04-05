@@ -1,32 +1,17 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
-import { MdCheck } from "react-icons/md";
+import { useTheme } from "styled-components";
+import { MdCheck, MdSearch } from "react-icons/md";
 import ReactModal from "react-modal";
 
-import Button from "~/components/common/Button";
-import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
 
 import useTopicSearch from "~/hooks/useTopicSearch";
 import useTrendingTopics from "~/hooks/useTrendingTopics";
 
-import SearchInput from "./SearchInput";
-import SearchResults from "./SearchResults";
+import TopicContainer from "./TopicContainer";
+
+import * as S from "./index.style";
 
 import type { Topic } from "common";
-
-const Content = styled.div`
-  width: 100%;
-  padding: 0 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const StyledButton = styled(Button)`
-  width: 100%;
-`;
 
 interface TopicModalProps extends Omit<ReactModal.Props, "style"> {
   addedTopics: Topic[];
@@ -40,7 +25,7 @@ export default function TopicModal({
   isOpen,
   ...props
 }: TopicModalProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   const {
     searchValue,
@@ -59,13 +44,17 @@ export default function TopicModal({
       isOpen={isOpen}
       {...props}
     >
-      <Content>
-        <Slide
-          visible={isOpen}
-          delay={50}
-        >
-          <SearchInput value={searchValue} onChange={handleChangeSearchValue} />
-          <SearchResults
+      <S.ContentContainer>
+        <Slide visible={isOpen} delay={50}>
+          <S.SearchInput
+            placeholder="검색어를 입력하세요."
+            value={searchValue}
+            onChange={handleChangeSearchValue}
+            icon={(focus) => (
+              <MdSearch size="24" color={focus ? theme?.grey1 : theme?.grey2} />
+            )}
+          />
+          <TopicContainer
             topics={
               trendingTopics !== undefined && searchValue.length === 0
                 ? trendingTopics
@@ -74,27 +63,22 @@ export default function TopicModal({
             addedTopics={addedTopics}
             setAddedTopics={setAddedTopics}
             searchValue={searchValue}
-            loading={loading}
+            isLoading={loading}
             onCreate={handleCreate}
           />
         </Slide>
 
         {/* 하단 버튼 */}
-        <Slide
-          visible={isOpen}
-          delay={100}
-        >
-          <StyledButton
-            backgroundColor={theme?.primary3}
-            icon={<MdCheck size="24" color={theme?.bg1} />}
+        <Slide visible={isOpen} delay={100}>
+          <S.FullWidthButton
+            backgroundColor={theme.primary3}
+            icon={<MdCheck size="24" color={theme.bg1} />}
             onClick={onRequestClose}
           >
-            <Typography color={theme?.bg1} size="18px">
-              완료
-            </Typography>
-          </StyledButton>
+            <S.ButtonText color={theme.bg1}>완료</S.ButtonText>
+          </S.FullWidthButton>
         </Slide>
-      </Content>
+      </S.ContentContainer>
     </ReactModal>
   );
 }

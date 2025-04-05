@@ -1,34 +1,31 @@
 import { styled } from "styled-components";
+import { motion } from "motion/react";
 
-const StyledP = styled.p<{
-  $color?: string;
-  $size?: string;
-  $weight?: string | number;
-}>`
+import type { HexColor } from "common";
+
+const Wrapper = styled.p`
   margin: 0;
   padding: 0;
-  color: ${(props) => props.$color};
-  font-size: ${(props) => props.$size};
-  font-weight: ${(props) => props.$weight};
   font-family: "Pretendard Variable", "Tossface";
+  font-weight: 500;
+  transition: font-size 0.2s ease-in-out;
 `;
 
-interface TypographyProps extends React.HTMLAttributes<HTMLParagraphElement> {
-  color?: string;
-  size?: string;
-  weight?: string | number;
+const MotionWrapper = motion.create(Wrapper);
+
+interface TypographyProps extends React.ComponentProps<typeof MotionWrapper> {
+  color?: HexColor;
 }
 
-export default function Typography({
-  children,
-  color,
-  size,
-  weight = 500,
-  ...props
-}: TypographyProps) {
+export default function Typography({ children, ...props }: TypographyProps) {
   return (
-    <StyledP {...props} $color={color} $size={size} $weight={weight}>
+    <MotionWrapper
+      initial={false}
+      {...props}
+      animate={{ color: props.color ?? "#000000" }}
+      transition={{ duration: 0.2 }}
+    >
       {children}
-    </StyledP>
+    </MotionWrapper>
   );
 }

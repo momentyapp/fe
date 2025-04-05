@@ -1,42 +1,12 @@
-import { useContext, useMemo, useState } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useMemo, useState } from "react";
+import { useTheme } from "styled-components";
 import { MdAddCircle } from "react-icons/md";
 
-import Typography from "~/components/common/Typography";
-import Button from "~/components/common/Button";
 import API from "~/apis";
-import CircularProgress from "../CircularProgress";
 
-const Wrapper = styled.div`
-  display: flex;
-  padding: 5px 10px;
-  gap: 10px;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  border-radius: 15px;
-  width: 100%;
-`;
+import CircularProgress from "~/components/common/CircularProgress";
 
-const Info = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  height: 100%;
-  overflow-x: auto;
-`;
-
-const StyledTypography = styled(Typography)`
-  white-space: nowrap;
-`;
-
-const StyledButton = styled(Button)`
-  height: 36px;
-  padding: 0px 10px;
-  gap: 5px;
-  border-radius: 10px;
-`;
+import * as S from "./New.style";
 
 interface NewProps {
   topic: string;
@@ -44,7 +14,7 @@ interface NewProps {
 }
 
 export default function New({ topic, onCreate }: NewProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const [loading, setLoading] = useState(false);
 
   const isValidName = useMemo(
@@ -67,44 +37,40 @@ export default function New({ topic, onCreate }: NewProps) {
   }
 
   return (
-    <Wrapper>
-      <Info>
+    <S.Wrapper>
+      <S.Info>
         {/* 이름 */}
-        <StyledTypography
-          color={isValidName ? theme?.primary3 : theme?.grey1}
-          size="18px"
-        >
+        <S.Name color={isValidName ? theme.primary3 : theme.grey1}>
           {topic}
-        </StyledTypography>
-      </Info>
+        </S.Name>
+      </S.Info>
 
       {/* 생성 버튼 */}
       <div>
-        <StyledButton
-          backgroundColor={
-            isValidName && !loading ? theme?.primary3 : theme?.grey3
-          }
+        <S.CreateButton
           icon={
             !loading ? (
               <MdAddCircle
                 size="20"
-                color={isValidName ? theme?.bg1 : theme?.grey1}
+                color={isValidName ? theme.bg1 : theme.grey1}
               />
             ) : (
-              <CircularProgress size={20} color={theme?.grey1} />
+              <CircularProgress size={20} color={theme.grey1} />
             )
           }
-          disabled={!isValidName && !loading}
           onClick={handleCreate}
+          disabled={!isValidName && !loading}
+          backgroundColor={
+            isValidName && !loading ? theme.primary3 : theme.grey3
+          }
         >
-          <StyledTypography
-            color={isValidName && !loading ? theme?.bg1 : theme?.grey1}
-            size="16px"
+          <S.ButtonText
+            color={isValidName && !loading ? theme.bg1 : theme.grey1}
           >
             {loading ? "생성 중" : "새로 생성"}
-          </StyledTypography>
-        </StyledButton>
+          </S.ButtonText>
+        </S.CreateButton>
       </div>
-    </Wrapper>
+    </S.Wrapper>
   );
 }

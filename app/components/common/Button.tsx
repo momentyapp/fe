@@ -13,10 +13,11 @@ const StyledPressable = styled(Pressable)`
   gap: 10px;
 `;
 
-interface ButtonProps extends PressableProps {
+interface ButtonProps extends Omit<PressableProps, "children"> {
   icon?: React.ReactNode | ((focus: boolean) => React.ReactNode);
   iconPosition?: "left" | "right";
   align?: "left" | "center" | "right";
+  children?: React.ReactNode;
 }
 
 export default function Button({

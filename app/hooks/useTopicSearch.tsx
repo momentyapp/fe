@@ -15,12 +15,14 @@ export default function useTopicSearch(
   const [loading, setLoading] = useState(false);
 
   // 검색어 변경 디바운싱
-  async function handleChangeSearchValue(value: string) {
+  async function handleChangeSearchValue(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
     abortController.current.abort();
     abortController.current = new AbortController();
     setLoading(false);
 
-    const replaced = value.replaceAll(" ", "");
+    const replaced = e.currentTarget.value.replaceAll(" ", "");
     setSearchValue(replaced);
 
     if (lastTimeout.current !== null) clearTimeout(lastTimeout.current);

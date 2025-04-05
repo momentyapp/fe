@@ -65,5 +65,7 @@ declare module "common" {
     refreshToken: Token;
   }
 
-  export type Result<T> = T["result"]
+  export type Result<T> = T["result"];
+
+  export type HexColor = `#${string}`;
 }
