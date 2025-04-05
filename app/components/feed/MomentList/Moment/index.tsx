@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { styled } from "styled-components";
 import { motion, useInView } from "motion/react";
 
@@ -29,7 +29,6 @@ interface MomentProps {
   trending?: boolean;
   highlight?: boolean;
   id?: string;
-  layout?: boolean;
   onInfo: (moment: Moment) => void;
   onAddReaction: (momentId: number, emoji: string) => void;
   onRemoveReaction: (momentId: number) => void;
@@ -39,11 +38,10 @@ interface MomentProps {
   onOutView?: (momentId: number) => void;
 }
 
-function Moment({
+export default function Moment({
   moment,
   trending,
   id,
-  layout = true,
   onInfo,
   onAddReaction,
   onRemoveReaction,
@@ -74,8 +72,8 @@ function Moment({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      layout={layout}
+      exit={{ height: 0, opacity: 0 }}
+      layout={isInView}
     >
       <Wrapper ref={ref} id={id}>
         {my && <My />}
@@ -93,5 +91,3 @@ function Moment({
     </motion.div>
   );
 }
-
-export default memo(Moment);

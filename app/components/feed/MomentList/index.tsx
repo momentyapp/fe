@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { styled, ThemeContext } from "styled-components";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, LayoutGroup } from "motion/react";
 
 import useReactMoment from "~/hooks/useReactMoment";
 import useOnVisible from "~/hooks/useOnVisible";
@@ -70,12 +70,11 @@ export default function MomentList({
 
   return (
     <Wrapper>
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {moments.map((moment) => (
           <Moment
             key={moment.id}
             moment={moment}
-            layout={moments.length < 50}
             onInfo={handleMomentInfoOpen}
             onAddReaction={handleAddReaction}
             onRemoveReaction={handleRemoveReaction}
