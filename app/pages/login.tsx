@@ -8,7 +8,7 @@ import Logo from "~/assets/svg/logo.svg?react";
 import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
 import Button from "~/components/common/Button";
-import Top from "~/components/common/Top";
+import Top from "~/components/feed/Top";
 import TextInput from "~/components/common/TextInput";
 import ErrorModal from "~/components/common/ErrorModal";
 
