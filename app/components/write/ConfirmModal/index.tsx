@@ -57,22 +57,14 @@ export default function ConfirmModal({
     >
       <Content>
         {/* 제목 */}
-        <Slide
-          visible={isOpen}
-          delay={50}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={50}>
           <Typography color={theme?.grey1} size="24px" weight="700">
             Just a moment...
           </Typography>
         </Slide>
 
         {/* 상세 */}
-        <Slide
-          visible={isOpen}
-          delay={100}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={100}>
           <InfoList>
             <Info icon={<MdAutoDelete size="24" color={theme?.grey1} />}>
               {expiresIn !== undefined
@@ -90,11 +82,7 @@ export default function ConfirmModal({
         </Slide>
 
         {/* 하단 버튼 */}
-        <Slide
-          visible={isOpen}
-          delay={150}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={150}>
           <ActionList
             loading={loading}
             onCancel={handleRequestClose}

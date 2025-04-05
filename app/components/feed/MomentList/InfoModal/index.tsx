@@ -75,22 +75,14 @@ export default function InfoModal({
     >
       <Content>
         {/* 제목 */}
-        <Slide
-          visible={isOpen}
-          delay={50}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={50}>
           <Typography color={theme?.grey1} size="24px" weight="700">
             {moment?.author?.username ?? "익명"}의 모멘트
           </Typography>
         </Slide>
 
         {/* 상세 */}
-        <Slide
-          visible={isOpen}
-          delay={100}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={100}>
           <Infos>
             <Info
               icon={<MdCalendarMonth size="24" color={theme?.grey2} />}
@@ -110,11 +102,7 @@ export default function InfoModal({
         </Slide>
 
         {/* 하단 버튼 */}
-        <Slide
-          visible={isOpen}
-          delay={150}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={150}>
           <Actions>
             <Action
               backgroundColor={theme?.bg2}

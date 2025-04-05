@@ -108,7 +108,6 @@ export default function ProfileModal({
         <Slide
           visible={isOpen}
           delay={50}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <Avatar>
             <StyledPressable backgroundColor={theme?.bg2}>
@@ -131,7 +130,6 @@ export default function ProfileModal({
         <Slide
           visible={isOpen}
           delay={100}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <Infos>
             <Info
@@ -145,7 +143,6 @@ export default function ProfileModal({
         <Slide
           visible={isOpen}
           delay={150}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
         >
           <Actions>
             <Action

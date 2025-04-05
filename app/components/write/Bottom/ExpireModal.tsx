@@ -83,11 +83,7 @@ export default function ExpireModal({
       {...props}
     >
       <Content>
-        <Slide
-          visible={isOpen}
-          delay={50}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={50}>
           <StyledDiv>
             <StyledTextInput value={inputValue} onChange={handleChange} />
             <Typography size="24px" color={theme?.grey1}>
@@ -97,11 +93,7 @@ export default function ExpireModal({
         </Slide>
 
         {/* 하단 버튼 */}
-        <Slide
-          visible={isOpen}
-          delay={100}
-          timingFunction="cubic-bezier(0.17,0.84,0.44,1)"
-        >
+        <Slide visible={isOpen} delay={100}>
           <Actions>
             <Action
               backgroundColor={theme?.primary3}
