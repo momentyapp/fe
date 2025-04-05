@@ -1,26 +1,12 @@
-import { useContext } from "react";
 import ReactModal from "react-modal";
-import { styled, ThemeContext } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdClose } from "react-icons/md";
 
-import Button from "~/components/common/Button";
-import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
 
-import EmojiList from "./EmojiList";
+import * as S from "./index.style";
 
-const Content = styled.div`
-  width: 100%;
-  padding: 0 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const StyledButton = styled(Button)`
-  width: 100%;
-`;
+import EmojiContainer from "./EmojiContainer";
 
 interface EmojiPickerModalProps extends Omit<ReactModal.Props, "style"> {
   onSelect: (emoji: string) => void;
@@ -34,7 +20,7 @@ export default function EmojiPickerModal({
   isOpen,
   ...props
 }: EmojiPickerModalProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <ReactModal
@@ -43,24 +29,22 @@ export default function EmojiPickerModal({
       isOpen={isOpen}
       {...props}
     >
-      <Content>
+      <S.Content>
         <Slide visible={isOpen} delay={50}>
-          <EmojiList onSelect={onSelect} myEmoji={myEmoji} />
+          <EmojiContainer onSelect={onSelect} myEmoji={myEmoji} />
         </Slide>
 
         {/* 하단 버튼 */}
         <Slide visible={isOpen} delay={100}>
-          <StyledButton
-            backgroundColor={theme?.primary3}
-            icon={<MdClose size="24" color={theme?.bg1} />}
+          <S.FullWidthButton
+            backgroundColor={theme.primary3}
+            icon={<MdClose size="24" color={theme.bg1} />}
             onClick={onRequestClose}
           >
-            <Typography color={theme?.bg1} size="18px">
-              닫기
-            </Typography>
-          </StyledButton>
+            <S.ButtonText color={theme.bg1}>닫기</S.ButtonText>
+          </S.FullWidthButton>
         </Slide>
-      </Content>
+      </S.Content>
     </ReactModal>
   );
 }
