@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 
 import Typography from "~/components/common/Typography";
 
@@ -9,20 +8,22 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const InfoText = styled(Typography)`
+  font-size: 18px;
+`;
+
 interface InfoProps {
   icon: React.ReactNode;
   text: string;
 }
 
 export default function Info({ icon, text }: InfoProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <Wrapper>
       {icon}
-      <Typography color={theme?.grey2} size="18px">
-        {text}
-      </Typography>
+      <InfoText color={theme?.grey2}>{text}</InfoText>
     </Wrapper>
   );
 }
