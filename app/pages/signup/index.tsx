@@ -8,7 +8,7 @@ import Logo from "~/assets/svg/logo.svg?react";
 import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
 import Button from "~/components/common/Button";
-import Top from "~/components/feed/Top";
+import AppBar from "~/components/common/AppBar";
 import ErrorModal from "~/components/common/ErrorModal";
 
 import useSession from "~/contexts/useSession";
@@ -149,7 +149,7 @@ export default function Signup() {
 
   return (
     <>
-      <Top />
+      <AppBar />
 
       <Body>
         <LogoWrapper>

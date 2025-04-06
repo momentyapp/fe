@@ -8,7 +8,7 @@ import Logo from "~/assets/svg/logo.svg?react";
 import Typography from "~/components/common/Typography";
 import Pressable from "~/components/common/Pressable";
 import Button from "~/components/common/Button";
-import Top from "~/components/feed/Top";
+import AppBar from "~/components/common/AppBar";
 import TextInput from "~/components/common/TextInput";
 import ErrorModal from "~/components/common/ErrorModal";
 
@@ -101,7 +101,7 @@ export default function Login() {
 
   return (
     <>
-      <Top />
+      <AppBar />
 
       <Body>
         <LogoWrapper>
