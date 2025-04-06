@@ -1,27 +1,15 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdTrendingUp } from "react-icons/md";
 
-import Typography from "~/components/common/Typography";
-
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  padding: 5px 20px;
-  align-items: center;
-  box-sizing: border-box;
-`;
+import * as S from "./Trending.style";
 
 export default function Trending() {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
-    <Wrapper>
-      <MdTrendingUp size="24" color={theme?.primary2} />
-      <Typography color={theme?.primary2} size="16px">
-        실시간 인기 모멘트
-      </Typography>
-    </Wrapper>
+    <S.Wrapper>
+      <MdTrendingUp size="18" color={theme.primary3} />
+      <S.Text color={theme.primary3}>실시간 인기 모멘트</S.Text>
+    </S.Wrapper>
   );
 }

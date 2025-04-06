@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef } from "react";
-import { styled } from "styled-components";
 import { motion, useInView } from "motion/react";
 
 import My from "./My";
@@ -10,19 +9,9 @@ import Bottom from "./Bottom";
 
 import useSession from "~/contexts/useSession";
 
-import type { Moment, Topic } from "common";
+import * as S from "./index.style";
 
-const Wrapper = styled.div`
-  flex-shrink: 0;
-  display: flex;
-  width: 100%;
-  padding: 20px 0px;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  background: ${(props) => props.theme.bg1};
-  border-bottom: 1px solid ${(props) => props.theme.bg2};
-`;
+import type { Moment, Topic } from "common";
 
 interface MomentProps {
   moment: Moment;
@@ -72,10 +61,10 @@ export default function Moment({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
+      exit={{ opacity: 0 }}
       layout={isInView}
     >
-      <Wrapper ref={ref} id={id}>
+      <S.Wrapper ref={ref} id={id}>
         {my && <My />}
         {trending && <Trending />}
 
@@ -87,7 +76,7 @@ export default function Moment({
           onRemoveReaction={() => onRemoveReaction(moment.id)}
           onEmojiModalOpen={() => onEmojiModalOpen(moment)}
         />
-      </Wrapper>
+      </S.Wrapper>
     </motion.div>
   );
 }

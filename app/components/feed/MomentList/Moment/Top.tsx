@@ -1,58 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useEffect, useState } from "react";
+import { useTheme } from "styled-components";
 
 import { MdAccountCircle, MdMoreVert } from "react-icons/md";
 
 import Dot from "~/components/common/Dot";
 import Typography from "~/components/common/Typography";
-import Pressable from "~/components/common/Pressable";
+
 import getRelativeTime from "~/utils/getRelativeTime";
 
+import * as S from "./Top.style";
+
 import type { Moment } from "common";
-
-const Wrapper = styled.div`
-  display: flex;
-  padding: 0px 15px;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  width: 100%;
-`;
-
-const Photo = styled.img`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-`;
-
-const Left = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
-`;
-
-const Info = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-`;
-
-const Right = styled.div`
-  display: flex;
-  padding: 5px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const StyledPressable = styled(Pressable)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-`;
 
 interface TopProps {
   moment: Moment;
@@ -60,7 +18,7 @@ interface TopProps {
 }
 
 export default function Top({ moment, onDetail }: TopProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   const [relativeTime, setRelativeTime] = useState(
     getRelativeTime(new Date(moment.createdAt))
@@ -75,33 +33,32 @@ export default function Top({ moment, onDetail }: TopProps) {
   }, [moment]);
 
   return (
-    <Wrapper>
-      <Left>
+    <S.Wrapper>
+      <S.Left>
         {moment.author?.photo ? (
-          <Photo
+          <S.Photo
             src={`${import.meta.env.VITE_HOST}/file/moment/${
               moment.author.photo
             }`}
           />
         ) : (
-          <MdAccountCircle size="32" color={theme?.grey1} />
+          <MdAccountCircle size="32" color={theme.grey1} />
         )}
-        <Info>
-          <Typography color={theme?.grey1} size="16px" weight="700">
-            {moment.author?.username ?? "익명"}
-          </Typography>
-          <Dot size="3px" color={theme?.grey1} />
-          <Typography color={theme?.grey1} size="14px">
-            {relativeTime}
-          </Typography>
-        </Info>
-      </Left>
 
-      <Right>
-        <StyledPressable onClick={onDetail} backgroundColor={theme?.bg1}>
-          <MdMoreVert size="24" color={theme?.grey1} />
-        </StyledPressable>
-      </Right>
-    </Wrapper>
+        <S.InfoContainer>
+          <S.Username color={theme.grey1}>
+            {moment.author?.username ?? "익명"}
+          </S.Username>
+          <Dot size="3px" color={theme.grey1} />
+          <S.Time color={theme.grey1}>{relativeTime}</S.Time>
+        </S.InfoContainer>
+      </S.Left>
+
+      <S.Right>
+        <S.StyledPressable onClick={onDetail} backgroundColor={theme.bg1}>
+          <MdMoreVert size="24" color={theme.grey1} />
+        </S.StyledPressable>
+      </S.Right>
+    </S.Wrapper>
   );
 }
