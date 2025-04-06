@@ -53,7 +53,7 @@ export default function TopicContainer({
 
       {isLoading ? (
         <S.ProgressWrapper>
-          <CircularProgress color={theme?.grey1} size={30} />
+          <CircularProgress color={theme.grey1} size={30} />
         </S.ProgressWrapper>
       ) : (
         topics.map((topic) => (

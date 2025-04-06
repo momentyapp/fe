@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import { styled, ThemeContext } from "styled-components";
+import React, { useState, useEffect } from "react";
+import { styled, useTheme } from "styled-components";
 import { AnimatePresence } from "motion/react";
 import { MdAdd } from "react-icons/md";
 
@@ -51,7 +51,7 @@ export default function TopicList({
   generatedTopics,
   setGeneratedTopics,
 }: TopicListProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [loadings, setLoadings] = useState<Record<string, boolean>>({});
@@ -132,12 +132,12 @@ export default function TopicList({
   return (
     <Wrapper>
       <StyledButton
-        backgroundColor={theme?.primary3}
-        icon={<MdAdd size="20" color={theme?.bg1} />}
+        backgroundColor={theme.primary3}
+        icon={<MdAdd size="20" color={theme.bg1} />}
         iconPosition="left"
         onClick={() => setModalOpen(true)}
       >
-        <Typography color={theme?.bg1} size="16px">
+        <Typography color={theme.bg1} size="16px">
           직접 추가
         </Typography>
       </StyledButton>

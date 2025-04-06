@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 
 import { MdNavigateBefore, MdSend } from "react-icons/md";
 
@@ -15,7 +14,7 @@ const StyledHeader = styled.header`
   align-items: center;
   position: sticky;
   top: 0;
-  background-color: ${(props) => props.theme?.bg1};
+  background-color: ${(props) => props.theme.bg1};
 `;
 
 const StyledPressable = styled(Pressable)`
@@ -33,26 +32,23 @@ interface TopProps {
 }
 
 export default function Top({ onPost }: TopProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const navigate = useNavigate();
 
   return (
     <StyledHeader>
       {/* left */}
-      <StyledPressable
-        backgroundColor={theme?.bg1}
-        onClick={() => navigate(-1)}
-      >
-        <MdNavigateBefore size="36" color={theme?.grey1} />
+      <StyledPressable backgroundColor={theme.bg1} onClick={() => navigate(-1)}>
+        <MdNavigateBefore size="36" color={theme.grey1} />
       </StyledPressable>
 
       {/* right */}
       <StyledButton
-        backgroundColor={theme?.primary3}
-        icon={<MdSend size="20" color={theme?.bg1} />}
+        backgroundColor={theme.primary3}
+        icon={<MdSend size="20" color={theme.bg1} />}
         onClick={onPost}
       >
-        <Typography color={theme?.bg1} size="18px">
+        <Typography color={theme.bg1} size="18px">
           게시하기
         </Typography>
       </StyledButton>

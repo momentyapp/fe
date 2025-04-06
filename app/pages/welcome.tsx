@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdPersonAdd } from "react-icons/md";
 
 import Logo from "~/assets/svg/logo.svg?react";
@@ -53,7 +52,7 @@ const Anchor = styled(Typography)`
 `;
 
 export default function Welcome() {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const navigate = useNavigate();
 
   function handleNotNow() {
@@ -72,14 +71,14 @@ export default function Welcome() {
     <>
       <Top>
         <Logo width="128" height="72" />
-        <Typography color={theme?.primary2} size="18px">
+        <Typography color={theme.primary2} size="18px">
           세상의 모든 트렌드를 한 순간에
         </Typography>
       </Top>
 
       <Bottom>
-        <AnchorWrapper onClick={handleLogin} backgroundColor={theme?.bg1}>
-          <Anchor color={theme?.grey2} size="16px">
+        <AnchorWrapper onClick={handleLogin} backgroundColor={theme.bg1}>
+          <Anchor color={theme.grey2} size="16px">
             이미 계정이 있어요.
           </Anchor>
         </AnchorWrapper>
@@ -87,15 +86,15 @@ export default function Welcome() {
         <ButtonList>
           <StyledButton
             onClick={handleSignUp}
-            backgroundColor={theme?.primary3}
-            icon={<MdPersonAdd size="24" color={theme?.bg1} />}
+            backgroundColor={theme.primary3}
+            icon={<MdPersonAdd size="24" color={theme.bg1} />}
           >
-            <Typography color={theme?.bg1} size="18px">
+            <Typography color={theme.bg1} size="18px">
               10초 만에 회원가입하기
             </Typography>
           </StyledButton>
-          <StyledButton onClick={handleNotNow} backgroundColor={theme?.bg3}>
-            <Typography color={theme?.grey1} size="18px">
+          <StyledButton onClick={handleNotNow} backgroundColor={theme.bg3}>
+            <Typography color={theme.grey1} size="18px">
               건너뛰기
             </Typography>
           </StyledButton>

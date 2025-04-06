@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 
 import Typography from "~/components/common/Typography";
 
@@ -15,12 +14,12 @@ interface InfoProps {
 }
 
 export default function Info({ icon, children }: InfoProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <Wrapper>
       {icon}
-      <Typography color={theme?.grey1} size="18px">
+      <Typography color={theme.grey1} size="18px">
         {children}
       </Typography>
     </Wrapper>

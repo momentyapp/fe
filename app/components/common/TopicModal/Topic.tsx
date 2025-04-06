@@ -28,7 +28,7 @@ export default function Topic({ topic, added, onAdd, onRemove }: TopicProps) {
         {topic.trending && (
           <>
             <S.Trending>
-              <MdTrendingUp size="16" color={theme?.primary2} />
+              <MdTrendingUp size="16" color={theme.primary2} />
               <S.TrendingText color={theme.primary2}>인기</S.TrendingText>
             </S.Trending>
             <Dot color={theme.grey2} size="3px" />

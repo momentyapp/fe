@@ -1,7 +1,8 @@
-import { useContext, useMemo, useState } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useMemo, useState } from "react";
+import { styled, useTheme } from "styled-components";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
+import { AnimatePresence } from "motion/react";
 
 import AppBar from "~/components/feed/AppBar";
 import TopicContainer from "~/components/feed/TopicContainer";
@@ -16,8 +17,8 @@ import useMomentFetch from "~/hooks/useMomentFetch";
 import useMomentSocket from "~/hooks/useMomentSocket";
 
 import useEnabledTopicsStore from "~/contexts/useEnabledTopicsStore";
+
 import type { Moment } from "common";
-import { AnimatePresence } from "motion/react";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -37,7 +38,7 @@ const Body = styled.div`
 export default function Feed() {
   const navigate = useNavigate();
   const session = useSession();
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   const { enabledTopics: topics, setEnabledTopics: setTopics } =
     useEnabledTopicsStore();
@@ -101,10 +102,10 @@ export default function Feed() {
 
       {/* 글 쓰기 버튼 */}
       <FloatingButton
-        backgroundColor={theme?.primary3}
+        backgroundColor={theme.primary3}
         onClick={() => navigate("/write")}
       >
-        <MdEdit size="20" color={theme?.bg1} />
+        <MdEdit size="20" color={theme.bg1} />
       </FloatingButton>
     </>
   );

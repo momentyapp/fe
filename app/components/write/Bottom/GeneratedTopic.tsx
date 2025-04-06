@@ -1,5 +1,5 @@
-import { useContext, type Ref } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { type Ref } from "react";
+import { styled, useTheme } from "styled-components";
 import { motion } from "motion/react";
 
 import Button from "~/components/common/Button";
@@ -41,7 +41,7 @@ export default function GeneratedTopic({
   loading = false,
   ref,
 }: GeneratedTopicProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <motion.div
@@ -66,19 +66,19 @@ export default function GeneratedTopic({
         exit={{ scale: 0.5, opacity: 0 }}
       >
         <TopicButton
-          backgroundColor={loading ? theme?.bg3 : theme?.bg1}
+          backgroundColor={loading ? theme.bg3 : theme.bg1}
           icon={
             loading ? (
-              <CircularProgress size={20} color={theme?.grey1} />
+              <CircularProgress size={20} color={theme.grey1} />
             ) : (
-              <MdAdd size="20" color={theme?.grey1} />
+              <MdAdd size="20" color={theme.grey1} />
             )
           }
           iconPosition="right"
           onClick={onClick}
           disabled={loading}
         >
-          <TopicName color={theme?.grey1} size="16px">
+          <TopicName color={theme.grey1} size="16px">
             <Emoji>✨</Emoji>
             {topic}
           </TopicName>

@@ -10,7 +10,7 @@ export const Wrapper = styled.header`
   align-items: center;
   position: sticky;
   top: 0;
-  background-color: ${(props) => props.theme?.bg1};
+  background-color: ${(props) => props.theme.bg1};
   z-index: 1;
 `;
 

@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useInView } from "motion/react";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 
 import CircularProgress from "~/components/common/CircularProgress";
 
@@ -18,10 +18,11 @@ interface EndProps {
 }
 
 export default function End({ isLoading, onTrigger }: EndProps) {
+  const theme = useTheme();
+
   const ref = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const theme = useContext(ThemeContext);
   const isInView = useInView(ref, { initial: false, margin: "500px" });
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function End({ isLoading, onTrigger }: EndProps) {
 
   return (
     <Wrapper ref={ref}>
-      {isLoading && <CircularProgress size={36} color={theme?.grey2} />}
+      {isLoading && <CircularProgress size={36} color={theme.grey2} />}
     </Wrapper>
   );
 }

@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react";
-import { ThemeContext } from "styled-components";
+import { useEffect } from "react";
+import { useTheme } from "styled-components";
 import { Outlet } from "react-router";
 import ReactModal from "react-modal";
 
@@ -10,7 +10,7 @@ import GlobalStyle from "~/styles/global";
 import useSessionRestore from "~/hooks/useSessionRestore";
 
 export default function App() {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   // 모달 기본 설정
   useEffect(() => {

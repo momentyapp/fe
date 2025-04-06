@@ -1,5 +1,4 @@
-import { useState, useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdVisibility, MdAutoDelete } from "react-icons/md";
 
 import Typography from "~/components/common/Typography";
@@ -38,14 +37,14 @@ export default function ConfigList({
   setAnonymous,
   setExpireModalOpen,
 }: ConfigListProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <div>
       <Config>
         <Label>
-          <MdVisibility size="20" color={theme?.grey1} />
-          <Typography color={theme?.grey1} size="16px">
+          <MdVisibility size="20" color={theme.grey1} />
+          <Typography color={theme.grey1} size="16px">
             모멘트를 익명으로 게시
           </Typography>
         </Label>
@@ -56,16 +55,16 @@ export default function ConfigList({
       </Config>
       <Config>
         <Label>
-          <MdAutoDelete size="20" color={theme?.grey1} />
-          <Typography color={theme?.grey1} size="16px">
+          <MdAutoDelete size="20" color={theme.grey1} />
+          <Typography color={theme.grey1} size="16px">
             자동 삭제
           </Typography>
         </Label>
         <ExpireButton
           onClick={() => setExpireModalOpen(true)}
-          backgroundColor={theme?.bg2}
+          backgroundColor={theme.bg2}
         >
-          <Typography color={theme?.grey1} size="14px">
+          <Typography color={theme.grey1} size="14px">
             {config.expiresIn === undefined
               ? "영구 게시"
               : `${config.expiresIn}시간`}

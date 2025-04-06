@@ -37,8 +37,8 @@ export default function AppBar() {
     <S.Wrapper>
       {/* left */}
       <S.Left>
-        <S.StyledPressable backgroundColor={theme?.bg1}>
-          <MdMenu size="32" color={theme?.grey1} />
+        <S.StyledPressable backgroundColor={theme.bg1}>
+          <MdMenu size="32" color={theme.grey1} />
         </S.StyledPressable>
       </S.Left>
 
@@ -50,7 +50,7 @@ export default function AppBar() {
       {/* right */}
       <S.Right>
         <S.StyledPressable
-          backgroundColor={theme?.bg1}
+          backgroundColor={theme.bg1}
           onClick={() => setModalOpen(true)}
         >
           {photo ? (
@@ -58,7 +58,7 @@ export default function AppBar() {
               src={`${import.meta.env.VITE_HOST}/file/profile/${photo}`}
             />
           ) : (
-            <MdAccountCircle size="36" color={theme?.grey1} />
+            <MdAccountCircle size="36" color={theme.grey1} />
           )}
         </S.StyledPressable>
       </S.Right>

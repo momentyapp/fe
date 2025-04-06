@@ -1,5 +1,5 @@
-import { useContext, type Ref } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { type Ref } from "react";
+import { styled, useTheme } from "styled-components";
 import { MdClose } from "react-icons/md";
 import { motion } from "motion/react";
 
@@ -28,7 +28,7 @@ interface TopicProps {
 }
 
 export default function Topic({ topic, onClick, ref }: TopicProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <motion.div
@@ -53,12 +53,12 @@ export default function Topic({ topic, onClick, ref }: TopicProps) {
         exit={{ scale: 0.5, opacity: 0 }}
       >
         <TopicButton
-          backgroundColor={theme?.bg3}
-          icon={<MdClose size="20" color={theme?.grey1} />}
+          backgroundColor={theme.bg3}
+          icon={<MdClose size="20" color={theme.grey1} />}
           iconPosition="right"
           onClick={onClick}
         >
-          <TopicName color={theme?.grey1} size="16px">
+          <TopicName color={theme.grey1} size="16px">
             {topic}
           </TopicName>
         </TopicButton>

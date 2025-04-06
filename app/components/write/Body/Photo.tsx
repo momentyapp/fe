@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdDelete } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
@@ -36,14 +35,14 @@ interface PhotoProps {
 }
 
 export default function Photo({ photo, onClick, onDelete }: PhotoProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   return (
     <>
       <Wrapper>
         <StyledImg src={photo} onClick={onClick} />
         <DeleteButton onClick={onDelete}>
-          <MdDelete size="18" color={theme?.grey1} />
+          <MdDelete size="18" color={theme.grey1} />
         </DeleteButton>
       </Wrapper>
     </>

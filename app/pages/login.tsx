@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdAlternateEmail, MdLogin, MdPassword } from "react-icons/md";
 
 import Logo from "~/assets/svg/logo.svg?react";
@@ -72,7 +72,7 @@ const Anchor = styled(Typography)`
 `;
 
 export default function Login() {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const session = useSession();
   const navigate = useNavigate();
 
@@ -112,23 +112,23 @@ export default function Login() {
           <StyledTextInput
             minLength={2}
             maxLength={20}
-            backgroundColor={theme?.bg2}
+            backgroundColor={theme.bg2}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             name="username"
             autoComplete="username"
-            icon={<MdAlternateEmail size="24" color={theme?.grey2} />}
+            icon={<MdAlternateEmail size="24" color={theme.grey2} />}
             placeholder="사용자 이름"
           />
           <StyledTextInput
             minLength={8}
             maxLength={20}
-            backgroundColor={theme?.bg2}
+            backgroundColor={theme.bg2}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             name="password"
             autoComplete="current-password"
-            icon={<MdPassword size="24" color={theme?.grey2} />}
+            icon={<MdPassword size="24" color={theme.grey2} />}
             placeholder="비밀번호"
             type="password"
           />
@@ -136,8 +136,8 @@ export default function Login() {
       </Body>
 
       <Bottom>
-        <AnchorWrapper onClick={handleSignUp} backgroundColor={theme?.bg1}>
-          <Anchor color={theme?.grey2} size="16px">
+        <AnchorWrapper onClick={handleSignUp} backgroundColor={theme.bg1}>
+          <Anchor color={theme.grey2} size="16px">
             계정 새로 만들기
           </Anchor>
         </AnchorWrapper>
@@ -145,10 +145,10 @@ export default function Login() {
         <StyledButton
           type="submit"
           form="login_form"
-          backgroundColor={theme?.primary3}
-          icon={<MdLogin size="24" color={theme?.bg1} />}
+          backgroundColor={theme.primary3}
+          icon={<MdLogin size="24" color={theme.bg1} />}
         >
-          <Typography color={theme?.bg1} size="18px">
+          <Typography color={theme.bg1} size="18px">
             로그인
           </Typography>
         </StyledButton>

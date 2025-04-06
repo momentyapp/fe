@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useState } from "react";
+import { styled, useTheme } from "styled-components";
 import { MdSend } from "react-icons/md";
 
 import Button from "~/components/common/Button";
@@ -41,7 +41,7 @@ interface IslandProps {
 }
 
 export default function Island({ config, setConfig, onPost }: IslandProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const session = useSession();
 
   const [anonymousModalOpen, setAnonymousModalOpen] = useState(false);
@@ -70,11 +70,11 @@ export default function Island({ config, setConfig, onPost }: IslandProps) {
 
       {/* 게시 버튼 */}
       <StyledButton
-        backgroundColor={theme?.primary3}
-        icon={<MdSend size="20" color={theme?.bg1} />}
+        backgroundColor={theme.primary3}
+        icon={<MdSend size="20" color={theme.bg1} />}
         onClick={onPost}
       >
-        <Typography color={theme?.bg1} size="18px">
+        <Typography color={theme.bg1} size="18px">
           게시하기
         </Typography>
       </StyledButton>

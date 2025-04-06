@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdAddAPhoto } from "react-icons/md";
 
 import Pressable from "~/components/common/Pressable";
@@ -35,14 +34,14 @@ interface PhotoListProps {
 }
 
 export default function PhotoList({ photos, onPhotosChange }: PhotoListProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
 
   const { handleAddPhoto, handleDeletePhoto } = usePhotoHandler(onPhotosChange);
 
   return (
     <Wrapper>
       <AddPhotoButton onClick={handleAddPhoto}>
-        <MdAddAPhoto size="36" color={theme?.grey1} />
+        <MdAddAPhoto size="36" color={theme.grey1} />
       </AddPhotoButton>
       {photos.map((photo) => (
         <Photo

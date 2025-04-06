@@ -23,7 +23,7 @@ export default function Info({ icon, text }: InfoProps) {
   return (
     <Wrapper>
       {icon}
-      <InfoText color={theme?.grey2}>{text}</InfoText>
+      <InfoText color={theme.grey2}>{text}</InfoText>
     </Wrapper>
   );
 }

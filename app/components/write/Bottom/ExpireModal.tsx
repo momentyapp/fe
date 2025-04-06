@@ -1,6 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import ReactModal from "react-modal";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdAllInclusive, MdCheck } from "react-icons/md";
 
 import Button from "~/components/common/Button";
@@ -55,7 +55,7 @@ export default function ExpireModal({
   isOpen,
   ...props
 }: ExpireModalProps) {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const [inputValue, setInputValue] = useState(value);
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -86,7 +86,7 @@ export default function ExpireModal({
         <Slide visible={isOpen} delay={50}>
           <StyledDiv>
             <StyledTextInput value={inputValue} onChange={handleChange} />
-            <Typography size="24px" color={theme?.grey1}>
+            <Typography size="24px" color={theme.grey1}>
               시간
             </Typography>
           </StyledDiv>
@@ -96,20 +96,20 @@ export default function ExpireModal({
         <Slide visible={isOpen} delay={100}>
           <Actions>
             <Action
-              backgroundColor={theme?.primary3}
-              icon={<MdAllInclusive size="24" color={theme?.bg1} />}
+              backgroundColor={theme.primary3}
+              icon={<MdAllInclusive size="24" color={theme.bg1} />}
               onClick={handlePermenant}
             >
-              <Typography color={theme?.bg1} size="18px">
+              <Typography color={theme.bg1} size="18px">
                 영구 게시
               </Typography>
             </Action>
             <Action
-              backgroundColor={theme?.primary3}
-              icon={<MdCheck size="24" color={theme?.bg1} />}
+              backgroundColor={theme.primary3}
+              icon={<MdCheck size="24" color={theme.bg1} />}
               onClick={handleSubmit}
             >
-              <Typography color={theme?.bg1} size="18px">
+              <Typography color={theme.bg1} size="18px">
                 완료
               </Typography>
             </Action>

@@ -1,6 +1,6 @@
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdArrowForward, MdCheck } from "react-icons/md";
 
 import Logo from "~/assets/svg/logo.svg?react";
@@ -69,7 +69,7 @@ export interface SignupContext {
 }
 
 export default function Signup() {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const session = useSession();
   const location = useLocation();
   const navigate = useNavigate();
@@ -172,8 +172,8 @@ export default function Signup() {
 
       <Bottom>
         {page === "form" && (
-          <AnchorWrapper onClick={handleLogin} backgroundColor={theme?.bg1}>
-            <Anchor color={theme?.grey2} size="16px">
+          <AnchorWrapper onClick={handleLogin} backgroundColor={theme.bg1}>
+            <Anchor color={theme.grey2} size="16px">
               이미 계정이 있어요.
             </Anchor>
           </AnchorWrapper>
@@ -183,17 +183,17 @@ export default function Signup() {
           type="submit"
           form="signup_form"
           onClick={page === "term" ? () => handleSubmit() : undefined}
-          backgroundColor={theme?.primary3}
+          backgroundColor={theme.primary3}
           icon={
             <>
               {page === "form" && (
-                <MdArrowForward size="24" color={theme?.bg1} />
+                <MdArrowForward size="24" color={theme.bg1} />
               )}
-              {page === "term" && <MdCheck size="24" color={theme?.bg1} />}
+              {page === "term" && <MdCheck size="24" color={theme.bg1} />}
             </>
           }
         >
-          <Typography color={theme?.bg1} size="18px">
+          <Typography color={theme.bg1} size="18px">
             {page === "form" && "다음"}
             {page === "term" && "모두 동의하기"}
           </Typography>

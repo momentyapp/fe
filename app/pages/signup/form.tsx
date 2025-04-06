@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { useOutletContext } from "react-router";
-import { styled, ThemeContext } from "styled-components";
+import { styled, useTheme } from "styled-components";
 import { MdAlternateEmail, MdPassword } from "react-icons/md";
 
 import TextInput from "~/components/common/TextInput";
@@ -20,7 +19,7 @@ const StyledTextInput = styled(TextInput)`
 `;
 
 export default function Form() {
-  const theme = useContext(ThemeContext);
+  const theme = useTheme();
   const {
     username,
     setUsername,
@@ -40,7 +39,7 @@ export default function Form() {
         onChange={(e) => setUsername(e.target.value)}
         name="username"
         autoComplete="username"
-        icon={<MdAlternateEmail size="24" color={theme?.grey2} />}
+        icon={<MdAlternateEmail size="24" color={theme.grey2} />}
         placeholder="사용자 이름"
       />
       <StyledTextInput
@@ -50,7 +49,7 @@ export default function Form() {
         onChange={(e) => setPassword(e.target.value)}
         name="password"
         autoComplete="new-password"
-        icon={<MdPassword size="24" color={theme?.grey2} />}
+        icon={<MdPassword size="24" color={theme.grey2} />}
         placeholder="비밀번호"
         type="password"
       />
@@ -61,7 +60,7 @@ export default function Form() {
         onChange={(e) => setPasswordConfirm(e.target.value)}
         name="password-confirm"
         autoComplete="new-password"
-        icon={<MdPassword size="24" color={theme?.grey2} />}
+        icon={<MdPassword size="24" color={theme.grey2} />}
         placeholder="비밀번호 확인"
         type="password"
       />
