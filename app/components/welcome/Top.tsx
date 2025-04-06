@@ -1,7 +1,8 @@
+import { useTheme } from "styled-components";
+
 import Logo from "~/assets/svg/logo.svg?react";
 
 import * as S from "./Top.style";
-import { useTheme } from "styled-components";
 
 export default function Top() {
   const theme = useTheme();
