@@ -16,3 +16,9 @@ export const BackButton = styled(Pressable)`
   padding: 5px;
   border-radius: 50%;
 `;
+
+export const ChildrenWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+`;

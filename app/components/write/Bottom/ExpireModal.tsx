@@ -1,47 +1,11 @@
 import { useState } from "react";
 import ReactModal from "react-modal";
-import { styled, useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdAllInclusive, MdCheck } from "react-icons/md";
 
-import Button from "~/components/common/Button";
-import Typography from "~/components/common/Typography";
 import Slide from "~/components/common/Slide";
-import TextInput from "~/components/common/TextInput";
 
-const Content = styled.div`
-  width: 100%;
-  padding: 0 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const StyledDiv = styled.div`
-  padding-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-`;
-
-const Actions = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  gap: 5px;
-`;
-
-const Action = styled(Button)`
-  width: 100%;
-`;
-
-const StyledTextInput = styled(TextInput)`
-  width: 50px;
-  height: 36px;
-  font-size: 24px;
-  text-align: center;
-`;
+import * as S from "./ExpireModal.style";
 
 interface ExpireModalProps extends Omit<ReactModal.Props, "style"> {
   value: number;
@@ -82,40 +46,40 @@ export default function ExpireModal({
       isOpen={isOpen}
       {...props}
     >
-      <Content>
+      <S.Content>
+        {/* 시간 입력 */}
         <Slide visible={isOpen} delay={50}>
-          <StyledDiv>
-            <StyledTextInput value={inputValue} onChange={handleChange} />
-            <Typography size="24px" color={theme.grey1}>
-              시간
-            </Typography>
-          </StyledDiv>
+          <S.TimeWrapper>
+            <S.TimeInput
+              value={inputValue}
+              onChange={handleChange}
+              backgroundColor={theme.bg3}
+            />
+            <S.TimeSuffix color={theme.grey1}>시간</S.TimeSuffix>
+          </S.TimeWrapper>
         </Slide>
 
         {/* 하단 버튼 */}
         <Slide visible={isOpen} delay={100}>
-          <Actions>
-            <Action
+          <S.ActionContainer>
+            <S.Action
               backgroundColor={theme.primary3}
               icon={<MdAllInclusive size="24" color={theme.bg1} />}
               onClick={handlePermenant}
             >
-              <Typography color={theme.bg1} size="18px">
-                영구 게시
-              </Typography>
-            </Action>
-            <Action
+              <S.ButtonText color={theme.bg1}>영구 게시</S.ButtonText>
+            </S.Action>
+
+            <S.Action
               backgroundColor={theme.primary3}
               icon={<MdCheck size="24" color={theme.bg1} />}
               onClick={handleSubmit}
             >
-              <Typography color={theme.bg1} size="18px">
-                완료
-              </Typography>
-            </Action>
-          </Actions>
+              <S.ButtonText color={theme.bg1}>완료</S.ButtonText>
+            </S.Action>
+          </S.ActionContainer>
         </Slide>
-      </Content>
+      </S.Content>
     </ReactModal>
   );
 }

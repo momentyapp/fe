@@ -1,26 +1,9 @@
-import { styled } from "styled-components";
-
-import TopicList from "./TopicList";
+import TopicContainer from "./TopicContainer";
 import Island from "./Island";
 
-import type { MomentConfig, Topic, GeneratedTopic } from "common";
+import * as S from "./index.style";
 
-const Wrapper = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding-top: 40px;
-  background: ${(props) => `linear-gradient(
-    0deg,
-    ${props.theme.bg1} 0%,
-    ${props.theme.bg1} 90%,
-    transparent 100%
-  )`};
-`;
+import type { MomentConfig, Topic, GeneratedTopic } from "common";
 
 interface BottomProps {
   topics: Topic[];
@@ -42,14 +25,14 @@ export default function Bottom({
   onPost,
 }: BottomProps) {
   return (
-    <Wrapper>
-      <TopicList
+    <S.Wrapper>
+      <TopicContainer
         topics={topics}
         setTopics={setTopics}
         generatedTopics={generatedTopics}
         setGeneratedTopics={setGeneratedTopics}
       />
       <Island config={config} setConfig={setConfig} onPost={onPost} />
-    </Wrapper>
+    </S.Wrapper>
   );
 }

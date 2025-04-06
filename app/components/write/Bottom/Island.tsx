@@ -1,38 +1,18 @@
 import { useState } from "react";
-import { styled, useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdSend } from "react-icons/md";
 
-import Button from "~/components/common/Button";
 import Typography from "~/components/common/Typography";
 import NeedLoginModal from "~/components/common/NeedLoginModal";
-import Pressable from "~/components/common/Pressable";
 
 import useSession from "~/contexts/useSession";
 
 import ExpireModal from "./ExpireModal";
-import ConfigList from "./ConfigList";
+import ConfigContainer from "./ConfigContainer";
+
+import * as S from "./Island.style";
 
 import type { MomentConfig } from "common";
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0px 10px;
-  padding: 20px;
-  gap: 10px;
-  border-radius: 15px;
-  box-sizing: border-box;
-  background-color: ${(props) => props.theme.bg3};
-`;
-const StyledButton = styled(Button)`
-  padding: 15px;
-  border-radius: 15px;
-`;
-
-const ExpireButton = styled(Pressable)`
-  padding: 10px;
-  border-radius: 10px;
-`;
 
 interface IslandProps {
   config: MomentConfig;
@@ -48,7 +28,7 @@ export default function Island({ config, setConfig, onPost }: IslandProps) {
   const [expireModalOpen, setExpireModalOpen] = useState(false);
 
   function setAnonymous(anonymous: boolean) {
-    if (session.user === undefined) {
+    if (session.user === null) {
       setAnonymousModalOpen(true);
       return;
     }
@@ -60,24 +40,22 @@ export default function Island({ config, setConfig, onPost }: IslandProps) {
   }
 
   return (
-    <Wrapper>
+    <S.Wrapper>
       {/* 설정 */}
-      <ConfigList
+      <ConfigContainer
         config={config}
         setAnonymous={setAnonymous}
         setExpireModalOpen={setExpireModalOpen}
       />
 
       {/* 게시 버튼 */}
-      <StyledButton
+      <S.PostButton
         backgroundColor={theme.primary3}
         icon={<MdSend size="20" color={theme.bg1} />}
         onClick={onPost}
       >
-        <Typography color={theme.bg1} size="18px">
-          게시하기
-        </Typography>
-      </StyledButton>
+        <S.ButtonText color={theme.bg1}>게시하기</S.ButtonText>
+      </S.PostButton>
 
       {/* 익명 게시글 경고 모달 */}
       <NeedLoginModal
@@ -93,6 +71,6 @@ export default function Island({ config, setConfig, onPost }: IslandProps) {
         onRequestClose={() => setExpireModalOpen(false)}
         onSubmit={setExpiresIn}
       />
-    </Wrapper>
+    </S.Wrapper>
   );
 }

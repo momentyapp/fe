@@ -1,46 +1,36 @@
-import { styled, useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdSend } from "react-icons/md";
 
-import Button from "~/components/common/Button";
-import Typography from "~/components/common/Typography";
 import CircularProgress from "~/components/common/CircularProgress";
 
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  gap: 5px;
-`;
+import * as S from "./ActionContainer.style";
 
-const Action = styled(Button)`
-  width: 100%;
-`;
-
-interface ActionListProps {
+interface ActionContainerProps {
   loading: boolean;
   onCancel: (event: React.MouseEvent | React.KeyboardEvent) => void;
   onPost: () => void;
 }
 
-export default function ActionList({
+export default function ActionContainer({
   loading,
   onCancel: handleRequestClose,
   onPost,
-}: ActionListProps) {
+}: ActionContainerProps) {
   const theme = useTheme();
 
   return (
-    <Wrapper>
-      <Action
+    <S.Wrapper>
+      <S.Action
         backgroundColor={loading ? theme.grey3 : theme.grey2}
         onClick={handleRequestClose}
         disabled={loading}
       >
-        <Typography color={loading ? theme.grey1 : theme.bg1} size="18px">
+        <S.ButtonText color={loading ? theme.grey1 : theme.bg1}>
           취소
-        </Typography>
-      </Action>
-      <Action
+        </S.ButtonText>
+      </S.Action>
+
+      <S.Action
         backgroundColor={loading ? theme.grey3 : theme.primary3}
         onClick={onPost}
         icon={
@@ -52,10 +42,10 @@ export default function ActionList({
         }
         disabled={loading}
       >
-        <Typography color={loading ? theme.grey1 : theme.bg1} size="18px">
+        <S.ButtonText color={loading ? theme.grey1 : theme.bg1}>
           {loading ? "게시 중..." : "게시하기"}
-        </Typography>
-      </Action>
-    </Wrapper>
+        </S.ButtonText>
+      </S.Action>
+    </S.Wrapper>
   );
 }

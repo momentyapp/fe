@@ -7,9 +7,10 @@ import * as S from "./index.style";
 
 interface TopProps {
   onBack?: () => void;
+  children?: React.ReactNode;
 }
 
-export default function AppBar({ onBack }: TopProps) {
+export default function AppBar({ onBack, children }: TopProps) {
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -21,6 +22,8 @@ export default function AppBar({ onBack }: TopProps) {
       >
         <MdNavigateBefore size="36" color={theme.grey1} />
       </S.BackButton>
+
+      <S.ChildrenWrapper>{children}</S.ChildrenWrapper>
     </S.Wrapper>
   );
 }

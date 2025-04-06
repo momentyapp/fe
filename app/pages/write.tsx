@@ -1,4 +1,4 @@
-import Top from "~/components/write/Top";
+import Top from "~/components/write/AppBar";
 import Body from "~/components/write/Body";
 import Bottom from "~/components/write/Bottom";
 import ConfirmModal from "~/components/write/ConfirmModal";

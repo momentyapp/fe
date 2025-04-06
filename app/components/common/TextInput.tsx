@@ -20,7 +20,7 @@ const IconWrapper = styled.div<{ $iconPosition: "left" | "right" }>`
   right: ${(props) => (props.$iconPosition === "right" ? "10px" : "unset")};
 `;
 
-const Input = styled.input<{ $iconPosition: "left" | "right" }>`
+const Input = styled.input<{ $iconPosition: "left" | "right" | null }>`
   width: 100%;
   height: 100%;
   border-radius: 10px;
@@ -62,13 +62,14 @@ export default function TextInput({
         <IconWrapper $iconPosition="left">{icon}</IconWrapper>
       )}
       <MotionInput
+        initial={false}
         {...props}
         type={type}
         animate={{ backgroundColor: backgroundColor ?? "#00000000" }}
         whileHover={{ backgroundColor: focusColor ?? "#00000014" }}
         whileFocus={{ backgroundColor: tapColor ?? "#00000028" }}
         transition={{ duration: 0.1 }}
-        $iconPosition={iconPosition}
+        $iconPosition={icon === undefined ? null : iconPosition}
       />
       {iconPosition === "right" && (
         <IconWrapper $iconPosition="right">{icon}</IconWrapper>

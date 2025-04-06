@@ -1,38 +1,19 @@
-import { type Ref } from "react";
-import { styled, useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdClose } from "react-icons/md";
 import { motion } from "motion/react";
 
-import Button from "~/components/common/Button";
-import Typography from "~/components/common/Typography";
-
-const TopicButton = styled(Button)`
-  height: 36px;
-  padding: 0px 10px;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  border-radius: 10px;
-`;
-
-const TopicName = styled(Typography)`
-  word-break: break-all;
-  white-space: nowrap;
-`;
+import * as S from "./Topic.Style";
 
 interface TopicProps {
   topic: string;
   onClick: () => void;
-  ref?: Ref<HTMLDivElement>;
 }
 
-export default function Topic({ topic, onClick, ref }: TopicProps) {
+export default function Topic({ topic, onClick }: TopicProps) {
   const theme = useTheme();
 
   return (
-    <motion.div
-      ref={ref}
+    <S.MotionWrapper
       initial={{ width: 0, marginRight: 0 }}
       animate={{ width: "auto", marginRight: "10px" }}
       exit={{ width: 0, marginRight: 0 }}
@@ -40,29 +21,23 @@ export default function Topic({ topic, onClick, ref }: TopicProps) {
         type: "spring",
         duration: 0.7,
       }}
-      style={{
-        borderRadius: "10px",
-        display: "flex",
-        justifyContent: "flex-start",
-        flexShrink: 0,
-      }}
+      layout
+      layoutId={topic}
     >
       <motion.div
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.5, opacity: 0 }}
       >
-        <TopicButton
+        <S.TopicButton
           backgroundColor={theme.bg3}
           icon={<MdClose size="20" color={theme.grey1} />}
           iconPosition="right"
           onClick={onClick}
         >
-          <TopicName color={theme.grey1} size="16px">
-            {topic}
-          </TopicName>
-        </TopicButton>
+          <S.TopicName color={theme.grey1}>{topic}</S.TopicName>
+        </S.TopicButton>
       </motion.div>
-    </motion.div>
+    </S.MotionWrapper>
   );
 }

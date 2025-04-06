@@ -1,32 +1,13 @@
-import { styled, useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { MdAddAPhoto } from "react-icons/md";
 
-import Pressable from "~/components/common/Pressable";
 import usePhotoHandler from "~/hooks/usePhotoHandler";
 
 import Photo from "./Photo";
 
+import * as S from "./PhotoList.style";
+
 import type { PhotoFile } from "common";
-
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-  padding: 10px 20px;
-  gap: 10px;
-  overflow-x: auto;
-  box-sizing: border-box;
-`;
-
-const AddPhotoButton = styled(Pressable)`
-  display: flex;
-  min-width: 120px;
-  height: 120px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
-  background: ${(props) => props.theme.bg3};
-  padding: 0;
-`;
 
 interface PhotoListProps {
   photos: PhotoFile[];
@@ -39,10 +20,11 @@ export default function PhotoList({ photos, onPhotosChange }: PhotoListProps) {
   const { handleAddPhoto, handleDeletePhoto } = usePhotoHandler(onPhotosChange);
 
   return (
-    <Wrapper>
-      <AddPhotoButton onClick={handleAddPhoto}>
+    <S.Wrapper>
+      <S.AddButton backgroundColor={theme.bg3} onClick={handleAddPhoto}>
         <MdAddAPhoto size="36" color={theme.grey1} />
-      </AddPhotoButton>
+      </S.AddButton>
+
       {photos.map((photo) => (
         <Photo
           key={photo.id}
@@ -51,6 +33,6 @@ export default function PhotoList({ photos, onPhotosChange }: PhotoListProps) {
           onDelete={() => handleDeletePhoto(photo.id)}
         />
       ))}
-    </Wrapper>
+    </S.Wrapper>
   );
 }
