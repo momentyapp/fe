@@ -5,12 +5,12 @@ import { AnimatePresence } from "motion/react";
 import useReactMoment from "~/hooks/useReactMoment";
 
 import NeedLoginModal from "~/components/common/NeedLoginModal";
+import Moment from "~/components/feed/Moment";
 
 import useSession from "~/contexts/useSession";
 
 import EmojiPickerModal from "./EmojiPickerModal";
 import InfoModal from "./InfoModal";
-import Moment from "./Moment";
 import End from "./End";
 
 import type { Moment as MomentType } from "common";
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-interface MomentListProps {
+interface MomentContainerProps {
   moments: MomentType[];
   loading: boolean;
   setAnchor?: (momentId: number) => void;
@@ -29,14 +29,14 @@ interface MomentListProps {
   onMomentInvisible?: (momentId: number) => void;
 }
 
-export default function MomentList({
+export default function MomentContainer({
   moments,
   loading,
   setAnchor,
   onScrollEnd,
   onMomentVisible,
   onMomentInvisible,
-}: MomentListProps) {
+}: MomentContainerProps) {
   const session = useSession();
 
   const accessToken = useMemo(

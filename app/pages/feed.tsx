@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 
 import AppBar from "~/components/feed/AppBar";
 import TopicList from "~/components/feed/TopicList";
-import MomentList from "~/components/feed/MomentList";
+import MomentContainer from "~/components/feed/MomentContainer";
 import Unseen from "~/components/feed/Unseen";
 import Pressable from "~/components/common/Pressable";
 
@@ -89,7 +89,7 @@ export default function Feed() {
         <Unseen open={unseenId !== null} />
 
         {/* 모멘트 */}
-        <MomentList
+        <MomentContainer
           moments={moments}
           loading={isLoading}
           onScrollEnd={handleScrollEnd}
