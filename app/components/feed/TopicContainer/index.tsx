@@ -1,46 +1,25 @@
-import { useContext, useEffect, useState } from "react";
-import { styled, ThemeContext } from "styled-components";
+import { useEffect, useState } from "react";
+import { useTheme } from "styled-components";
 import { AnimatePresence } from "motion/react";
 import { MdTune } from "react-icons/md";
 
-import Pressable from "~/components/common/Pressable";
 import TopicModal from "~/components/common/TopicModal";
+import Topic from "~/components/feed/Topic";
 
-import Topic from "./Topic";
+import * as S from "./index.style";
 
 import type { Topic as TopicType } from "common";
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  align-items: center;
-  box-sizing: border-box;
-  overflow-x: scroll;
-  position: sticky;
-  top: 60px;
-  background-color: ${(props) => props.theme?.bg1};
-  z-index: 1;
-  scrollbar-width: none;
-`;
-
-const AddTopic = styled(Pressable)`
-  display: flex;
-  height: 36px;
-  padding: 0 15px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  margin-right: 15px;
-`;
-
-interface TopicListProps {
+interface TopicContainerProps {
   topics: TopicType[];
   setTopics: React.Dispatch<React.SetStateAction<TopicType[]>>;
 }
 
-export default function TopicList({ topics, setTopics }: TopicListProps) {
-  const theme = useContext(ThemeContext);
+export default function TopicContainer({
+  topics,
+  setTopics,
+}: TopicContainerProps) {
+  const theme = useTheme();
   const [modalOpen, setModalOpen] = useState(false);
 
   // 주제 제거
@@ -54,10 +33,13 @@ export default function TopicList({ topics, setTopics }: TopicListProps) {
   useEffect(() => setInitialized(true), []);
 
   return (
-    <Wrapper>
-      <AddTopic backgroundColor={theme?.bg2} onClick={() => setModalOpen(true)}>
-        <MdTune size="20" color={theme?.grey1} />
-      </AddTopic>
+    <S.Wrapper>
+      <S.AddTopic
+        backgroundColor={theme.bg2}
+        onClick={() => setModalOpen(true)}
+      >
+        <MdTune size="20" color={theme.grey1} />
+      </S.AddTopic>
 
       <AnimatePresence initial={initialized}>
         {topics.map((topic) => (
@@ -76,6 +58,6 @@ export default function TopicList({ topics, setTopics }: TopicListProps) {
         onRequestClose={() => setModalOpen(false)}
         isOpen={modalOpen}
       />
-    </Wrapper>
+    </S.Wrapper>
   );
 }

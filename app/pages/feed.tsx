@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router";
 
 import AppBar from "~/components/feed/AppBar";
-import TopicList from "~/components/feed/TopicList";
+import TopicContainer from "~/components/feed/TopicContainer";
 import MomentContainer from "~/components/feed/MomentContainer";
 import Unseen from "~/components/feed/Unseen";
 import Pressable from "~/components/common/Pressable";
@@ -17,6 +17,7 @@ import useMomentSocket from "~/hooks/useMomentSocket";
 
 import useEnabledTopicsStore from "~/contexts/useEnabledTopicsStore";
 import type { Moment } from "common";
+import { AnimatePresence } from "motion/react";
 
 const FloatingButton = styled(Pressable)`
   position: fixed;
@@ -82,11 +83,11 @@ export default function Feed() {
       <AppBar />
 
       {/* 주제 목록 */}
-      <TopicList topics={topics} setTopics={setTopics} />
+      <TopicContainer topics={topics} setTopics={setTopics} />
 
       <Body>
         {/* 새로운 모멘트 알림 */}
-        <Unseen open={unseenId !== null} />
+        <AnimatePresence>{unseenId !== null && <Unseen />}</AnimatePresence>
 
         {/* 모멘트 */}
         <MomentContainer
